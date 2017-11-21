@@ -101,10 +101,10 @@ module main(
     always @(*) begin
         case (cur_state)
             `MAIN_OP_DRAW_BACKGROUND_START: begin
-                next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY
+                next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY;
             end
             `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
-                next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT
+                next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT;
             end
             `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
                 next_state <= draw_background_finished ? `MAIN_OP_DRAW_BACKGROUND_START : next_state;
