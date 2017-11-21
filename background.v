@@ -12,33 +12,33 @@ module draw_background(
 	output reg finished
    );
 	
+	reg [`X_COORD_WIDTH-1:0] frag_x;
+	reg [`Y_COORD_WIDTH-1:0] frag_y;
+	
     always @(posedge clock) begin
         if (!resetn) begin
             frag_x <= `X_COORD_WIDTH'b0;
             frag_y <= `Y_COORD_WIDTH'b0;
-            
-            paused <= 0;
-            
-            op_code <= `OP_LOAD;
+
+				plot <= 0;
+				finished <= 0;
         end
         else begin
-            if (paused) begin
-                op_code <= `OP_LOAD;
-                paused <= 0;
-            end
-            else if (op_code == `OP_LOAD) begin
+				// setup registers on the first cycle
+            if (finished && start) begin
                 frag_x <= `X_COORD_WIDTH'b0;
                 frag_y <= `Y_COORD_WIDTH'b0;
-                
-                op_code <= `OP_RUN_SHADER;
+					 
+					 plot <= 1;
+					 finished <= 0;
             end
-            else if (op_code == `OP_RUN_SHADER) begin
-                op_code <= `OP_DRAW;
+				// update positions as long as we are not finished drawing
+            else if (!finished) begin
                 if (frag_x == `SCREEN_WIDTH - 1) begin
                     frag_x <= `X_COORD_WIDTH'b0;
                     if (frag_y == `SCREEN_HEIGHT - 1) begin
                         frag_y <= `Y_COORD_WIDTH'b0;
-                        paused <= 1;
+                        finished <= 1;
                     end
                     else begin
                         frag_y <= frag_y + 1;
@@ -48,8 +48,8 @@ module draw_background(
                     frag_x <= frag_x + 1;
                 end
             end
-            else if (op_code == `OP_DRAW) begin
-                op_code <= `OP_RUN_SHADER;
+            else if (finished) begin
+                plot <= 0;
             end
         end
     end
