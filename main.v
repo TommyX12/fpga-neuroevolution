@@ -78,7 +78,7 @@ module main(
     wire draw_background_drawing;
     
     DrawBackground draw_background(
-       .start(start),
+       .start(1),
        .clock(CLOCK_50),
        .resetn(resetn),
        .drawing(draw_background_drawing),
