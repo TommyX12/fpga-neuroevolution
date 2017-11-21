@@ -1,15 +1,16 @@
-`define SCREEN_WIDTH  `X_COORD_WIDTH'd160
-`define SCREEN_HEIGHT `Y_COORD_WIDTH'd120
+`include "constants.h"
 
 module draw_background(
-	input start,
-	input clock,
-	output drawing,
-	output x,
-	output y,
-	output colour,	// WE'RE CANADIAN
-	output plot
-	);
+   input start,
+   input clock,
+   input resetn,
+   output reg drawing,
+   output reg [`X_COORD_WIDTH-1:0] x,
+   output reg [`Y_COORD_WIDTH-1:0] y,
+   output reg [`COLOUR_WIDTH-1:0] colour, // WE'RE CANADIAN
+   output reg plot,
+	output reg finished
+   );
 	
     always @(posedge clock) begin
         if (!resetn) begin

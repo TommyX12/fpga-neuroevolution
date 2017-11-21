@@ -3,7 +3,7 @@
 `define S_WIDTH 3
 `define X_COORD_WIDTH 8
 `define Y_COORD_WIDTH 7
-`define COLOUR_WIDTH   3
+`define COLOR_WIDTH   3
 `define DELAY_WIDTH   20
 
 `define SCREEN_WIDTH  `X_COORD_WIDTH'd160
