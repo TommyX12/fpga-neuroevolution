@@ -1,6 +1,17 @@
 // Part 2 skeleton
 
-`define OP_CODE_WIDTH 2
+
+
+
+
+
+
+
+
+
+
+
+/* `define OP_CODE_WIDTH 2
 `define S_WIDTH 3
 `define X_COORD_WIDTH 8
 `define Y_COORD_WIDTH 7
@@ -73,7 +84,7 @@ module main
 			.x(x),
 			.y(y),
 			.plot(writeEn),
-			/* Signals for the DAC to drive the monitor. */
+			[>Signals for the DAC to drive the monitor.<]
 			.VGA_R(VGA_R),
 			.VGA_G(VGA_G),
 			.VGA_B(VGA_B),
@@ -414,4 +425,4 @@ module block_shader (
         end
     end
     
-endmodule
+endmodule */
