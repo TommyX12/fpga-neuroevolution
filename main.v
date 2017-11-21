@@ -99,27 +99,29 @@ module main(
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
     
     always @(*) begin
-        case (cur_state)
-            `MAIN_OP_DRAW_BACKGROUND_START: begin
-                next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY;
-            end
-            `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
-                next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT;
-            end
-            `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
-                next_state <= draw_background_finished ? `MAIN_OP_DRAW_BACKGROUND_START : next_state;
-            end
-        endcase
+		  case (cur_state)
+				`MAIN_OP_DRAW_BACKGROUND_START: begin
+					 next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY;
+				end
+				`MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+					 next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT;
+				end
+				`MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+					 next_state <= draw_background_finished ? `MAIN_OP_DRAW_BACKGROUND_START : next_state;
+				end
+		  endcase
     end
     
     always @(posedge clock) begin
+        if (!resetn) begin
+            cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+        end
         cur_state <= next_state;
     end
     
     always @(posedge clock) begin
         if (!resetn) begin
             draw_background_start = 0;
-            next_state = `MAIN_OP_DRAW_BACKGROUND_START;
         end
         else begin
             case (cur_state)
