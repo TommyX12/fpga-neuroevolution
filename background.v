@@ -29,11 +29,13 @@ module DrawBackground(
                 frag_x <= `X_COORD_WIDTH'b0;
                 frag_y <= `Y_COORD_WIDTH'b0;
 					 
+					 colour <= `COLOUR_WIDTH'b000;
 					 plot <= 1;
 					 finished <= 0;
             end
 				// update positions as long as we are not finished drawing
             else if (!finished) begin
+					 colour <= `COLOUR_WIDTH'b010;
                 if (frag_x == `SCREEN_WIDTH - 1) begin
                     frag_x <= `X_COORD_WIDTH'b0;
                     if (frag_y == `SCREEN_HEIGHT - 1) begin
@@ -51,6 +53,8 @@ module DrawBackground(
             else if (finished) begin
                 plot <= 0;
             end
+			  x = frag_x;
+			  y = frag_y;
         end
     end
 
