@@ -5,7 +5,9 @@
 `include "constants.h"
 
 `define MAIN_OP_WIDTH 5
-`define MAIN_OP_LOAD `MAIN_OP_WIDTH'd0
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd0
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd1
+`define MAIN_OP_DRAW_BACKGROUND_WAIT `MAIN_OP_WIDTH'd2
 
 module main(
         CLOCK_50,						//	On Board 50 MHz
@@ -74,6 +76,7 @@ module main(
     // Put your code here. Your code should produce signals x,y,colour and writeEn/plot
     // for the VGA controller, in addition to any other functionality your design may require.
     
+    reg draw_background_start;
     wire draw_background_finished;
     wire draw_background_drawing;
     
@@ -81,7 +84,7 @@ module main(
     assign clock = CLOCK_50;
     
     DrawBackground draw_background(
-       .start(1),
+       .start(draw_background_start),
        .clock(clock),
        .resetn(resetn),
        .drawing(draw_background_drawing),
@@ -90,12 +93,47 @@ module main(
        .colour(colour),
        .plot(writeEn),
        .finished(draw_background_finished)
-       );
+    );
     
-    reg test;
+    reg [`MAIN_OP_WIDTH-1:0] next_state;
+    reg [`MAIN_OP_WIDTH-1:0] cur_state;
+    
+    always @(*) begin
+        case (cur_state)
+            `MAIN_OP_DRAW_BACKGROUND_START: begin
+                next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY
+            end
+            `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+                next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT
+            end
+            `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+                next_state <= draw_background_finished ? `MAIN_OP_DRAW_BACKGROUND_START : next_state;
+            end
+        endcase
+    end
     
     always @(posedge clock) begin
-        test <= 1;
+        cur_state <= next_state;
+    end
+    
+    always @(posedge clock) begin
+        if (!resetn) begin
+            draw_background_start = 0;
+            next_state = `MAIN_OP_DRAW_BACKGROUND_START;
+        end
+        else begin
+            case (cur_state)
+                `MAIN_OP_DRAW_BACKGROUND_START: begin
+                    draw_background_start <= 1;
+                end
+                `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+                    draw_background_start <= 1;
+                end
+                `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+                    draw_background_start <= 0;
+                end
+            endcase
+        end
     end
 
 endmodule
