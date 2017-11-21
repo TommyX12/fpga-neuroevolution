@@ -77,9 +77,12 @@ module main(
     wire draw_background_finished;
     wire draw_background_drawing;
     
+    wire clock;
+    assign clock = CLOCK_50;
+    
     DrawBackground draw_background(
        .start(1),
-       .clock(CLOCK_50),
+       .clock(clock),
        .resetn(resetn),
        .drawing(draw_background_drawing),
        .x(x),
