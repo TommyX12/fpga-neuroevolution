@@ -1,6 +1,6 @@
 `include "constants.h"
 
-module draw_background(
+module DrawBackground(
    input start,
    input clock,
    input resetn,
