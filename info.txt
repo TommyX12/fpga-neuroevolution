@@ -1,0 +1,17 @@
+
+
+
+standardized datapath access
+    start signal to datapath
+    finished signal from datapath
+    instruction to datapath
+        32 bit standardized instruction for doing anything, such as memory read, write, write to screen, etc.
+    
+    return value from datapath
+        32 bit value corresponding to each possible operation in the instruction to datapath
+
+datapath multiplexer for concurrent access control.
+    generate for arbitrary number of inputs.
+    multiplex each of the 4 standard signals for datapath access, for each input.
+    scan for an input that has unfinished instruction. pass its instructions to datapath and wait for output, then put that into the corresponding output to that input and set finished for it. repeat.
+
