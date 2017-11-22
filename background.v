@@ -21,7 +21,7 @@ module DrawBackground(
 
             x <= `X_COORD_WIDTH'd0;
             y <= `Y_COORD_WIDTH'd0;
-            color <= `COLOUR_WIDTH'd0;
+            colour <= `COLOUR_WIDTH'd0;
             plot <= 0;
             finished <= 1;
         end

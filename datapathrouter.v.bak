@@ -40,23 +40,21 @@ module DatapathRouter(
     reg [ports-1:0] ptr_mask;
     reg [`THREADS_WIDTH-1:0] ptr;
     reg [`THREADS_WIDTH-1:0] index;
-    reg [`THREADS_WIDTH-1:0] i;
     reg waiting;
     reg delay;
     reg loop;
     
     always @(posedge clock) begin
         if (!resetn) begin
-            result <= {(`RESULT_WIDTH*ports){1'd0}};
-            finished <= ~{(ports){1'd0}};
+            result <= `RESULT_WIDTH*ports'd0;
+            finished <= ~(ports'd0);
             
             instruction_dp = `INSTRUCTION_WIDTH'd0;
             start_dp = 0;
             
-            ptr_mask <= {(ports){1'd1}};
+            ptr_mask <= ports'd1;
             ptr <= `THREADS_WIDTH'd0;
             index <= `THREADS_WIDTH'd0;
-            i <= `THREADS_WIDTH'd0;
             waiting <= 0;
             delay <= 0;
             loop <= 0;
@@ -72,7 +70,7 @@ module DatapathRouter(
                 start_dp = 0;
                 if (finished_dp) begin
                     // receive
-                    for (i = 0; i < ports; i = i + 1) begin
+                    for (int i = 0; i < ports; ++i) begin
                         if (ptr == i) begin
                             result[`THREADS_WIDTH * (i+1):`THREADS_WIDTH * i] = result_dp;
                         end
@@ -88,7 +86,7 @@ module DatapathRouter(
                 while (index < ports && loop) begin
                     if (ptr_mask & ~(finished)) begin
                         // send
-                        for (i = 0; i < ports; i = i + 1) begin
+                        for (int i = 0; i < ports; ++i) begin
                             if (ptr == i) begin
                                 instruction_dp = instruction[`THREADS_WIDTH * (i+1):`THREADS_WIDTH * i];
                             end
@@ -102,7 +100,7 @@ module DatapathRouter(
                         index = index + 1;
                         if (ptr == ports - 1) begin
                             ptr = 0;
-                            ptr_mask = {ports{1'd1}};
+                            ptr_mask = ports'd1;
                         end
                         else begin
                             ptr = ptr + 1;
