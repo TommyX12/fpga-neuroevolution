@@ -78,7 +78,6 @@ module main(
     
     reg draw_background_start;
     wire draw_background_finished;
-    wire draw_background_drawing;
     
     wire clock;
     assign clock = CLOCK_50;
@@ -87,7 +86,6 @@ module main(
        .start(draw_background_start),
        .clock(clock),
        .resetn(resetn),
-       .drawing(draw_background_drawing),
        .x(x),
        .y(y),
        .colour(colour),

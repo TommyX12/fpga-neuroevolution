@@ -1,5 +1,7 @@
 
 
+floating point arithmetic with 'real' datatype
+
 
 standardized datapath access
     start signal to datapath
