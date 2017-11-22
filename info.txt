@@ -8,6 +8,28 @@ standardized datapath access
     finished signal from datapath
     instruction to datapath
         32 bit standardized instruction for doing anything, such as memory read, write, write to screen, etc.
+        highest 4 bits: opcode: determines operation to use.
+            0: do nothing.
+            1: draw to screen.
+                bit 0-7: x
+                bit 8-14: y
+                bit 15-17: color
+                bit 18: plot
+                
+            2: read from memory
+            3: write to memory
+            4: 
+            5: 
+            6: 
+            7: 
+            8: 
+            9: 
+            10: 
+            11: 
+            12: 
+            13: 
+            14: 
+            15: 
     
     return value from datapath
         32 bit value corresponding to each possible operation in the instruction to datapath
