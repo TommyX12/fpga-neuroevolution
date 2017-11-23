@@ -43,10 +43,10 @@ module Datapath(
                 end
                 case (instruction[`INSTRUCTION_WIDTH-1:`INSTRUCTION_WIDTH-`OPCODE_WIDTH])
                     `OPCODE_WIDTH'd1: begin
-                        x = instruction[7:0];
-                        y = instruction[14:8];
-                        colour = instruction[17:15];
-                        plot = instruction[18];
+                        x = 20;
+                        y = 20;
+                        colour = 3b'110;
+                        plot = 1;
                         
                         delay = 1;
                     end
