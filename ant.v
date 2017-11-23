@@ -3,12 +3,14 @@
 `define ANT_COLOUR 3'b010;
 
 `define OP_WIDTH 5
-`define OP_LOAD_START `OP_WIDTH'd0
-`define OP_LOAD_X_DELAY `OP_WIDTH'd1
-`define OP_LOAD_X_WAIT `OP_WIDTH'd2
-`define OP_LOAD_Y_DELAY `OP_WIDTH'd3
-`define OP_LOAD_Y_WAIT `OP_WIDTH'd4
-`define OP_DRAW `OP_WIDTH'd5
+`define OP_STANDBY `OP_WIDTH'd0
+`define OP_LOAD_X_START `OP_WIDTH'd1
+`define OP_LOAD_X_DELAY `OP_WIDTH'd2
+`define OP_LOAD_X_WAIT `OP_WIDTH'd3
+`define OP_LOAD_Y_START `OP_WIDTH'd1
+`define OP_LOAD_Y_DELAY `OP_WIDTH'd4
+`define OP_LOAD_Y_WAIT `OP_WIDTH'd5
+`define OP_DRAW `OP_WIDTH'd6
 
 module AntDraw(
     input clock,
