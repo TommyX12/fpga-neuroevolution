@@ -59,6 +59,7 @@ module DrawBackground(
             // update positions as long as we are not finished drawing
             else begin
                 if (delay) begin
+                    delay = 0;
                     start_dp = 1;
                     waiting = 1;
                 end
