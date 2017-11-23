@@ -40,7 +40,6 @@ module DatapathRouter(
     reg [ports-1:0] ptr_mask;
     reg [`THREADS_WIDTH-1:0] ptr;
     reg [`THREADS_WIDTH-1:0] index;
-    reg [`THREADS_WIDTH-1:0] i;
     reg waiting;
     reg delay;
     reg loop;
@@ -56,7 +55,6 @@ module DatapathRouter(
             ptr_mask <= {(ports){1'd1}};
             ptr <= `THREADS_WIDTH'd0;
             index <= `THREADS_WIDTH'd0;
-            i <= `THREADS_WIDTH'd0;
             waiting <= 0;
             delay <= 0;
             loop <= 0;
@@ -72,11 +70,17 @@ module DatapathRouter(
                 start_dp = 0;
                 if (finished_dp) begin
                     // receive
-                    for (i = 0; i < ports; i = i + 1) begin
-                        if (ptr == i) begin
-                            result[`THREADS_WIDTH * (i+1):`THREADS_WIDTH * i] = result_dp;
-                        end
-                    end
+                    result = result & ~(
+                        ({(`RESULT_WIDTH*(ports - 1)){1'd0}, (`RESULT_WIDTH){1'd1}})
+                        << (`RESULT_WIDTH * ptr)
+                    );
+                    result = result | (
+                        (
+                        ({(`RESULT_WIDTH*(ports - 1)){1'd0}, (`RESULT_WIDTH){1'd1}})
+                        & result_dp
+                        )
+                        << (`RESULT_WIDTH * ptr)
+                    );
                     finished = finished | ptr_mask;
                     
                     waiting = 0;
@@ -88,11 +92,7 @@ module DatapathRouter(
                 while (index < ports && loop) begin
                     if (ptr_mask & ~(finished)) begin
                         // send
-                        for (i = 0; i < ports; i = i + 1) begin
-                            if (ptr == i) begin
-                                instruction_dp = instruction[`THREADS_WIDTH * (i+1):`THREADS_WIDTH * i];
-                            end
-                        end
+                        instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr))[`INSTRUCTION_WIDTH-1:0];
                         start_dp = 1;
                         
                         delay = 1;
