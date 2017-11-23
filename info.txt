@@ -21,7 +21,7 @@ standardized datapath access
                 
             3: write to memory
                 bit 0-15: address
-                bit 16-17: value
+                bit 16-27: value
                 
             4: 
             5: 
