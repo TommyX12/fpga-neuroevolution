@@ -12,12 +12,12 @@ module Datapath(
     output reg [`Y_COORD_WIDTH-1:0] y,
     output reg [`COLOUR_WIDTH-1:0] colour,
     output reg plot,
-    output reg finished
+    output reg finished,
     
     input [`MEM_DATA_WIDTH-1:0] mem_output,
     output reg [`MEM_ADDR_WIDTH-1:0] mem_address,
     output reg [`MEM_DATA_WIDTH-1:0] mem_data,
-    output reg mem_write,
+    output reg mem_write
     );
     
     reg [1:0] delay;

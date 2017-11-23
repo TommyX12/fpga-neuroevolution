@@ -123,12 +123,12 @@ module main(
         .y(y),
         .colour(colour),
         .plot(writeEn),
-        .finished(finished_dp)
+        .finished(finished_dp),
         
         .mem_output(mem_output),
         .mem_address(mem_address),
         .mem_data(mem_data),
-        .mem_write(mem_write),
+        .mem_write(mem_write)
     );
     
     reg [`MAIN_OP_WIDTH-1:0] next_state;
