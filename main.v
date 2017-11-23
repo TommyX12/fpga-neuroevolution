@@ -7,7 +7,10 @@
 `define MAIN_OP_WIDTH 5
 `define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd0
 `define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd1
-`define MAIN_OP_DRAW_BACKGROUND_WAIT `MAIN_OP_WIDTH'd2
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd2
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd3
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd4
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd5
 
 module main(
         CLOCK_50,						//	On Board 50 MHz
@@ -79,6 +82,9 @@ module main(
     reg draw_background_start;
     wire draw_background_finished;
     
+    reg ant_draw_start;
+    wire ant_draw_finished;
+    
     wire clock;
     assign clock = CLOCK_50;
     
@@ -91,18 +97,6 @@ module main(
     wire [`MEM_ADDR_WIDTH-1:0] mem_address;
     wire [`MEM_DATA_WIDTH-1:0] mem_data;
     wire mem_write;
-    
-    DrawBackground draw_background(
-       .start(draw_background_start),
-       .clock(clock),
-       .resetn(resetn),
-       .finished(draw_background_finished),
-
-       .finished_dp(finished),
-       .result_dp(result_dp),
-       .start_dp(start_dp),
-       .instruction_dp(instruction_dp)
-    );
     
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
@@ -128,6 +122,18 @@ module main(
         defparam
             datapath_router.ports = 2;
         
+    DrawBackground draw_background(
+        .start(draw_background_start),
+        .clock(clock),
+        .resetn(resetn),
+        .finished(draw_background_finished),
+
+        .finished_dp(finished[0]),
+        .result_dp(result_dp[`RESULT_WIDTH-1:0]),
+        .start_dp(start_dp[0]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+    );
+    
     AntDraw ant_draw(
         .clock(clock),
         .resetn(resetn),
@@ -137,10 +143,10 @@ module main(
         .x_address(x_address),
         .y_address(y_address),
         
-        .finished_dp(finished_dp),
-        .result_dp(result_dp),
-        .start_dp(start_dp),
-        .instruction_dp(instruction_dp)
+        .finished_dp(finished[1]),
+        .result_dp(result_dp[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
+        .start_dp(start_dp[1]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
         );
     
     ram12x16 ram(
