@@ -17,7 +17,12 @@ standardized datapath access
                 bit 18: plot
                 
             2: read from memory
+                bit 0-15: address
+                
             3: write to memory
+                bit 0-15: address
+                bit 16-17: value
+                
             4: 
             5: 
             6: 
