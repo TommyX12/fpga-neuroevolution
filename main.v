@@ -4,13 +4,13 @@
 
 `include "constants.h"
 
-`define MAIN_OP_WIDTH 5
-`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd0
-`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd1
-`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd2
-`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd3
-`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd4
-`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd5
+`define OP_WIDTH 5
+`define OP_DRAW_BACKGROUND_START `OP_WIDTH'd0
+`define OP_DRAW_BACKGROUND_DELAY `OP_WIDTH'd1
+`define OP_DRAW_BACKGROUND_WAIT  `OP_WIDTH'd2
+`define OP_ANT_DRAW_START        `OP_WIDTH'd3
+`define OP_ANT_DRAW_DELAY        `OP_WIDTH'd4
+`define OP_ANT_DRAW_WAIT         `OP_WIDTH'd5
 
 module main(
         CLOCK_50,						//	On Board 50 MHz
@@ -98,6 +98,8 @@ module main(
     wire [`MEM_DATA_WIDTH-1:0] mem_data;
     wire mem_write;
     
+    localparam ports = 2; // number of subroutines
+    
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
     wire [`RESULT_WIDTH*ports-1:0] result;
@@ -140,8 +142,8 @@ module main(
         .start(start),
         .finished(finished),
         
-        .x_address(x_address),
-        .y_address(y_address),
+        .x_address(16'd5),
+        .y_address(16'd10),
         
         .finished_dp(finished[1]),
         .result_dp(result_dp[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
@@ -176,26 +178,26 @@ module main(
         .mem_write(mem_write)
     );
     
-    reg [`MAIN_OP_WIDTH-1:0] next_state;
-    reg [`MAIN_OP_WIDTH-1:0] cur_state;
+    reg [`OP_WIDTH-1:0] next_state;
+    reg [`OP_WIDTH-1:0] cur_state;
     
     always @(*) begin
 		  case (cur_state)
-				`MAIN_OP_DRAW_BACKGROUND_START: begin
-					 next_state <= `MAIN_OP_DRAW_BACKGROUND_DELAY;
+				`OP_DRAW_BACKGROUND_START: begin
+					 next_state <= `OP_DRAW_BACKGROUND_DELAY;
 				end
-				`MAIN_OP_DRAW_BACKGROUND_DELAY: begin
-					 next_state <= `MAIN_OP_DRAW_BACKGROUND_WAIT;
+				`OP_DRAW_BACKGROUND_DELAY: begin
+					 next_state <= `OP_DRAW_BACKGROUND_WAIT;
 				end
-				`MAIN_OP_DRAW_BACKGROUND_WAIT: begin
-					 next_state <= draw_background_finished ? `MAIN_OP_DRAW_BACKGROUND_START : next_state;
+				`OP_DRAW_BACKGROUND_WAIT: begin
+					 next_state <= draw_background_finished ? `OP_DRAW_BACKGROUND_START : next_state;
 				end
 		  endcase
     end
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+            cur_state <= `OP_DRAW_BACKGROUND_START;
         end
         cur_state <= next_state;
     end
@@ -206,13 +208,13 @@ module main(
         end
         else begin
             case (cur_state)
-                `MAIN_OP_DRAW_BACKGROUND_START: begin
+                `OP_DRAW_BACKGROUND_START: begin
                     draw_background_start <= 1;
                 end
-                `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+                `OP_DRAW_BACKGROUND_DELAY: begin
                     draw_background_start <= 1;
                 end
-                `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+                `OP_DRAW_BACKGROUND_WAIT: begin
                     draw_background_start <= 0;
                 end
             endcase

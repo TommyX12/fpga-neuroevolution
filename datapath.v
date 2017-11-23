@@ -21,6 +21,7 @@ module Datapath(
     );
     
     reg [1:0] delay;
+    reg [`INSTRUCTION_WIDTH-1:0] instruction_buffer,
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -37,25 +38,29 @@ module Datapath(
             mem_write <= 0;
             
             delay <= 2'b0;
+            instruction_buffer <= `INSTRUCTION_WIDTH'd0;
         end
         else begin
             if (finished) begin
                 if (start) begin
                     finished = 0;
+                    instruction_buffer = instruction;
                 end
             end
             else begin
-                case (instruction[`INSTRUCTION_WIDTH-1:`INSTRUCTION_WIDTH-`OPCODE_WIDTH])
+                case (instruction_buffer[`INSTRUCTION_WIDTH-1:`INSTRUCTION_WIDTH-`OPCODE_WIDTH])
                     `OPCODE_WIDTH'd1: begin
                         if (delay) begin
                             delay = delay - 1;
-                            finished = 1;
+                            if (!delay) begin
+                                finished = 1;
+                            end
                         end
                         else begin
-                            x = instruction[7:0];
-                            y = instruction[14:8];
-                            colour = instruction[17:15];
-                            plot = instruction[18];
+                            x = instruction_buffer[7:0];
+                            y = instruction_buffer[14:8];
+                            colour = instruction_buffer[17:15];
+                            plot = instruction_buffer[18];
                             
                             delay = 1;
                         end
@@ -65,11 +70,13 @@ module Datapath(
                             result = mem_output;
                             
                             delay = delay - 1;
-                            finished = 1;
+                            if (!delay) begin
+                                finished = 1;
+                            end
                         end
                         else begin
                             mem_write = 0;
-                            mem_address = instruction[15:0];
+                            mem_address = instruction_buffer[15:0];
                             
                             delay = 2;
                         end
@@ -77,18 +84,20 @@ module Datapath(
                     `OPCODE_WIDTH'd3: begin
                         if (delay) begin
                             delay = delay - 1;
-                            finished = 1;
+                            if (!delay) begin
+                                finished = 1;
+                            end
                         end
                         else begin
                             mem_write = 1;
-                            mem_address = instruction[15:0];
-                            mem_data = instruction[27:16];
+                            mem_address = instruction_buffer[15:0];
+                            mem_data = instruction_buffer[27:16];
                             
                             delay = 2;
                         end
                     end
                     default: begin
-                        
+                        finished = 1;
                     end
                 endcase
             end

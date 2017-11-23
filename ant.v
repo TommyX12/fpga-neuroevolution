@@ -2,7 +2,7 @@
 
 `define ANT_COLOUR 3'b010;
 
-`define OP_WIDTH 5
+`define OP_WIDTH 5 // TODO this must be large enough
 `define OP_STANDBY      `OP_WIDTH'd0
 `define OP_LOAD_X_START `OP_WIDTH'd1
 `define OP_LOAD_X_DELAY `OP_WIDTH'd2
@@ -29,110 +29,103 @@ module AntDraw(
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp
     );
     
-    reg [`OP_WIDTH-1:0] next_state;
     reg [`OP_WIDTH-1:0] cur_state;
     
-    reg draw_finished;
-    
-    always @(*) begin
-        case (cur_state)
-            `OP_STANDBY: begin
-                next_state <= start ? `OP_LOAD_START : `OP_STANDBY;
-            end
-            `OP_LOAD_X_START: begin
-                next_state <= `OP_LOAD_X_DELAY;
-            end
-            `OP_LOAD_X_DELAY: begin
-                next_state <= `OP_LOAD_X_WAIT;
-            end
-            `OP_LOAD_X_WAIT: begin
-                next_state <= finished_dp : `OP_LOAD_Y_START : `OP_LOAD_X_WAIT;
-            end
-            `OP_LOAD_Y_START: begin
-                next_state <= `OP_LOAD_Y_DELAY;
-            end
-            `OP_LOAD_Y_DELAY: begin
-                next_state <= `OP_LOAD_Y_WAIT;
-            end
-            `OP_LOAD_Y_WAIT: begin
-                next_state <= finished_dp : `OP_DRAW_START : `OP_LOAD_Y_WAIT;
-            end
-            `OP_DRAW_START: begin
-                next_state <= `OP_DRAW_DELAY;
-            end
-            `OP_DRAW_DELAY: begin
-                next_state <= `OP_DRAW_WAIT;
-            end
-            `OP_DRAW_WAIT: begin
-                if (finished_dp) begin
-                    next_state <= draw_finished : `OP_STANDBY : `OP_DRAW_START;
-                end
-                else begin
-                    next_state <= next_state;
-                end
-            end
-        endcase
-    end
+    // TODO declare any register
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `OP_LOAD_START;
-        end
-        cur_state <= next_state;
-    end
-    
-    always @(posedge clock) begin
-        if (!resetn) begin
-            finished <= 0;
+            cur_state <= `OP_STANDBY;
+            finished <= 1;
+            
             start_dp <= 0;
             instruction_dp <= 0;
             
-            draw_finished <= 0;
+            // TODO reset any register
         end
         else begin
+            // TODO make sure everything use blocking assignment
             case (cur_state)
                 
                 `OP_STANDBY: begin
                     finished = 1;
+                    
+                    if (start) begin
+                        // TODO register initialization on start
+                        
+                        cur_state = cur_state + 1;
+                        finished = 0;
+                    end
                 end
                 `OP_LOAD_X_START: begin
                     start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
                     instruction_dp = {4'd2, 12'd0, x_address};
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_LOAD_X_DELAY: begin
                     start_dp = 1;
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_LOAD_X_WAIT: begin
                     start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        x = result_dp;
+                        
+                        cur_state = cur_state + 1;
+                    end
                 end
                 `OP_LOAD_Y_START: begin
-                    x = result_dp;
-                    
                     start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
                     instruction_dp = {4'd2, 12'd0, y_address};
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_LOAD_Y_DELAY: begin
                     start_dp = 1;
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_LOAD_Y_WAIT: begin
                     start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        y = result_dp;
+                        
+                        cur_state = cur_state + 1;
+                    end
                 end
                 `OP_DRAW_START: begin
-                    y = result_dp;
-                    
                     start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
                     instruction_dp = {4'd1, 9'd0, 1'b1, 3'b011, y, x};
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_DRAW_DELAY: begin
                     start_dp = 1;
+                    
+                    cur_state = cur_state + 1;
                 end
                 `OP_DRAW_WAIT: begin
                     start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = `OP_STANDBY;
+                    end
                 end
             endcase
-            if (start) begin
-                finished = 0;
-            end
         end
     end
 
