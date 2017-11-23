@@ -23,7 +23,7 @@ module fsm(
     always @(*) begin
         case (cur_state)
             `OP_STANDBY: begin
-                next_state <= start ? `OP_LOAD_DELAY : `OP_STANDBY;
+                next_state <= start ? `OP_LOAD_START : `OP_STANDBY;
             end
             `OP_LOAD_START: begin
                 next_state <= `OP_LOAD_DELAY;
@@ -51,9 +51,7 @@ module fsm(
             // reset stuff
         end
         else begin
-            if (start) begin
-                finished = 0;
-            end
+            // make sure everything use blocking assignment
             case (cur_state)
                 `OP_STANDBY: begin
                     finished = 1;
@@ -65,11 +63,18 @@ module fsm(
                 end
                 `OP_LOAD_DELAY: begin
                     // do something
+                    // note that outbound start signals has to
+                    // maintain 1 in the delay state.
                 end
                 `OP_LOAD_WAIT: begin
                     // do something
+                    // note that outbound start signals has to
+                    // be 0 in the wait state.
                 end
             endcase
+            if (start) begin
+                finished = 0;
+            end
         end
     end
 

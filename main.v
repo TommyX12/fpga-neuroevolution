@@ -98,11 +98,50 @@ module main(
        .resetn(resetn),
        .finished(draw_background_finished),
 
-       .finished_dp(finished_dp),
+       .finished_dp(finished),
        .result_dp(result_dp),
        .start_dp(start_dp),
        .instruction_dp(instruction_dp)
     );
+    
+    wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
+    wire [ports-1:0] start;
+    wire [`RESULT_WIDTH*ports-1:0] result;
+    wire [ports-1:0] finished;
+    
+    DatapathRouter datapath_router(
+        
+        .clock(clock),
+        .resetn(resetn),
+        
+        .instruction(instruction),
+        .start(start),
+        .result(result),
+        .finished(finished),
+        
+        .instruction_dp(instruction_dp),
+        .start_dp(start_dp),
+        .result_dp(result_dp),
+        .finished_dp(finished_dp)
+        
+        );
+        defparam
+            datapath_router.ports = 2;
+        
+    AntDraw ant_draw(
+        .clock(clock),
+        .resetn(resetn),
+        .start(start),
+        .finished(finished),
+        
+        .x_address(x_address),
+        .y_address(y_address),
+        
+        .finished_dp(finished_dp),
+        .result_dp(result_dp),
+        .start_dp(start_dp),
+        .instruction_dp(instruction_dp)
+        );
     
     ram12x16 ram(
         .address(mem_address),
