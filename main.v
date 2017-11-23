@@ -82,16 +82,36 @@ module main(
     wire clock;
     assign clock = CLOCK_50;
     
+    wire finished_dp;
+    wire [`RESULT_WIDTH-1:0] result_dp;
+    wire start_dp;
+    wire [`INSTRUCTION_WIDTH-1:0] instruction_d;
+    
     DrawBackground draw_background(
        .start(draw_background_start),
        .clock(clock),
        .resetn(resetn),
-       .x(x),
-       .y(y),
-       .colour(colour),
-       .plot(writeEn),
-       .finished(draw_background_finished)
+       .finished(draw_background_finished),
+
+       .finished_dp(finished_dp),
+       .result_dp(result_dp),
+       .start_dp(start_dp),
+       .instruction_dp(instruction_dp)
     );
+    
+    Datapath datapath(
+        .start(start_dp),
+        .clock(clock),
+        .resetn(resetn),
+        .instruction(instruction_dp),
+        .result(result_dp),
+        
+        .x(x),
+        .y(y),
+        .colour(colour),
+        .plot(writeEn),
+        .finished(finished_dp)
+    )
     
     reg [`MAIN_OP_WIDTH-1:0] next_state;
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
