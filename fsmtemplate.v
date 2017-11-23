@@ -4,9 +4,9 @@
 `include "constants.h"
 
 `define OP_WIDTH 5
-`define OP_LOAD_START `MAIN_OP_WIDTH'd0
-`define OP_LOAD_DELAY `MAIN_OP_WIDTH'd1
-`define OP_LOAD_WAIT `MAIN_OP_WIDTH'd2
+`define OP_LOAD_START `OP_WIDTH'd0
+`define OP_LOAD_DELAY `OP_WIDTH'd1
+`define OP_LOAD_WAIT `OP_WIDTH'd2
 
 module fsm(
     input start,
