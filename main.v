@@ -87,6 +87,11 @@ module main(
     wire start_dp;
     wire [`INSTRUCTION_WIDTH-1:0] instruction_dp;
     
+    wire [`MEM_DATA_WIDTH-1:0] mem_output;
+    wire [`MEM_ADDR_WIDTH-1:0] mem_address;
+    wire [`MEM_DATA_WIDTH-1:0] mem_data;
+    wire mem_write;
+    
     DrawBackground draw_background(
        .start(draw_background_start),
        .clock(clock),
@@ -97,6 +102,14 @@ module main(
        .result_dp(result_dp),
        .start_dp(start_dp),
        .instruction_dp(instruction_dp)
+    );
+    
+    ram12x16 ram(
+        .address(mem_address),
+        .clock(clock),
+        .data(mem_data),
+        .wren(mem_write),
+        .q(mem_output)
     );
     
     Datapath datapath(
@@ -111,6 +124,11 @@ module main(
         .colour(colour),
         .plot(writeEn),
         .finished(finished_dp)
+        
+        .mem_output(mem_output),
+        .mem_address(mem_address),
+        .mem_data(mem_data),
+        .mem_write(mem_write),
     );
     
     reg [`MAIN_OP_WIDTH-1:0] next_state;
