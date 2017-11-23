@@ -111,7 +111,7 @@ module main(
         .colour(colour),
         .plot(writeEn),
         .finished(finished_dp)
-    )
+    );
     
     reg [`MAIN_OP_WIDTH-1:0] next_state;
     reg [`MAIN_OP_WIDTH-1:0] cur_state;

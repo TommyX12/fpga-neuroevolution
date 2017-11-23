@@ -28,6 +28,7 @@ module Datapath(
             finished <= 1;
             
             delay <= 0;
+            waiting <= 0;
         end
         else begin
             if (finished) begin

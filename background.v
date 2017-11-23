@@ -46,7 +46,7 @@ module DrawBackground(
                     plot <= 1;
                     finished <= 0;
                     start_dp <= 1;
-                    instuction_dp <= {4'd1, 9'd0, plot, colour, y, x};
+                    instruction_dp <= {4'd1, 9'd0, plot, colour, y, x};
                     delay <= 1;
                     waiting = 0;
                 end
@@ -81,7 +81,7 @@ module DrawBackground(
                         end
                         if (!finished) begin
                             start_dp = 1;
-                            instuction_dp = {4'd1, 9'd0, plot, colour, y, x};
+                            instruction_dp = {4'd1, 9'd0, plot, colour, y, x};
                             delay = 1;
                             waiting = 0;
                         end
