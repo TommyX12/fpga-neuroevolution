@@ -85,7 +85,7 @@ module main(
     wire finished_dp;
     wire [`RESULT_WIDTH-1:0] result_dp;
     wire start_dp;
-    wire [`INSTRUCTION_WIDTH-1:0] instruction_d;
+    wire [`INSTRUCTION_WIDTH-1:0] instruction_dp;
     
     DrawBackground draw_background(
        .start(draw_background_start),
