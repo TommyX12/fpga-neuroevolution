@@ -190,7 +190,8 @@ module main(
         .clock(clock),
         .resetn(resetn),
         
-        .delay(`DELAY_WIDTH'd833333),
+        // .delay(`DELAY_WIDTH'd833333),
+        .delay(`DELAY_WIDTH'd50000000),
         
         .finished(fps_limiter_finished)
     );
@@ -239,67 +240,67 @@ module main(
                 `MAIN_OP_FPS_LIMITER_START: begin
                     fps_limiter_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_FPS_LIMITER_DELAY: begin
                     fps_limiter_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_FPS_LIMITER_DELAY2: begin
                     fps_limiter_start = 0;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_DRAW_BACKGROUND_START: begin
                     draw_background_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
                     draw_background_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
                     draw_background_start = 0;
                     
                     if (draw_background_finished) begin
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
                 `MAIN_OP_ANT_DRAW_START: begin
                     ant_draw_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_ANT_DRAW_DELAY: begin
                     ant_draw_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_ANT_DRAW_WAIT: begin
                     ant_draw_start = 0;
                     
                     if (ant_draw_finished) begin
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
                 `MAIN_OP_ANT_UPDATE_START: begin
                     ant_update_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_ANT_UPDATE_DELAY: begin
                     ant_update_start = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 `MAIN_OP_ANT_UPDATE_WAIT: begin
                     ant_update_start = 0;
                     
                     if (ant_update_finished) begin
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
                 `MAIN_OP_FPS_LIMITER_WAIT: begin

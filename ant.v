@@ -62,7 +62,7 @@ module AntDraw(
                     if (start) begin
                         // TODO register initialization on start
                         
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                         finished = 0;
                     end
                 end
@@ -72,12 +72,12 @@ module AntDraw(
                     // TODO process and replace with your instruction
                     instruction_dp = {4'd2, 12'd0, x_address};
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_LOAD_X_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_LOAD_X_WAIT: begin
                     start_dp = 0;
@@ -86,7 +86,7 @@ module AntDraw(
                         // TODO do something with result_dp
                         x = 10;//result_dp;
                         
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
                 end
                 `ANTD_OP_LOAD_Y_START: begin
@@ -95,12 +95,12 @@ module AntDraw(
                     // TODO process and replace with your instruction
                     instruction_dp = {4'd2, 12'd0, y_address};
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_LOAD_Y_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_LOAD_Y_WAIT: begin
                     start_dp = 0;
@@ -109,7 +109,7 @@ module AntDraw(
                         // TODO do something with result_dp
                         y = 10;//result_dp;
                         
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
                 end
                 `ANTD_OP_DRAW_START: begin
@@ -118,12 +118,12 @@ module AntDraw(
                     // TODO process and replace with your instruction
                     instruction_dp = {4'd1, 9'd0, 1'b1, 3'b100, y, x};
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_DRAW_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
                 `ANTD_OP_DRAW_WAIT: begin
                     start_dp = 0;
@@ -200,7 +200,7 @@ module AntUpdate(
                     if (start) begin
                         // TODO register initialization on start
                         
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                         finished = 0;
                     end
                 end
@@ -221,7 +221,7 @@ module AntUpdate(
                         dy = -dy;
                     end
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_SET_X_START: begin
                     start_dp = 1;
@@ -229,12 +229,12 @@ module AntUpdate(
                     // TODO process and replace with your instruction
                     instruction_dp = {4'd3, 4'b0, x, x_address};
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_SET_X_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_SET_X_WAIT: begin
                     start_dp = 0;
@@ -242,7 +242,7 @@ module AntUpdate(
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         
-                        cur_state = cur_state + 1;
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                     end
                 end
                 `ANTU_OP_SET_Y_START: begin
@@ -251,12 +251,12 @@ module AntUpdate(
                     // TODO process and replace with your instruction
                     instruction_dp = {4'd3, 5'b0, y, y_address};
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_SET_Y_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_SET_Y_WAIT: begin
                     start_dp = 0;

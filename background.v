@@ -54,7 +54,7 @@ module DrawBackground(
                         x <= `X_COORD_WIDTH'd0;
                         y <= `Y_COORD_WIDTH'd0;
                         
-                        cur_state = cur_state + 1; // this jumps to the next instruction in sequence
+                        cur_state = cur_state + `BG_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                         finished = 0;
                     end
                 end
@@ -68,12 +68,12 @@ module DrawBackground(
                     instruction_dp = {4'd1, 9'd0, plot, colour, y, x};
                     // it is best to maintain the same instruction until result comes back.
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `BG_OP_WIDTH'd1;
                 end
                 `BG_OP_DRAW_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `BG_OP_WIDTH'd1;
                 end
                 `BG_OP_DRAW_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.

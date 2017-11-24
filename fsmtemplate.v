@@ -4,6 +4,7 @@
 `include "constants.h"
 
 // TODO change prefix to be for this file specifically
+// TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define PREFIX_OP_WIDTH 5 // TODO this must be large enough
 `define PREFIX_OP_STANDBY          `PREFIX_OP_WIDTH'd0
 `define PREFIX_OP_SUBROUTINE_START `PREFIX_OP_WIDTH'd1
@@ -48,7 +49,7 @@ module fsm(
                     if (start) begin
                         // TODO register initialization on start
                         
-                        cur_state = cur_state + 1; // this jumps to the next instruction in sequence
+                        cur_state = cur_state + `PREFIX_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                         finished = 0;
                     end
                 end
@@ -60,12 +61,12 @@ module fsm(
                     instruction_dp = {4'd0, 28'd0};
                     // it is best to maintain the same instruction until result comes back.
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `PREFIX_OP_WIDTH'd1;
                 end
                 `PREFIX_OP_SUBROUTINE_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
-                    cur_state = cur_state + 1;
+                    cur_state = cur_state + `PREFIX_OP_WIDTH'd1;
                 end
                 `PREFIX_OP_SUBROUTINE_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.

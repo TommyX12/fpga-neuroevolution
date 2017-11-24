@@ -3,7 +3,7 @@
 `define X_COORD_WIDTH 8
 `define Y_COORD_WIDTH 7
 `define COLOUR_WIDTH   3
-`define DELAY_WIDTH   20
+`define DELAY_WIDTH   32
 
 `define INSTRUCTION_WIDTH   32
 `define RESULT_WIDTH   32
