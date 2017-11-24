@@ -198,7 +198,7 @@ module main(
         .clock(clock),
         .resetn(resetn),
         
-        .delay(`DELAY_WIDTH'd833333),
+        .delay(`DELAY_WIDTH'd233333),
         // .delay(`DELAY_WIDTH'd50000000),
         
         .finished(fps_limiter_finished)
