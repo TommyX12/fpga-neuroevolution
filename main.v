@@ -4,13 +4,14 @@
 
 `include "constants.h"
 
-`define OP_WIDTH 5
-`define OP_DRAW_BACKGROUND_START `OP_WIDTH'd0
-`define OP_DRAW_BACKGROUND_DELAY `OP_WIDTH'd1
-`define OP_DRAW_BACKGROUND_WAIT  `OP_WIDTH'd2
-`define OP_ANT_DRAW_START        `OP_WIDTH'd3
-`define OP_ANT_DRAW_DELAY        `OP_WIDTH'd4
-`define OP_ANT_DRAW_WAIT         `OP_WIDTH'd5
+// TODO change prefix to be for this file specifically
+`define MAIN_OP_WIDTH 5 // TODO this must be large enough
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd0
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd1
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd2
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd3
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd4
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd5
 
 
 module main(
@@ -80,14 +81,18 @@ module main(
     // Put your code here. Your code should produce signals x,y,colour and writeEn/plot
     // for the VGA controller, in addition to any other functionality your design may require.
     
+    wire clock;
+    assign clock = CLOCK_50;
+    
+    reg [`MAIN_OP_WIDTH-1:0] next_state;
+    reg [`MAIN_OP_WIDTH-1:0] cur_state;
+    
+    // TODO declare any register
     reg draw_background_start;
     wire draw_background_finished;
     
     reg ant_draw_start;
     wire ant_draw_finished;
-    
-    wire clock;
-    assign clock = CLOCK_50;
     
     wire finished_dp;
     wire [`RESULT_WIDTH-1:0] result_dp;
@@ -179,44 +184,51 @@ module main(
         .mem_write(mem_write)
     );
     
-    reg [`OP_WIDTH-1:0] next_state;
-    reg [`OP_WIDTH-1:0] cur_state;
-    
-    always @(*) begin
-		  case (cur_state)
-				`OP_DRAW_BACKGROUND_START: begin
-					 next_state <= `OP_DRAW_BACKGROUND_DELAY;
-				end
-				`OP_DRAW_BACKGROUND_DELAY: begin
-					 next_state <= `OP_DRAW_BACKGROUND_WAIT;
-				end
-				`OP_DRAW_BACKGROUND_WAIT: begin
-					 next_state <= draw_background_finished ? `OP_DRAW_BACKGROUND_START : next_state;
-				end
-		  endcase
-    end
-    
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `OP_DRAW_BACKGROUND_START;
-        end
-        cur_state <= next_state;
-    end
-    
-    always @(posedge clock) begin
-        if (!resetn) begin
-            draw_background_start = 0;
+            cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+            
+            // TODO reset any register
+            
+            draw_background_start <= 0;
+            ant_draw_start <= 0;
         end
         else begin
+            // TODO make sure everything use blocking assignment
             case (cur_state)
-                `OP_DRAW_BACKGROUND_START: begin
-                    draw_background_start <= 1;
+                `MAIN_OP_DRAW_BACKGROUND_START: begin
+                    draw_background_start = 1;
+                    
+                    cur_state = cur_state + 1;
                 end
-                `OP_DRAW_BACKGROUND_DELAY: begin
-                    draw_background_start <= 1;
+                `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+                    draw_background_start = 1;
+                    
+                    cur_state = cur_state + 1;
                 end
-                `OP_DRAW_BACKGROUND_WAIT: begin
-                    draw_background_start <= 0;
+                `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+                    draw_background_start = 0;
+                    
+                    if (draw_background_finished) begin
+                        cur_state = cur_state + 1;
+                    end
+                end
+                `MAIN_OP_ANT_DRAW_START: begin
+                    ant_draw_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_ANT_DRAW_DELAY: begin
+                    ant_draw_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_ANT_DRAW_WAIT: begin
+                    ant_draw_start = 0;
+                    
+                    if (draw_background_finished) begin
+                        cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+                    end
                 end
             endcase
         end

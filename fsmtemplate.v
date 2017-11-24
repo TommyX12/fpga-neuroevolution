@@ -3,11 +3,12 @@
 
 `include "constants.h"
 
-`define OP_WIDTH 5 // TODO this must be large enough
-`define OP_STANDBY          `OP_WIDTH'd0
-`define OP_SUBROUTINE_START `OP_WIDTH'd1
-`define OP_SUBROUTINE_DELAY `OP_WIDTH'd2
-`define OP_SUBROUTINE_WAIT  `OP_WIDTH'd3
+// TODO change prefix to be for this file specifically
+`define PREFIX_OP_WIDTH 5 // TODO this must be large enough
+`define PREFIX_OP_STANDBY          `PREFIX_OP_WIDTH'd0
+`define PREFIX_OP_SUBROUTINE_START `PREFIX_OP_WIDTH'd1
+`define PREFIX_OP_SUBROUTINE_DELAY `PREFIX_OP_WIDTH'd2
+`define PREFIX_OP_SUBROUTINE_WAIT  `PREFIX_OP_WIDTH'd3
 
 module fsm(
     input start,
@@ -22,13 +23,13 @@ module fsm(
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp
     );
 
-    reg [`OP_WIDTH-1:0] cur_state;
+    reg [`PREFIX_OP_WIDTH-1:0] cur_state;
     
     // TODO declare any register
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `OP_STANDBY;
+            cur_state <= `PREFIX_OP_STANDBY;
             finished <= 1;
             
             start_dp <= 0;
@@ -39,7 +40,7 @@ module fsm(
         else begin
             // TODO make sure everything use blocking assignment
             case (cur_state)
-                `OP_STANDBY: begin
+                `PREFIX_OP_STANDBY: begin
                     finished = 1;
                     
                     // usually do nothing
@@ -51,7 +52,7 @@ module fsm(
                         finished = 0;
                     end
                 end
-                `OP_SUBROUTINE_START: begin
+                `PREFIX_OP_SUBROUTINE_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -61,18 +62,18 @@ module fsm(
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_SUBROUTINE_DELAY: begin
+                `PREFIX_OP_SUBROUTINE_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_SUBROUTINE_WAIT: begin
+                `PREFIX_OP_SUBROUTINE_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         
-                        cur_state = `OP_STANDBY;
+                        cur_state = `PREFIX_OP_STANDBY;
                     end
                 end
             endcase

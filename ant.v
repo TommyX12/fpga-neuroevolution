@@ -2,17 +2,17 @@
 
 `define ANT_COLOUR 3'b010;
 
-`define OP_WIDTH 5 // TODO this must be large enough
-`define OP_STANDBY      `OP_WIDTH'd0
-`define OP_LOAD_X_START `OP_WIDTH'd1
-`define OP_LOAD_X_DELAY `OP_WIDTH'd2
-`define OP_LOAD_X_WAIT  `OP_WIDTH'd3
-`define OP_LOAD_Y_START `OP_WIDTH'd4
-`define OP_LOAD_Y_DELAY `OP_WIDTH'd5
-`define OP_LOAD_Y_WAIT  `OP_WIDTH'd6
-`define OP_DRAW_START   `OP_WIDTH'd7
-`define OP_DRAW_DELAY   `OP_WIDTH'd8
-`define OP_DRAW_WAIT    `OP_WIDTH'd9
+`define ANT_OP_WIDTH 5 // TODO this must be large enough
+`define ANT_OP_STANDBY      `ANT_OP_WIDTH'd0
+`define ANT_OP_LOAD_X_START `ANT_OP_WIDTH'd1
+`define ANT_OP_LOAD_X_DELAY `ANT_OP_WIDTH'd2
+`define ANT_OP_LOAD_X_WAIT  `ANT_OP_WIDTH'd3
+`define ANT_OP_LOAD_Y_START `ANT_OP_WIDTH'd4
+`define ANT_OP_LOAD_Y_DELAY `ANT_OP_WIDTH'd5
+`define ANT_OP_LOAD_Y_WAIT  `ANT_OP_WIDTH'd6
+`define ANT_OP_DRAW_START   `ANT_OP_WIDTH'd7
+`define ANT_OP_DRAW_DELAY   `ANT_OP_WIDTH'd8
+`define ANT_OP_DRAW_WAIT    `ANT_OP_WIDTH'd9
 
 module AntDraw(
     input clock,
@@ -29,7 +29,7 @@ module AntDraw(
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp
     );
     
-    reg [`OP_WIDTH-1:0] cur_state;
+    reg [`ANT_OP_WIDTH-1:0] cur_state;
     
     // TODO declare any register
     reg [`X_COORD_WIDTH-1:0] x;
@@ -39,7 +39,7 @@ module AntDraw(
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `OP_STANDBY;
+            cur_state <= `ANT_OP_STANDBY;
             finished <= 1;
             
             start_dp <= 0;
@@ -55,7 +55,7 @@ module AntDraw(
             // TODO make sure everything use blocking assignment
             case (cur_state)
                 
-                `OP_STANDBY: begin
+                `ANT_OP_STANDBY: begin
                     finished = 1;
                     
                     if (start) begin
@@ -65,7 +65,7 @@ module AntDraw(
                         finished = 0;
                     end
                 end
-                `OP_LOAD_X_START: begin
+                `ANT_OP_LOAD_X_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
@@ -73,12 +73,12 @@ module AntDraw(
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_LOAD_X_DELAY: begin
+                `ANT_OP_LOAD_X_DELAY: begin
                     start_dp = 1;
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_LOAD_X_WAIT: begin
+                `ANT_OP_LOAD_X_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
@@ -88,7 +88,7 @@ module AntDraw(
                         cur_state = cur_state + 1;
                     end
                 end
-                `OP_LOAD_Y_START: begin
+                `ANT_OP_LOAD_Y_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
@@ -96,12 +96,12 @@ module AntDraw(
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_LOAD_Y_DELAY: begin
+                `ANT_OP_LOAD_Y_DELAY: begin
                     start_dp = 1;
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_LOAD_Y_WAIT: begin
+                `ANT_OP_LOAD_Y_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
@@ -111,7 +111,7 @@ module AntDraw(
                         cur_state = cur_state + 1;
                     end
                 end
-                `OP_DRAW_START: begin
+                `ANT_OP_DRAW_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
@@ -119,18 +119,18 @@ module AntDraw(
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_DRAW_DELAY: begin
+                `ANT_OP_DRAW_DELAY: begin
                     start_dp = 1;
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_DRAW_WAIT: begin
+                `ANT_OP_DRAW_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         
-                        cur_state = `OP_STANDBY;
+                        cur_state = `ANT_OP_STANDBY;
                     end
                 end
             endcase

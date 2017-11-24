@@ -1,10 +1,11 @@
 `include "constants.h"
 
-`define OP_WIDTH 5 // TODO this must be large enough
-`define OP_STANDBY    `OP_WIDTH'd0
-`define OP_DRAW_START `OP_WIDTH'd1
-`define OP_DRAW_DELAY `OP_WIDTH'd2
-`define OP_DRAW_WAIT  `OP_WIDTH'd3
+// TODO change prefix to be for this file specifically
+`define BG_OP_WIDTH 5 // TODO this must be large enough
+`define BG_OP_STANDBY    `BG_OP_WIDTH'd0
+`define BG_OP_DRAW_START `BG_OP_WIDTH'd1
+`define BG_OP_DRAW_DELAY `BG_OP_WIDTH'd2
+`define BG_OP_DRAW_WAIT  `BG_OP_WIDTH'd3
 
 module DrawBackground(
     input start,
@@ -18,7 +19,7 @@ module DrawBackground(
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp
     );
     
-    reg [`OP_WIDTH-1:0] cur_state;
+    reg [`BG_OP_WIDTH-1:0] cur_state;
     
     // TODO declare any register
     reg [`X_COORD_WIDTH-1:0] x;
@@ -28,7 +29,7 @@ module DrawBackground(
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `OP_STANDBY;
+            cur_state <= `BG_OP_STANDBY;
             finished <= 1;
             
             start_dp <= 0;
@@ -43,7 +44,7 @@ module DrawBackground(
         else begin
             // TODO make sure everything use blocking assignment
             case (cur_state)
-                `OP_STANDBY: begin
+                `BG_OP_STANDBY: begin
                     finished = 1;
                     
                     // usually do nothing
@@ -57,7 +58,7 @@ module DrawBackground(
                         finished = 0;
                     end
                 end
-                `OP_DRAW_START: begin
+                `BG_OP_DRAW_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -69,12 +70,12 @@ module DrawBackground(
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_DRAW_DELAY: begin
+                `BG_OP_DRAW_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + 1;
                 end
-                `OP_DRAW_WAIT: begin
+                `BG_OP_DRAW_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
@@ -94,10 +95,10 @@ module DrawBackground(
                         end
                         
                         if (finished) begin
-                            cur_state = `OP_STANDBY;
+                            cur_state = `BG_OP_STANDBY;
                         end
                         else begin
-                            cur_state = `OP_DRAW_START;
+                            cur_state = `BG_OP_DRAW_START;
                         end
                     end
                 end
