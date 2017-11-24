@@ -153,11 +153,11 @@ module main(
         .clock(clock),
         .resetn(resetn),
         .finished(draw_background_finished),
-        
-        .finished_dp(finished[1]),
-        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
-        .start_dp(start[1]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
+
+        .finished_dp(finished[0]),
+        .result_dp(result[`RESULT_WIDTH-1:0]),
+        .start_dp(start[0]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
     );
     
     AntDraw ant_draw(
@@ -168,17 +168,17 @@ module main(
         
         .x_address(16'd5),
         .y_address(16'd10),
-
-        .finished_dp(finished[0]),
-        .result_dp(result[`RESULT_WIDTH-1:0]),
-        .start_dp(start[0]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+        
+        .finished_dp(finished[1]),
+        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
+        .start_dp(start[1]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
     );
     
     AntDraw ant_update(
         .clock(clock),
         .resetn(resetn),
-        .start(ant_draw_start),
+        .start(ant_update_start),
         .finished(ant_update_finished),
         
         .x_address(16'd5),

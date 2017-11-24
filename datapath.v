@@ -67,11 +67,10 @@ module Datapath(
                     end
                     `OPCODE_WIDTH'd2: begin
                         if (delay) begin
-                            // result = mem_output;
-                            result = `RESULT_WIDTH'd15;
-                            
                             delay = delay - 1;
                             if (!delay) begin
+                                result = mem_output;
+                                
                                 finished = 1;
                             end
                         end
@@ -86,6 +85,7 @@ module Datapath(
                         if (delay) begin
                             delay = delay - 1;
                             if (!delay) begin
+                                mem_write = 0;
                                 finished = 1;
                             end
                         end
