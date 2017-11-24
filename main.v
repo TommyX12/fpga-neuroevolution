@@ -6,12 +6,19 @@
 
 // TODO change prefix to be for this file specifically
 `define MAIN_OP_WIDTH 5 // TODO this must be large enough
-`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd0
-`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd1
-`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd2
-`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd3
-`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd4
-`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd5
+`define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd0
+`define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd1
+`define MAIN_OP_FPS_LIMITER_DELAY2    `MAIN_OP_WIDTH'd2
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd3
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd4
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd5
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd6
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd7
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd8
+`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd9
+`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd10
+`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd11
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd12
 
 
 module main(
@@ -94,6 +101,12 @@ module main(
     reg ant_draw_start;
     wire ant_draw_finished;
     
+    reg ant_update_start;
+    wire ant_update_finished;
+    
+    reg fps_limiter_start;
+    wire fps_limiter_finished;
+    
     wire finished_dp;
     wire [`RESULT_WIDTH-1:0] result_dp;
     wire start_dp;
@@ -104,7 +117,7 @@ module main(
     wire [`MEM_DATA_WIDTH-1:0] mem_data;
     wire mem_write;
     
-    localparam ports = 2; // number of subroutines
+    localparam ports = 3; // number of subroutines
     
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
@@ -126,9 +139,9 @@ module main(
         .result_dp(result_dp),
         .finished_dp(finished_dp)
         
-        );
+    );
         defparam
-            datapath_router.ports = 2;
+            datapath_router.ports = ports;
         
     DrawBackground draw_background(
         .start(draw_background_start),
@@ -155,7 +168,32 @@ module main(
         .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
         .start_dp(start[1]),
         .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
-        );
+    );
+    
+    AntDraw ant_update(
+        .clock(clock),
+        .resetn(resetn),
+        .start(ant_draw_start),
+        .finished(ant_draw_finished),
+        
+        .x_address(16'd5),
+        .y_address(16'd10),
+        
+        .finished_dp(finished[2]),
+        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
+        .start_dp(start[2]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
+    );
+    
+    FPSLimiter fps_limiter(
+        .start(fps_limiter_start),
+        .clock(clock),
+        .resetn(resetn),
+        
+        .delay(`DELAY_WIDTH'd833333),
+        
+        .finished(fps_limiter_finished)
+    );
     
     ram12x16 ram(
         .address(mem_address),
@@ -190,12 +228,29 @@ module main(
             
             // TODO reset any register
             
+            fps_limiter_start <= 0;
             draw_background_start <= 0;
             ant_draw_start <= 0;
+            ant_update_start <= 0;
         end
         else begin
             // TODO make sure everything use blocking assignment
             case (cur_state)
+                `MAIN_OP_FPS_LIMITER_START: begin
+                    fps_limiter_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_FPS_LIMITER_DELAY: begin
+                    fps_limiter_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_FPS_LIMITER_DELAY2: begin
+                    fps_limiter_start = 0;
+                    
+                    cur_state = cur_state + 1;
+                end
                 `MAIN_OP_DRAW_BACKGROUND_START: begin
                     draw_background_start = 1;
                     
@@ -226,8 +281,30 @@ module main(
                 `MAIN_OP_ANT_DRAW_WAIT: begin
                     ant_draw_start = 0;
                     
-                    if (draw_background_finished) begin
-                        cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+                    if (ant_draw_finished) begin
+                        cur_state = cur_state + 1;
+                    end
+                end
+                `MAIN_OP_ANT_UPDATE_START: begin
+                    ant_update_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_ANT_UPDATE_DELAY: begin
+                    ant_update_start = 1;
+                    
+                    cur_state = cur_state + 1;
+                end
+                `MAIN_OP_ANT_UPDATE_WAIT: begin
+                    ant_update_start = 0;
+                    
+                    if (ant_update_finished) begin
+                        cur_state = cur_state + 1;
+                    end
+                end
+                `MAIN_OP_FPS_LIMITER_WAIT: begin
+                    if (fps_limiter_finished) begin
+                        cur_state = `MAIN_OP_DRAW_BACKGROUND_START;
                     end
                 end
             endcase
