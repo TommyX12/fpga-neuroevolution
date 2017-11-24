@@ -140,8 +140,8 @@ module main(
     AntDraw ant_draw(
         .clock(clock),
         .resetn(resetn),
-        .start(start),
-        .finished(finished),
+        .start(ant_draw_start),
+        .finished(ant_draw_finished),
         
         .x_address(16'd5),
         .y_address(16'd10),

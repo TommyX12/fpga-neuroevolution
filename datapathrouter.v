@@ -21,7 +21,7 @@ module DatapathRouter(
     
     );
     
-    parameter ports;
+    parameter [`THREADS_WIDTH-1:0] ports;
     
     input clock;
     input resetn;
@@ -88,8 +88,8 @@ module DatapathRouter(
             end
             else begin // find new ones to check
                 loop = 1;
-                index = 0;
-                while (index < ports && loop) begin
+                index = `THREADS_WIDTH'd0;
+                while ((index < ports) & loop) begin
                     if (ptr_mask & ~(finished)) begin
                         // send
                         instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
@@ -99,8 +99,8 @@ module DatapathRouter(
                         loop = 0;
                     end
                     else begin
-                        index = index + 1;
-                        if (ptr == ports - 1) begin
+                        index = index + `THREADS_WIDTH'd1;
+                        if (ptr == ports - `THREADS_WIDTH'd1) begin
                             ptr = 0;
                             ptr_mask = {ports{1'd1}};
                         end
