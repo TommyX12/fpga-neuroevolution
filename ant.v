@@ -249,7 +249,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd3, 5'b0, y, y_address};
+                    instruction_dp = {4'd3, 12'd10, y_address};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
