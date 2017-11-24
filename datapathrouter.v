@@ -39,10 +39,8 @@ module DatapathRouter(
     
     reg [ports-1:0] ptr_mask;
     reg [`THREADS_WIDTH-1:0] ptr;
-    reg [`THREADS_WIDTH-1:0] index;
     reg waiting;
     reg delay;
-    reg loop;
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -52,12 +50,10 @@ module DatapathRouter(
             instruction_dp = `INSTRUCTION_WIDTH'd0;
             start_dp = 0;
             
-            ptr_mask <= {(ports){1'd1}};
+            ptr_mask = {{(ports - 1){1'd0}}, 1'd1};
             ptr <= `THREADS_WIDTH'd0;
-            index <= `THREADS_WIDTH'd0;
             waiting <= 0;
             delay <= 0;
-            loop <= 0;
         end
         else begin
             finished = finished & ~(start);
@@ -87,26 +83,22 @@ module DatapathRouter(
                 end
             end
             else begin // find new ones to check
-                loop = 1;
-                index = `THREADS_WIDTH'd0;
                 repeat (ports) begin
-                    if (~(start_dp) & ptr_mask & ~(finished)) begin
-                        // send
-                        instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
-                        start_dp = 1;
-                        
-                        delay = 1;
-                        loop = 0;
-                    end
-                    else begin
-                        index = index + `THREADS_WIDTH'd1;
+					if (~(start_dp)) begin
                         if (ptr == ports - `THREADS_WIDTH'd1) begin
-                            ptr = 0;
-                            ptr_mask = {ports{1'd1}};
+                            ptr = `THREADS_WIDTH'd0;
+                            ptr_mask = {{(ports - 1){1'd0}}, 1'd1};
                         end
                         else begin
-                            ptr = ptr + 1;
+                            ptr = ptr + `THREADS_WIDTH'd1;
                             ptr_mask = ptr_mask << 1;
+                        end
+                        if (ptr_mask & ~(finished)) begin
+                            // send
+                            instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
+                            start_dp = 1;
+                            
+                            delay = 1;
                         end
                     end
                 end

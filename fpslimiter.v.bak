@@ -17,7 +17,11 @@ module FPSLimiter(
     
     always @(posedge clock) begin
         if (!resetn) begin
+            cur_state <= `PREFIX_OP_STANDBY;
             finished <= 1;
+            
+            start_dp <= 0;
+            instruction_dp <= 0;
             
             // TODO reset any register
             counter <= `DELAY_WIDTH'd0;

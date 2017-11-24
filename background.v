@@ -63,7 +63,7 @@ module DrawBackground(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = `COLOUR_WIDTH'b010;
+                    colour = `COLOUR_WIDTH'b111;
                     plot = 1;
                     instruction_dp = {4'd1, 9'd0, plot, colour, y, x};
                     // it is best to maintain the same instruction until result comes back.

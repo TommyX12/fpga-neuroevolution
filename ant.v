@@ -84,7 +84,7 @@ module AntDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        x = result_dp;
+                        x = 10;//result_dp;
                         
                         cur_state = cur_state + 1;
                     end
@@ -107,7 +107,7 @@ module AntDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        y = result_dp;
+                        y = 10;//result_dp;
                         
                         cur_state = cur_state + 1;
                     end
@@ -116,7 +116,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd1, 9'd0, 1'b1, 3'b011, y, x};
+                    instruction_dp = {4'd1, 9'd0, 1'b1, 3'b100, y, x};
                     
                     cur_state = cur_state + 1;
                 end
