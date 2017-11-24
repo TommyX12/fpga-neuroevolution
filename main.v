@@ -178,7 +178,7 @@ module main(
         .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
     );
     
-    AntDraw ant_update(
+    AntUpdate ant_update(
         .clock(clock),
         .resetn(resetn),
         .start(ant_update_start),
