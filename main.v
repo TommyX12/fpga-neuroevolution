@@ -26,6 +26,7 @@ module main(
         // Your inputs and outputs here
         KEY,
         SW,
+        LEDR,
         // The ports below are for the VGA output.  Do not change.
         VGA_CLK,   						//	VGA Clock
         VGA_HS,							//	VGA H_SYNC
@@ -39,6 +40,7 @@ module main(
 
     input			CLOCK_50;				//	50 MHz
     input   [9:0]   SW;
+    output   [9:0]   LEDR;
     input   [3:0]   KEY;
 
     // Declare your inputs and outputs here
@@ -54,6 +56,8 @@ module main(
     
     wire resetn;
     assign resetn = KEY[0];
+    
+    assign LEDR = ~{(5){1'd0}};
     
     // Create the colour, x, y and writeEn wires that are inputs to the controller.
     wire [`COLOUR_WIDTH:0] colour;
@@ -305,7 +309,7 @@ module main(
                 end
                 `MAIN_OP_FPS_LIMITER_WAIT: begin
                     if (fps_limiter_finished) begin
-                        cur_state = `MAIN_OP_ANT_DRAW_START;
+                        // cur_state = `MAIN_OP_DRAW_BACKGROUND_START;
                     end
                 end
             endcase
