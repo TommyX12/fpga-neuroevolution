@@ -156,11 +156,11 @@ module main(
         .clock(clock),
         .resetn(resetn),
         .finished(draw_background_finished),
-
-        .finished_dp(finished[0]),
-        .result_dp(result[`RESULT_WIDTH-1:0]),
-        .start_dp(start[0]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+        
+        .finished_dp(finished[2]),
+        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
+        .start_dp(start[2]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
     );
     
     AntDraw ant_draw(
@@ -186,11 +186,11 @@ module main(
         
         .x_address(16'd5),
         .y_address(16'd10),
-        
-        .finished_dp(finished[2]),
-        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
-        .start_dp(start[2]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
+
+        .finished_dp(finished[0]),
+        .result_dp(result[`RESULT_WIDTH-1:0]),
+        .start_dp(start[0]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
     );
     
     FPSLimiter fps_limiter(
