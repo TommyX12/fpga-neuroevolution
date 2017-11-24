@@ -89,8 +89,8 @@ module DatapathRouter(
             else begin // find new ones to check
                 loop = 1;
                 index = `THREADS_WIDTH'd0;
-                while ((index < ports) & loop) begin
-                    if (ptr_mask & ~(finished)) begin
+                repeat (ports) begin
+                    if (~(start_dp) & ptr_mask & ~(finished)) begin
                         // send
                         instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
                         start_dp = 1;
