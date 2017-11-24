@@ -32,6 +32,10 @@ module AntDraw(
     reg [`OP_WIDTH-1:0] cur_state;
     
     // TODO declare any register
+    reg [`X_COORD_WIDTH-1:0] x;
+    reg [`Y_COORD_WIDTH-1:0] y;
+    reg [`COLOUR_WIDTH-1:0] colour; // WE'RE CANADIAN
+    reg plot;
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -42,6 +46,10 @@ module AntDraw(
             instruction_dp <= 0;
             
             // TODO reset any register
+            x <= `X_COORD_WIDTH'd0;
+            y <= `Y_COORD_WIDTH'd0;
+            colour <= `COLOUR_WIDTH'd0;
+            plot <= 0;
         end
         else begin
             // TODO make sure everything use blocking assignment

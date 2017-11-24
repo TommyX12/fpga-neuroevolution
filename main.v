@@ -12,6 +12,7 @@
 `define OP_ANT_DRAW_DELAY        `OP_WIDTH'd4
 `define OP_ANT_DRAW_WAIT         `OP_WIDTH'd5
 
+
 module main(
         CLOCK_50,						//	On Board 50 MHz
         // Your inputs and outputs here
@@ -131,8 +132,8 @@ module main(
         .finished(draw_background_finished),
 
         .finished_dp(finished[0]),
-        .result_dp(result_dp[`RESULT_WIDTH-1:0]),
-        .start_dp(start_dp[0]),
+        .result_dp(result[`RESULT_WIDTH-1:0]),
+        .start_dp(start[0]),
         .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
     );
     
@@ -146,8 +147,8 @@ module main(
         .y_address(16'd10),
         
         .finished_dp(finished[1]),
-        .result_dp(result_dp[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
-        .start_dp(start_dp[1]),
+        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
+        .start_dp(start[1]),
         .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
         );
     

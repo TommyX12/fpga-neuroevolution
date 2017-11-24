@@ -21,7 +21,7 @@ module Datapath(
     );
     
     reg [1:0] delay;
-    reg [`INSTRUCTION_WIDTH-1:0] instruction_buffer,
+    reg [`INSTRUCTION_WIDTH-1:0] instruction_buffer;
     
     always @(posedge clock) begin
         if (!resetn) begin
