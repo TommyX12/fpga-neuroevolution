@@ -227,7 +227,8 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd3, 4'b0, x, x_address};
+                    // instruction_dp = {4'd3, 4'b0, x, x_address};
+                    instruction_dp = {4'd3, 12'd20, x_address};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -249,7 +250,8 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd3, 5'b0, y, y_address};
+                    // instruction_dp = {4'd3, 5'b0, y, y_address};
+                    instruction_dp = {4'd1, 9'd0, 1'b1, 3'b010, 7'd30, 8'd30};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end

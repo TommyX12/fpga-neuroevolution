@@ -2,6 +2,9 @@
 
 
 
+// !!!! TODO many times typo are the bug, especially when things don't match up (such as copy pasting but not replacing correctly). maybe use a preprocessor or use more parameterization.
+
+
 `include "constants.h"
 
 // TODO change prefix to be for this file specifically
