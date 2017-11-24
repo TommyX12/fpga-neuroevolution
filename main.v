@@ -6,19 +6,20 @@
 
 // TODO change prefix to be for this file specifically
 `define MAIN_OP_WIDTH 5 // TODO this must be large enough
-`define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd0
-`define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd1
-`define MAIN_OP_FPS_LIMITER_DELAY2    `MAIN_OP_WIDTH'd2
-`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd3
-`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd4
-`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd5
-`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd6
-`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd7
-`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd8
-`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd9
-`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd10
-`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd11
-`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd12
+`define MAIN_OP_STANDBY               `MAIN_OP_WIDTH'd0
+`define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd1
+`define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd2
+`define MAIN_OP_FPS_LIMITER_DELAY2    `MAIN_OP_WIDTH'd3
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd4
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd5
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd6
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd7
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd8
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd9
+`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd10
+`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd11
+`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd12
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd13
 
 
 module main(
@@ -229,7 +230,7 @@ module main(
     
     always @(posedge clock) begin
         if (!resetn) begin
-            cur_state <= `MAIN_OP_DRAW_BACKGROUND_START;
+            cur_state <= `MAIN_OP_STANDBY;
             
             // TODO reset any register
             
@@ -241,6 +242,9 @@ module main(
         else begin
             // TODO make sure everything use blocking assignment
             case (cur_state)
+                `MAIN_OP_STANDBY: begin
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
                 `MAIN_OP_FPS_LIMITER_START: begin
                     fps_limiter_start = 1;
                     
@@ -309,7 +313,7 @@ module main(
                 end
                 `MAIN_OP_FPS_LIMITER_WAIT: begin
                     if (fps_limiter_finished) begin
-                        // cur_state = `MAIN_OP_DRAW_BACKGROUND_START;
+                        cur_state = `MAIN_OP_STANDBY;
                     end
                 end
             endcase
