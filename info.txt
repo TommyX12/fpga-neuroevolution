@@ -49,8 +49,66 @@ datapath multiplexer for concurrent access control.
     
     !!! this is essential so make sure this is actually working.
     
-!!! make a frame buffer that act the same as vga adapter but is just a memory. all draw now draw to frame buffer, and final step draw from frame buffer to screen.
+// !!! make a frame buffer that act the same as vga adapter but is just a memory. all draw now draw to frame buffer, and final step draw from frame buffer to screen.
 
 !!! use numerous memory locator module to find where memory are suppose to be stored.
     !!! let Ian do this
+    !!! maybe setup in main and all connect outward to singleton version of those separate locator module.
+    module AntPoisonEatenAddr(
+        input id,
+        output [15:0] address
+    )
 
+!!! random number generator
+    ? available as datapath operation, or simply connection.
+
+structs:
+    ant:
+        x, y, food eaten, poison eaten, current fitness
+    
+    food:
+        x, y
+        
+    poison:
+        x, y
+    
+    neural network weights are stored in ant update module locally.
+
+main loop:
+    // logic
+    GA update
+        if times up for a generation, compute next generation.
+        also account for the first generation.
+        
+        !!! note:
+        this module connects to a register of all weights of every neural network (in main module).
+        it also stores a copy buffer
+        
+    ant update (parallel for each ant)
+        test if food collide.
+            if yes, change food to another random location, update current food eaten count. store to memory.
+            in the same step, retrieve closest food location.
+                
+        test if poison collide.
+            if yes, change poison to another random location, update current poison eaten count. store to memory.
+            in the same step, retrieve closest poison location.
+        
+        compute current fitness, store to memory
+        
+        if not initialized, randomize the neural network weights.
+        run neural network
+        
+        move depending on output
+        
+        !!! note:
+        this module stores all connections of the neural network
+        
+    // drawing
+    background draw
+    ant draw
+    food draw
+    poison draw
+    output frame buffer
+    
+    // fps control
+    limit fps
