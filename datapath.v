@@ -133,6 +133,7 @@ module Datapath(
                             x = instruction_buffer[7:0];
                             y = instruction_buffer[14:8];
                             fb_address = y * `SCREEN_WIDTH + x;
+                            fb_write = 0;
                             
                             delay = 2;
                         end
