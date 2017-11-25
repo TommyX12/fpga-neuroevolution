@@ -67,7 +67,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {ADDR_ANT_X(id), `OPCODE_MEMREAD};
+                    instruction_dp = {`ADDR_ANT_X(id), `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -90,7 +90,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {ADDR_ANT_Y(id), `OPCODE_MEMREAD};
+                    instruction_dp = {`ADDR_ANT_Y(id), `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -224,7 +224,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {x, ADDR_ANT_X(id), `OPCODE_MEMWRITE};
+                    instruction_dp = {x, `ADDR_ANT_X(id), `OPCODE_MEMWRITE};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -246,7 +246,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {y, ADDR_ANT_Y(id), `OPCODE_MEMWRITE};
+                    instruction_dp = {y, `ADDR_ANT_Y(id), `OPCODE_MEMWRITE};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end

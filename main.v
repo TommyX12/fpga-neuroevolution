@@ -177,7 +177,7 @@ module main(
         
         .id(`ID_WIDTH'd0),
         
-        PORT_CONNECT(0)
+        `PORT_CONNECT(0)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -187,7 +187,7 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
-        PORT_CONNECT(1)
+        `PORT_CONNECT(1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -199,7 +199,7 @@ module main(
         
         .id(`ID_WIDTH'd0),
         
-        PORT_CONNECT(2)
+        `PORT_CONNECT(2)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -211,7 +211,7 @@ module main(
         
         .id(`ID_WIDTH'd0),
         
-        PORT_CONNECT(3)
+        `PORT_CONNECT(3)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -221,7 +221,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        PORT_CONNECT(4)
+        `PORT_CONNECT(4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.

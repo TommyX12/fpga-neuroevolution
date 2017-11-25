@@ -11,8 +11,8 @@ module Random16 (clock, resetn, data);
         if(!resetn)
             data <= 16'b1000000000001101;
         else
-            data = {data[14:0], feedback};
-            
+            data = {feedback, data[14:0]};
+            data[
     end
 
 endmodule;

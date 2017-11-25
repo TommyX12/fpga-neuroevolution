@@ -69,7 +69,7 @@ module FoodDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`ADDR_FOOD_X(id), `OPCODE_MEMREAD};
+                    instruction_dp = {ADDR_FOOD_X(id), `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `FOODD_OP_WIDTH'd1;
                 end
@@ -92,7 +92,7 @@ module FoodDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`ADDR_FOOD_Y(id), `OPCODE_MEMREAD};
+                    instruction_dp = {ADDR_FOOD_Y(id), `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `FOODD_OP_WIDTH'd1;
                 end
