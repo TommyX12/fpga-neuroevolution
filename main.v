@@ -9,7 +9,7 @@
 
 // TODO change prefix to be for this file specifically
 // TODO for cur_state += 1 to work, this must also reflect the real execution order
-`define MAIN_OP_WIDTH 5 // TODO this must be large enough
+`define MAIN_OP_WIDTH 6 // TODO this must be large enough
 `define MAIN_OP_STANDBY               `MAIN_OP_WIDTH'd0
 `define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd1
 `define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd2
@@ -23,10 +23,13 @@
 `define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd10
 `define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd11
 `define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd12
-`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd13
-`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd14
-`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd15
-`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd16
+`define MAIN_OP_FOOD_DRAW_START       `MAIN_OP_WIDTH'd13
+`define MAIN_OP_FOOD_DRAW_DELAY       `MAIN_OP_WIDTH'd14
+`define MAIN_OP_FOOD_DRAW_WAIT        `MAIN_OP_WIDTH'd15
+`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd16
+`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd17
+`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd18
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd19
 
 
 module main(
@@ -107,8 +110,8 @@ module main(
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
     
     // TODO declare start and finished signal for each subroutine.
-    reg fb_display_start;
-    wire fb_display_finished;
+    reg ant_update_start;
+    wire ant_update_finished;
     
     reg draw_background_start;
     wire draw_background_finished;
@@ -116,8 +119,11 @@ module main(
     reg ant_draw_start;
     wire ant_draw_finished;
     
-    reg ant_update_start;
-    wire ant_update_finished;
+    reg food_draw_start;
+    wire food_draw_finished;
+    
+    reg fb_display_start;
+    wire fb_display_finished;
     
     reg fps_limiter_start;
     wire fps_limiter_finished;
@@ -134,7 +140,7 @@ module main(
     wire [ports-1:0] finished;
     
     // TODO update this with the number of subroutines
-    localparam ports = 4;
+    localparam ports = 5;
     
     DatapathRouter datapath_router(
         
@@ -154,18 +160,24 @@ module main(
     );
         defparam
             datapath_router.ports = ports;
-        
+    
+`define PORT_CONNECT(index) \
+    .finished_dp(finished[index]), \
+    .result_dp(result[`RESULT_WIDTH*(index + 1)-1:`RESULT_WIDTH*index]), \
+    .start_dp(start[index]), \
+    .instruction_dp(instruction[`INSTRUCTION_WIDTH*(index + 1)-1:`INSTRUCTION_WIDTH*index])
+
+    
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    FBDisplay fb_display(
-        .start(fb_display_start),
+    AntUpdate ant_update(
         .clock(clock),
         .resetn(resetn),
-        .finished(fb_display_finished),
-
-        .finished_dp(finished[0]),
-        .result_dp(result[`RESULT_WIDTH-1:0]),
-        .start_dp(start[0]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+        .start(ant_update_start),
+        .finished(ant_update_finished),
+        
+        .id(`ID_WIDTH'd0),
+        
+        PORT_CONNECT(0)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -175,10 +187,7 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
-        .finished_dp(finished[1]),
-        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
-        .start_dp(start[1]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
+        PORT_CONNECT(1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -188,29 +197,31 @@ module main(
         .start(ant_draw_start),
         .finished(ant_draw_finished),
         
-        .x_address(16'd5),
-        .y_address(16'd10),
+        .id(`ID_WIDTH'd0),
         
-        .finished_dp(finished[2]),
-        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
-        .start_dp(start[2]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
+        PORT_CONNECT(2)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    AntUpdate ant_update(
+    FoodDraw food_draw(
         .clock(clock),
         .resetn(resetn),
-        .start(ant_update_start),
-        .finished(ant_update_finished),
+        .start(food_draw_start),
+        .finished(food_draw_finished),
         
-        .x_address(16'd5),
-        .y_address(16'd10),
+        .id(`ID_WIDTH'd0),
         
-        .finished_dp(finished[3]),
-        .result_dp(result[`RESULT_WIDTH*4-1:`RESULT_WIDTH*3]),
-        .start_dp(start[3]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*4-1:`INSTRUCTION_WIDTH*3])
+        PORT_CONNECT(3)
+    );
+    
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    FBDisplay fb_display(
+        .start(fb_display_start),
+        .clock(clock),
+        .resetn(resetn),
+        .finished(fb_display_finished),
+
+        PORT_CONNECT(4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -243,12 +254,14 @@ module main(
         if (!resetn) begin
             cur_state <= `MAIN_OP_STANDBY;
             
-            // TODO reset any register
+            // TODO reset any register, namely, the start signal of subroutines
             
-            fps_limiter_start <= 0;
+            ant_update_start <= 0;
             draw_background_start <= 0;
             ant_draw_start <= 0;
-            ant_update_start <= 0;
+            food_draw_start <= 0;
+            fb_display_start <= 0;
+            fps_limiter_start <= 0;
         end
         else begin
             // TODO make sure this matches the order of state code, and make sure no typo.
@@ -327,6 +340,25 @@ module main(
                     ant_draw_start = 0;
                     
                     if (ant_draw_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_FOOD_DRAW_START: begin
+                    food_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_FOOD_DRAW_DELAY: begin
+                    food_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_FOOD_DRAW_WAIT: begin
+                    food_draw_start = 0;
+                    
+                    if (food_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
