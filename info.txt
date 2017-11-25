@@ -109,8 +109,10 @@ main loop:
                     sum += ant.fitness
                 
                 copy parent weight to buffer[ant id] weight.
-                apply mutation to each weight in the buffer.
-            
+                
+            apply mutation to each weight in the buffer.
+                // might need multiple cycles
+                
             copy buffer weight to main weights.
         
         finally:
