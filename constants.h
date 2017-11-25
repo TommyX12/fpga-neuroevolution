@@ -23,3 +23,6 @@
 
 `define MEM_ADDR_WIDTH 16
 `define MEM_DATA_WIDTH 12
+
+`define FB_ADDR_WIDTH 15
+`define FB_DATA_WIDTH `COLOUR_WIDTH

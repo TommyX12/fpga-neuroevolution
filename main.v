@@ -23,7 +23,10 @@
 `define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd10
 `define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd11
 `define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd12
-`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd13
+`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd13
+`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd14
+`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd15
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd16
 
 
 module main(
@@ -104,6 +107,9 @@ module main(
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
     
     // TODO declare start and finished signal for each subroutine.
+    reg fb_display_start;
+    wire fb_display_finished;
+    
     reg draw_background_start;
     wire draw_background_finished;
     
@@ -128,7 +134,7 @@ module main(
     wire [ports-1:0] finished;
     
     // TODO update this with the number of subroutines
-    localparam ports = 3;
+    localparam ports = 4;
     
     DatapathRouter datapath_router(
         
@@ -150,16 +156,29 @@ module main(
             datapath_router.ports = ports;
         
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    DrawBackground draw_background(
-        .start(draw_background_start),
+    FBDisplay fb_display(
+        .start(fb_display_start),
         .clock(clock),
         .resetn(resetn),
-        .finished(draw_background_finished),
+        .finished(fb_display_finished),
 
         .finished_dp(finished[0]),
         .result_dp(result[`RESULT_WIDTH-1:0]),
         .start_dp(start[0]),
         .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+    );
+    
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    DrawBackground draw_background(
+        .start(draw_background_start),
+        .clock(clock),
+        .resetn(resetn),
+        .finished(draw_background_finished),
+        
+        .finished_dp(finished[1]),
+        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
+        .start_dp(start[1]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -172,10 +191,10 @@ module main(
         .x_address(16'd5),
         .y_address(16'd10),
         
-        .finished_dp(finished[1]),
-        .result_dp(result[`RESULT_WIDTH*2-1:`RESULT_WIDTH]),
-        .start_dp(start[1]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
+        .finished_dp(finished[2]),
+        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
+        .start_dp(start[2]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -188,10 +207,10 @@ module main(
         .x_address(16'd5),
         .y_address(16'd10),
         
-        .finished_dp(finished[2]),
-        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
-        .start_dp(start[2]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
+        .finished_dp(finished[3]),
+        .result_dp(result[`RESULT_WIDTH*4-1:`RESULT_WIDTH*3]),
+        .start_dp(start[3]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*4-1:`INSTRUCTION_WIDTH*3])
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -308,6 +327,25 @@ module main(
                     ant_draw_start = 0;
                     
                     if (ant_draw_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_FBDISP_START: begin
+                    fb_display_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_FBDISP_DELAY: begin
+                    fb_display_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_FBDISP_WAIT: begin
+                    fb_display_start = 0;
+                    
+                    if (fb_display_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end

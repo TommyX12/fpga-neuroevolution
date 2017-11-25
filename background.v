@@ -51,8 +51,8 @@ module DrawBackground(
                     
                     if (start) begin
                         // TODO register initialization on start
-                        x <= `X_COORD_WIDTH'd0;
-                        y <= `Y_COORD_WIDTH'd0;
+                        x = `X_COORD_WIDTH'd0;
+                        y = `Y_COORD_WIDTH'd0;
                         
                         cur_state = cur_state + `BG_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                         finished = 0;

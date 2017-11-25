@@ -23,12 +23,25 @@ module Datapath(
     reg [`MEM_DATA_WIDTH-1:0] mem_data;
     reg mem_write;
     
+    wire [`FB_DATA_WIDTH-1:0] fb_output;
+    reg [`FB_ADDR_WIDTH-1:0] fb_address;
+    reg [`FB_DATA_WIDTH-1:0] fb_data;
+    reg fb_write;
+    
     ram12x16 ram(
         .address(mem_address),
         .clock(clock),
         .data(mem_data),
         .wren(mem_write),
         .q(mem_output)
+    );
+    
+    ram3x15 framebuffer(
+        .address(fb_address),
+        .clock(clock),
+        .data(fb_data),
+        .wren(fb_write),
+        .q(fb_output)
     );
     
     always @(posedge clock) begin
@@ -65,10 +78,9 @@ module Datapath(
                             end
                         end
                         else begin
-                            x = instruction_buffer[7:0];
-                            y = instruction_buffer[14:8];
-                            colour = instruction_buffer[17:15];
-                            plot = instruction_buffer[18];
+                            fb_address = instruction_buffer[14:8] * `SCREEN_WIDTH + instruction_buffer[7:0];
+                            fb_data = instruction_buffer[17:15];
+                            fb_write = instruction_buffer[18];
                             
                             delay = 1;
                         end
@@ -94,6 +106,7 @@ module Datapath(
                             delay = delay - 1;
                             if (!delay) begin
                                 mem_write = 0;
+                                
                                 finished = 1;
                             end
                         end
@@ -101,6 +114,23 @@ module Datapath(
                             mem_write = 1;
                             mem_address = instruction_buffer[15:0];
                             mem_data = instruction_buffer[27:16];
+                            
+                            delay = 2;
+                        end
+                    end
+                    `OPCODE_DISPLAY: begin
+                        if (delay) begin
+                            delay = delay - 1;
+                            if (!delay) begin
+                                colour = fb_output;
+                                
+                                finished = 1;
+                            end
+                        end
+                        else begin
+                            x = instruction_buffer[7:0];
+                            y = instruction_buffer[14:8];
+                            fb_address = y * `SCREEN_WIDTH + x;
                             
                             delay = 2;
                         end
