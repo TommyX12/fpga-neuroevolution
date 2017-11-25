@@ -47,5 +47,10 @@ datapath multiplexer for concurrent access control.
     multiplex each of the 4 standard signals for datapath access, for each input.
     scan for an input that has unfinished instruction. pass its instructions to datapath and wait for output, then put that into the corresponding output to that input and set finished for it. repeat.
     
+    !!! this is essential so make sure this is actually working.
+    
 !!! make a frame buffer that act the same as vga adapter but is just a memory. all draw now draw to frame buffer, and final step draw from frame buffer to screen.
+
+!!! use numerous memory locator module to find where memory are suppose to be stored.
+    !!! let Ian do this
 

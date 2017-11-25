@@ -122,18 +122,13 @@ module main(
     wire start_dp;
     wire [`INSTRUCTION_WIDTH-1:0] instruction_dp;
     
-    wire [`MEM_DATA_WIDTH-1:0] mem_output;
-    wire [`MEM_ADDR_WIDTH-1:0] mem_address;
-    wire [`MEM_DATA_WIDTH-1:0] mem_data;
-    wire mem_write;
-    
-    // TODO update this with the number of subroutines
-    localparam ports = 3;
-    
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
     wire [`RESULT_WIDTH*ports-1:0] result;
     wire [ports-1:0] finished;
+    
+    // TODO update this with the number of subroutines
+    localparam ports = 3;
     
     DatapathRouter datapath_router(
         
@@ -211,14 +206,6 @@ module main(
         .finished(fps_limiter_finished)
     );
     
-    ram12x16 ram(
-        .address(mem_address),
-        .clock(clock),
-        .data(mem_data),
-        .wren(mem_write),
-        .q(mem_output)
-    );
-    
     Datapath datapath(
         .start(start_dp),
         .clock(clock),
@@ -231,11 +218,6 @@ module main(
         .colour(colour),
         .plot(writeEn),
         .finished(finished_dp),
-        
-        .mem_output(mem_output),
-        .mem_address(mem_address),
-        .mem_data(mem_data),
-        .mem_write(mem_write)
     );
     
     always @(posedge clock) begin

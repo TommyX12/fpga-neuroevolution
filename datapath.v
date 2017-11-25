@@ -12,16 +12,24 @@ module Datapath(
     output reg [`Y_COORD_WIDTH-1:0] y,
     output reg [`COLOUR_WIDTH-1:0] colour,
     output reg plot,
-    output reg finished,
-    
-    input [`MEM_DATA_WIDTH-1:0] mem_output,
-    output reg [`MEM_ADDR_WIDTH-1:0] mem_address,
-    output reg [`MEM_DATA_WIDTH-1:0] mem_data,
-    output reg mem_write
+    output reg finished
     );
     
     reg [1:0] delay;
     reg [`INSTRUCTION_WIDTH-1:0] instruction_buffer;
+    
+    wire [`MEM_DATA_WIDTH-1:0] mem_output;
+    reg [`MEM_ADDR_WIDTH-1:0] mem_address;
+    reg [`MEM_DATA_WIDTH-1:0] mem_data;
+    reg mem_write;
+    
+    ram12x16 ram(
+        .address(mem_address),
+        .clock(clock),
+        .data(mem_data),
+        .wren(mem_write),
+        .q(mem_output)
+    );
     
     always @(posedge clock) begin
         if (!resetn) begin
