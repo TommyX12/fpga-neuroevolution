@@ -121,9 +121,11 @@ module Datapath(
                     `OPCODE_DISPLAY: begin
                         if (delay) begin
                             delay = delay - 1;
+                            
+                            colour = fb_output;
+                            plot = 1;
+                            
                             if (!delay) begin
-                                colour = fb_output;
-                                
                                 finished = 1;
                             end
                         end
