@@ -1,0 +1,49 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+Z0 dC:/TommyX/repo
+vfibonacci_lfsr_5bit
+!s110 1511651669
+!i10b 1
+!s100 k9V1NKUNM@embic17=JMX0
+IDF`hiZV3UHhM3=S?5?XLA3
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+R0
+w1511651668
+Z2 8random.v
+Z3 Frandom.v
+L0 38
+Z4 OV;L;10.4d;61
+r1
+!s85 0
+31
+!s108 1511651669.000000
+!s107 random.v|
+Z5 !s90 -reportprogress|300|random.v|
+!i113 1
+vRandom16
+!s110 1511653303
+!i10b 1
+!s100 PWXD1O7oQ_9n;8NIMolQA0
+I97`]_FN1B>6a:g3XkU9V>2
+R1
+R0
+w1511653299
+R2
+R3
+L0 1
+R4
+r1
+!s85 0
+31
+!s108 1511653303.000000
+!s107 random.v|
+R5
+!i113 1
+n@random16

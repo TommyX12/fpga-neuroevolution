@@ -32,9 +32,9 @@
 `define COLOUR_FOOD   `COLOUR_WIDTH'b010
 `define COLOUR_POISON `COLOUR_WIDTH'b100
 
-`defined NUM_ANT    20
-`defined NUM_FOOD   15
-`defined NUM_POISON 15
+`define NUM_ANT    20
+`define NUM_FOOD   15
+`define NUM_POISON 15
 
 `define ADDR_FOOD_X(ID)           (ID)
 `define ADDR_FOOD_Y(ID)           (ID + `NUM_FOOD)
