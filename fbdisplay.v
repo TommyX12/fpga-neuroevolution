@@ -64,7 +64,7 @@ module FBDisplay(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_DISPLAY, 13'd0, y, x};
+                    instruction_dp = {y, x, `OPCODE_DISPLAY};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `FBDISP_OP_WIDTH'd1;

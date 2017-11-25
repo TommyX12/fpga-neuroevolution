@@ -69,7 +69,7 @@ module Datapath(
                 end
             end
             else begin
-                case (instruction_buffer[`INSTRUCTION_WIDTH-1:`INSTRUCTION_WIDTH-`OPCODE_WIDTH])
+                case (instruction_buffer[`OPCODE_WIDTH-1:0])
                     `OPCODE_DRAW: begin
                         if (delay) begin
                             delay = delay - 1;
@@ -78,9 +78,9 @@ module Datapath(
                             end
                         end
                         else begin
-                            fb_address = instruction_buffer[14:8] * `SCREEN_WIDTH + instruction_buffer[7:0];
-                            fb_data = instruction_buffer[17:15];
-                            fb_write = instruction_buffer[18];
+                            fb_address = instruction_buffer[18:12] * `SCREEN_WIDTH + instruction_buffer[11:4];
+                            fb_data = instruction_buffer[21:19];
+                            fb_write = instruction_buffer[22];
                             
                             delay = 1;
                         end
@@ -96,7 +96,7 @@ module Datapath(
                         end
                         else begin
                             mem_write = 0;
-                            mem_address = instruction_buffer[15:0];
+                            mem_address = instruction_buffer[19:4];
                             
                             delay = 2;
                         end
@@ -112,8 +112,8 @@ module Datapath(
                         end
                         else begin
                             mem_write = 1;
-                            mem_address = instruction_buffer[15:0];
-                            mem_data = instruction_buffer[27:16];
+                            mem_address = instruction_buffer[19:4];
+                            mem_data = instruction_buffer[31:20];
                             
                             delay = 2;
                         end
@@ -130,8 +130,8 @@ module Datapath(
                             end
                         end
                         else begin
-                            x = instruction_buffer[7:0];
-                            y = instruction_buffer[14:8];
+                            x = instruction_buffer[11:4];
+                            y = instruction_buffer[18:12];
                             fb_address = y * `SCREEN_WIDTH + x;
                             fb_write = 0;
                             

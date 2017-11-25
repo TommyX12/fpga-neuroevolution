@@ -63,9 +63,9 @@ module DrawBackground(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = `COLOUR_WIDTH'b111;
+                    colour = `COLOUR_BG;
                     plot = 1;
-                    instruction_dp = {`OPCODE_DRAW, 9'd0, plot, colour, y, x};
+                    instruction_dp = {plot, colour, y, x, `OPCODE_DRAW};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `BG_OP_WIDTH'd1;

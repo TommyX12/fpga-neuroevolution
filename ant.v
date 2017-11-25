@@ -1,7 +1,5 @@
 `include "constants.h"
 
-`define ANTD_COLOUR 3'b010;
-
 // TODO change prefix to be for this file specifically
 `define ANTD_OP_WIDTH 5 // TODO this must be large enough
 `define ANTD_OP_STANDBY      `ANTD_OP_WIDTH'd0
@@ -70,7 +68,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_MEMREAD, 12'd0, x_address};
+                    instruction_dp = {x_address, `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -93,7 +91,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_MEMREAD, 12'd0, y_address};
+                    instruction_dp = {y_address, `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -116,7 +114,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_DRAW, 9'd0, 1'b1, 3'b100, y, x};
+                    instruction_dp = {1'b1, `COLOUR_ANT, y, x, `OPCODE_DRAW};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -227,7 +225,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_MEMWRITE, 4'b0, x, x_address};
+                    instruction_dp = {x, x_address, `OPCODE_MEMWRITE};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -249,7 +247,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`OPCODE_MEMWRITE, 5'b0, y, y_address};
+                    instruction_dp = {y, y_address, `OPCODE_MEMWRITE};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
