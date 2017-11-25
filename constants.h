@@ -26,3 +26,18 @@
 
 `define FB_ADDR_WIDTH 15
 `define FB_DATA_WIDTH `COLOUR_WIDTH
+
+
+`defined NUM_ANT    20
+`defined NUM_FOOD   15
+`defined NUM_POISON 15
+
+`define ADDR_ANT_X(ID)            0
+`define ADDR_ANT_Y(ID)            0
+`define ADDR_ANT_FOOD_EATEN(ID)   0
+`define ADDR_ANT_POISON_EATEN(ID) 0
+`define ADDR_ANT_FITNESS(ID)      0
+`define ADDR_FOOD_X(ID)           0
+`define ADDR_FOOD_Y(ID)           0
+`define ADDR_POISON_X(ID)         0
+`define ADDR_POISON_Y(ID)         0

@@ -90,6 +90,7 @@ main loop:
     // logic
     GA update
         if generation timer is not 30 seconds yet, finish immediately.
+        otherwise increase generation timer by 1.
             
         if it's the first generation
             randomize all ant, food, poison location
