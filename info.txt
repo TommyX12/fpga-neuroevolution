@@ -95,7 +95,7 @@ main loop:
             randomize the neural network weights.
         
         else:
-            
+            compute all 
         
         finally:
             set foot eaten, poison eaten, current fitness to 0.
