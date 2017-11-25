@@ -8,8 +8,6 @@
 `define INSTRUCTION_WIDTH   32
 `define RESULT_WIDTH   32
 
-`define ID_WIDTH 6
-
 `define SCREEN_WIDTH  `X_COORD_WIDTH'd160
 `define SCREEN_HEIGHT `Y_COORD_WIDTH'd120
 
@@ -34,16 +32,17 @@
 `define COLOUR_FOOD   `COLOUR_WIDTH'b010
 `define COLOUR_POISON `COLOUR_WIDTH'b100
 
-`define NUM_ANT    20
-`define NUM_FOOD   15
-`define NUM_POISON 15
+`define NUM_ANT    `MEM_ADDR_WIDTH'd20
+`define NUM_FOOD   `MEM_ADDR_WIDTH'd15
+`define NUM_POISON `MEM_ADDR_WIDTH'd15
 
+// TODO make sure the output with must be MEM_ADDR_WIDTH.
 `define ADDR_FOOD_X(ID)           (ID)
 `define ADDR_FOOD_Y(ID)           (ID + `NUM_FOOD)
-`define ADDR_POISON_X(ID)         (ID + 2 * `NUM_FOOD)
-`define ADDR_POISON_Y(ID)         (ID + 2 * `NUM_FOOD + `NUM_POISON)
-`define ADDR_ANT_X(ID)            (ID + 2 * `NUM_FOOD + 2 * `NUM_POISON)
-`define ADDR_ANT_Y(ID)            (ID + 2 * `NUM_FOOD + 2 * `NUM_POISON + `NUM_ANT)
-`define ADDR_ANT_FOOD_EATEN(ID)   (ID + 2 * `NUM_FOOD + 2 * `NUM_POISON + 2 * `NUM_ANT)
-`define ADDR_ANT_POISON_EATEN(ID) (ID + 2 * `NUM_FOOD + 2 * `NUM_POISON + 3 * `NUM_ANT)
-`define ADDR_ANT_FITNESS(ID)      (ID + 2 * `NUM_FOOD + 2 * `NUM_POISON + 4 * `NUM_ANT)
+`define ADDR_POISON_X(ID)         (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD)
+`define ADDR_POISON_Y(ID)         (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `NUM_POISON)
+`define ADDR_ANT_X(ID)            (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `MEM_ADDR_WIDTH'd2 * `NUM_POISON)
+`define ADDR_ANT_Y(ID)            (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `MEM_ADDR_WIDTH'd2 * `NUM_POISON + `NUM_ANT)
+`define ADDR_ANT_FOOD_EATEN(ID)   (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `MEM_ADDR_WIDTH'd2 * `NUM_POISON + `MEM_ADDR_WIDTH'd2 * `NUM_ANT)
+`define ADDR_ANT_POISON_EATEN(ID) (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `MEM_ADDR_WIDTH'd2 * `NUM_POISON + `MEM_ADDR_WIDTH'd3 * `NUM_ANT)
+`define ADDR_ANT_FITNESS(ID)      (ID + `MEM_ADDR_WIDTH'd2 * `NUM_FOOD + `MEM_ADDR_WIDTH'd2 * `NUM_POISON + `MEM_ADDR_WIDTH'd4 * `NUM_ANT)

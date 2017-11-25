@@ -21,7 +21,7 @@ module FoodDraw(
     input start,
     output reg finished,
     
-    input [`ID_WIDTH-1:0] id,
+    input [`MEM_ADDR_WIDTH-1:0] id,
     
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
