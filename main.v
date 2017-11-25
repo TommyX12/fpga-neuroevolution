@@ -8,20 +8,21 @@
 `include "constants.h"
 
 // TODO change prefix to be for this file specifically
+// TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define MAIN_OP_WIDTH 5 // TODO this must be large enough
 `define MAIN_OP_STANDBY               `MAIN_OP_WIDTH'd0
 `define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd1
 `define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd2
 `define MAIN_OP_FPS_LIMITER_DELAY2    `MAIN_OP_WIDTH'd3
-`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd4
-`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd5
-`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd6
-`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd7
-`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd8
-`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd9
-`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd10
-`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd11
-`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd12
+`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd4
+`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd5
+`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd6
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd7
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd8
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd9
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd10
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd11
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd12
 `define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd13
 
 
@@ -102,7 +103,7 @@ module main(
     reg [`MAIN_OP_WIDTH-1:0] next_state;
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
     
-    // TODO declare any register
+    // TODO declare start and finished signal for each subroutine.
     reg draw_background_start;
     wire draw_background_finished;
     
@@ -115,6 +116,7 @@ module main(
     reg fps_limiter_start;
     wire fps_limiter_finished;
     
+    
     wire finished_dp;
     wire [`RESULT_WIDTH-1:0] result_dp;
     wire start_dp;
@@ -125,7 +127,8 @@ module main(
     wire [`MEM_DATA_WIDTH-1:0] mem_data;
     wire mem_write;
     
-    localparam ports = 3; // number of subroutines
+    // TODO update this with the number of subroutines
+    localparam ports = 3;
     
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
@@ -151,18 +154,20 @@ module main(
         defparam
             datapath_router.ports = ports;
         
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     DrawBackground draw_background(
         .start(draw_background_start),
         .clock(clock),
         .resetn(resetn),
         .finished(draw_background_finished),
-        
-        .finished_dp(finished[2]),
-        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
-        .start_dp(start[2]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
+
+        .finished_dp(finished[0]),
+        .result_dp(result[`RESULT_WIDTH-1:0]),
+        .start_dp(start[0]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
     );
     
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntDraw ant_draw(
         .clock(clock),
         .resetn(resetn),
@@ -178,6 +183,7 @@ module main(
         .instruction_dp(instruction[`INSTRUCTION_WIDTH*2-1:`INSTRUCTION_WIDTH])
     );
     
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntUpdate ant_update(
         .clock(clock),
         .resetn(resetn),
@@ -186,19 +192,20 @@ module main(
         
         .x_address(16'd5),
         .y_address(16'd10),
-
-        .finished_dp(finished[0]),
-        .result_dp(result[`RESULT_WIDTH-1:0]),
-        .start_dp(start[0]),
-        .instruction_dp(instruction[`INSTRUCTION_WIDTH-1:0])
+        
+        .finished_dp(finished[2]),
+        .result_dp(result[`RESULT_WIDTH*3-1:`RESULT_WIDTH*2]),
+        .start_dp(start[2]),
+        .instruction_dp(instruction[`INSTRUCTION_WIDTH*3-1:`INSTRUCTION_WIDTH*2])
     );
     
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     FPSLimiter fps_limiter(
         .start(fps_limiter_start),
         .clock(clock),
         .resetn(resetn),
         
-        .delay(`DELAY_WIDTH'd233333),
+        .delay(`DELAY_WIDTH'd833333),
         // .delay(`DELAY_WIDTH'd50000000),
         
         .finished(fps_limiter_finished)
@@ -243,11 +250,13 @@ module main(
             ant_update_start <= 0;
         end
         else begin
-            // TODO make sure everything use blocking assignment
+            // TODO make sure this matches the order of state code, and make sure no typo.
             case (cur_state)
                 `MAIN_OP_STANDBY: begin
                     cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
                 `MAIN_OP_FPS_LIMITER_START: begin
                     fps_limiter_start = 1;
                     
@@ -263,40 +272,8 @@ module main(
                     
                     cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
-                `MAIN_OP_DRAW_BACKGROUND_START: begin
-                    draw_background_start = 1;
-                    
-                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                end
-                `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
-                    draw_background_start = 1;
-                    
-                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                end
-                `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
-                    draw_background_start = 0;
-                    
-                    if (draw_background_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                    end
-                end
-                `MAIN_OP_ANT_DRAW_START: begin
-                    ant_draw_start = 1;
-                    
-                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                end
-                `MAIN_OP_ANT_DRAW_DELAY: begin
-                    ant_draw_start = 1;
-                    
-                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                end
-                `MAIN_OP_ANT_DRAW_WAIT: begin
-                    ant_draw_start = 0;
-                    
-                    if (ant_draw_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                    end
-                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
                 `MAIN_OP_ANT_UPDATE_START: begin
                     ant_update_start = 1;
                     
@@ -314,6 +291,45 @@ module main(
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_DRAW_BACKGROUND_START: begin
+                    draw_background_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_DRAW_BACKGROUND_DELAY: begin
+                    draw_background_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_DRAW_BACKGROUND_WAIT: begin
+                    draw_background_start = 0;
+                    
+                    if (draw_background_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_ANT_DRAW_START: begin
+                    ant_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_ANT_DRAW_DELAY: begin
+                    ant_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_ANT_DRAW_WAIT: begin
+                    ant_draw_start = 0;
+                    
+                    if (ant_draw_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
                 `MAIN_OP_FPS_LIMITER_WAIT: begin
                     if (fps_limiter_finished) begin
                         cur_state = `MAIN_OP_STANDBY;

@@ -49,7 +49,7 @@ module Datapath(
             end
             else begin
                 case (instruction_buffer[`INSTRUCTION_WIDTH-1:`INSTRUCTION_WIDTH-`OPCODE_WIDTH])
-                    `OPCODE_WIDTH'd1: begin
+                    `OPCODE_DRAW: begin
                         if (delay) begin
                             delay = delay - 1;
                             if (!delay) begin
@@ -65,7 +65,7 @@ module Datapath(
                             delay = 1;
                         end
                     end
-                    `OPCODE_WIDTH'd2: begin
+                    `OPCODE_MEMREAD: begin
                         if (delay) begin
                             delay = delay - 1;
                             if (!delay) begin
@@ -81,7 +81,7 @@ module Datapath(
                             delay = 2;
                         end
                     end
-                    `OPCODE_WIDTH'd3: begin
+                    `OPCODE_MEMWRITE: begin
                         if (delay) begin
                             delay = delay - 1;
                             if (!delay) begin

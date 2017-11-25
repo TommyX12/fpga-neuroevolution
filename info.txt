@@ -10,7 +10,7 @@ standardized datapath access
         32 bit standardized instruction for doing anything, such as memory read, write, write to screen, etc.
         highest 4 bits: opcode: determines operation to use.
             0: do nothing.
-            1: draw to screen.
+            1: draw to frame buffer.
                 bit 0-7: x
                 bit 8-14: y
                 bit 15-17: color
@@ -23,7 +23,10 @@ standardized datapath access
                 bit 0-15: address
                 bit 16-27: value
                 
-            4: 
+            4: output frame buffer
+                bit 0-7: x
+                bit 8-14: y
+                
             5: 
             6: 
             7: 
@@ -43,4 +46,6 @@ datapath multiplexer for concurrent access control.
     generate for arbitrary number of inputs.
     multiplex each of the 4 standard signals for datapath access, for each input.
     scan for an input that has unfinished instruction. pass its instructions to datapath and wait for output, then put that into the corresponding output to that input and set finished for it. repeat.
+    
+!!! make a frame buffer that act the same as vga adapter but is just a memory. all draw now draw to frame buffer, and final step draw from frame buffer to screen.
 

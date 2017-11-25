@@ -70,7 +70,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd2, 12'd0, x_address};
+                    instruction_dp = {`OPCODE_MEMREAD, 12'd0, x_address};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -93,7 +93,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd2, 12'd0, y_address};
+                    instruction_dp = {`OPCODE_MEMREAD, 12'd0, y_address};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -116,7 +116,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd1, 9'd0, 1'b1, 3'b100, y, x};
+                    instruction_dp = {`OPCODE_DRAW, 9'd0, 1'b1, 3'b100, y, x};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -227,7 +227,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd3, 4'b0, x, x_address};
+                    instruction_dp = {`OPCODE_MEMWRITE, 4'b0, x, x_address};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -249,7 +249,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {4'd3, 5'b0, y, y_address};
+                    instruction_dp = {`OPCODE_MEMWRITE, 5'b0, y, y_address};
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
