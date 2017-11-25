@@ -51,13 +51,8 @@ datapath multiplexer for concurrent access control.
     
 // !!! make a frame buffer that act the same as vga adapter but is just a memory. all draw now draw to frame buffer, and final step draw from frame buffer to screen.
 
-!!! use numerous memory locator module to find where memory are suppose to be stored.
+!!! use numerous memory locator macro to find where memory are suppose to be stored.
     !!! let Ian do this
-    !!! maybe setup in main and all connect outward to singleton version of those separate locator module.
-    module AntPoisonEatenAddr(
-        input id,
-        output [15:0] address
-    )
 
 !!! random number generator
     ? available as datapath operation, or simply connection.
@@ -86,23 +81,41 @@ structs:
     
     neural network weights are stored in ant update module locally.
 
+!!! note:
+    GA update stores all weights of the neural network.
+    and each ant module connects to one of them.
+    GA also stores a copy buffer, used in copying.
+
 main loop:
     // logic
     GA update
-        if times up for a generation, compute next generation.
+        if generation timer is not 30 seconds yet, finish immediately.
+            
         if it's the first generation
             randomize all ant, food, poison location
             randomize the neural network weights.
         
         else:
-            compute all 
+            for each ant:
+                // perform roulette wheel selection to find parent ant.
+                // try the following in a single cycle.
+                get rand = random number.
+                sum = 0
+                id = 0
+                for each ant:
+                    if rand >= sum and rand < sum + ant.fitness:
+                        id = current id
+                    
+                    sum += ant.fitness
+                
+                copy parent weight to buffer[ant id] weight.
+                apply mutation to each weight in the buffer.
+            
+            copy buffer weight to main weights.
         
         finally:
+            set generation timer = 0.
             set foot eaten, poison eaten, current fitness to 0.
-        
-        !!! note:
-        this module connects to a register of all weights of every neural network (in main module).
-        it also stores a copy buffer
         
     ant update (parallel for each ant)
         test if food collide.
