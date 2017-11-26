@@ -183,26 +183,32 @@ endmodule
 `define ANTU_OP_FOOD_Y_START       `ANTU_OP_WIDTH'd13
 `define ANTU_OP_FOOD_Y_DELAY       `ANTU_OP_WIDTH'd14
 `define ANTU_OP_FOOD_Y_WAIT        `ANTU_OP_WIDTH'd15
+`define ANTU_OP_FOOD_SET_START     `ANTU_OP_WIDTH'd16
+`define ANTU_OP_FOOD_SET_DELAY     `ANTU_OP_WIDTH'd17
+`define ANTU_OP_FOOD_SET_WAIT      `ANTU_OP_WIDTH'd18
 
-`define ANTU_OP_POISON_X_START     `ANTU_OP_WIDTH'd16
-`define ANTU_OP_POISON_X_DELAY     `ANTU_OP_WIDTH'd17
-`define ANTU_OP_POISON_X_WAIT      `ANTU_OP_WIDTH'd18
-`define ANTU_OP_POISON_Y_START     `ANTU_OP_WIDTH'd19
-`define ANTU_OP_POISON_Y_DELAY     `ANTU_OP_WIDTH'd20
-`define ANTU_OP_POISON_Y_WAIT      `ANTU_OP_WIDTH'd21
+`define ANTU_OP_POISON_X_START     `ANTU_OP_WIDTH'd19
+`define ANTU_OP_POISON_X_DELAY     `ANTU_OP_WIDTH'd20
+`define ANTU_OP_POISON_X_WAIT      `ANTU_OP_WIDTH'd21
+`define ANTU_OP_POISON_Y_START     `ANTU_OP_WIDTH'd22
+`define ANTU_OP_POISON_Y_DELAY     `ANTU_OP_WIDTH'd23
+`define ANTU_OP_POISON_Y_WAIT      `ANTU_OP_WIDTH'd24
+`define ANTU_OP_POISON_SET_START   `ANTU_OP_WIDTH'd25
+`define ANTU_OP_POISON_SET_DELAY   `ANTU_OP_WIDTH'd26
+`define ANTU_OP_POISON_SET_WAIT    `ANTU_OP_WIDTH'd27
 
-`define ANTU_OP_NN_START           `ANTU_OP_WIDTH'd22
-`define ANTU_OP_NN_WAIT            `ANTU_OP_WIDTH'd23
+`define ANTU_OP_NN_START           `ANTU_OP_WIDTH'd28
+`define ANTU_OP_NN_WAIT            `ANTU_OP_WIDTH'd29
 
-`define ANTU_OP_SET_X_START        `ANTU_OP_WIDTH'd24
-`define ANTU_OP_SET_X_DELAY        `ANTU_OP_WIDTH'd25
-`define ANTU_OP_SET_X_WAIT         `ANTU_OP_WIDTH'd26
-`define ANTU_OP_SET_Y_START        `ANTU_OP_WIDTH'd27
-`define ANTU_OP_SET_Y_DELAY        `ANTU_OP_WIDTH'd28
-`define ANTU_OP_SET_Y_WAIT         `ANTU_OP_WIDTH'd29
-`define ANTU_OP_SET_FITNESS_START  `ANTU_OP_WIDTH'd30
-`define ANTU_OP_SET_FITNESS_DELAY  `ANTU_OP_WIDTH'd31
-`define ANTU_OP_SET_FITNESS_WAIT   `ANTU_OP_WIDTH'd32
+`define ANTU_OP_SET_X_START        `ANTU_OP_WIDTH'd30
+`define ANTU_OP_SET_X_DELAY        `ANTU_OP_WIDTH'd31
+`define ANTU_OP_SET_X_WAIT         `ANTU_OP_WIDTH'd32
+`define ANTU_OP_SET_Y_START        `ANTU_OP_WIDTH'd33
+`define ANTU_OP_SET_Y_DELAY        `ANTU_OP_WIDTH'd34
+`define ANTU_OP_SET_Y_WAIT         `ANTU_OP_WIDTH'd35
+`define ANTU_OP_SET_FITNESS_START  `ANTU_OP_WIDTH'd36
+`define ANTU_OP_SET_FITNESS_DELAY  `ANTU_OP_WIDTH'd37
+`define ANTU_OP_SET_FITNESS_WAIT   `ANTU_OP_WIDTH'd38
 
 
 module AntUpdate(
@@ -342,6 +348,7 @@ module AntUpdate(
                 
                 
                 // TODO
+                // I added extra states for writing the modified food location back to memory
                 
                 
                 `ANTU_OP_NN_START: begin
