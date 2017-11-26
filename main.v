@@ -243,9 +243,9 @@ module main(
         .clock(clock),
         .resetn(resetn),
         .start(poison_draw_start),
-        .finished(poison_draw_finished[poison_i]),
+        .finished(poison_draw_finished),
         
-        .id(id_reg),
+        .id(`MEM_ADDR_WIDTH'd0),
         .rand(rand),
         
         `PORT_CONNECT(3)
