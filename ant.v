@@ -488,13 +488,13 @@ module AntUpdate(
                     if (x < `X_COORD_WIDTH'd0) begin
                         dx = -dx;
                     end
-                    else if (x >= `SCREEN_WIDTH - `BLOCK_WIDTH) begin
+                    else if (x >= `SCREEN_WIDTH - `ANT_WIDTH) begin
                         dx = -dx;
                     end
                     if (y < `Y_COORD_WIDTH'd0) begin
                         dy = -dy;
                     end
-                    else if (y >= `SCREEN_HEIGHT - `BLOCK_HEIGHT) begin
+                    else if (y >= `SCREEN_HEIGHT - `ANT_HEIGHT) begin
                         dy = -dy;
                     end
                     
