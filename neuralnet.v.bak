@@ -24,16 +24,16 @@ module NeuralNet(
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size)) - 1 : 0]),
         .output_data(hidden_output)
     );
-    defparam hidden_layer.data_width = data_width;
-    defparam hidden_layer.input_size = input_size;
+    defparam input_layer.data_width = data_width;
+    defparam input_layer.input_size = input_size;
     
     Neuron output_layer[output_size - 1 : 0] (
         .input_data(hidden_output),
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE(input_size, hidden_size, output_size)) - 1 : data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size))]),
         .output_data(output_data)
     );
-    defparam output_layer.data_width = data_width;
-    defparam output_layer.input_size = hidden_size;
+    defparam input_layer.data_width = data_width;
+    defparam input_layer.input_size = hidden_size;
     
 endmodule
 
@@ -45,7 +45,7 @@ module Neuron(
     );
     
     parameter data_width = `NN_DATA_WIDTH;
-    parameter input_size = 1;
+    parameter input_size;
     
     input [data_width * input_size - 1 : 0] input_data;
     input [data_width * (input_size + 1) - 1 : 0] weights;

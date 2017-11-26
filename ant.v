@@ -280,6 +280,7 @@ module AntUpdate(
             move_down
         })
     );
+	 
     
     always @(posedge clock) begin
         if (!resetn) begin
