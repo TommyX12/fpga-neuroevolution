@@ -236,7 +236,7 @@ module main(
         .id(`MEM_ADDR_WIDTH'd0),
         .rand(rand),
         
-        `PORT_CONNECT(2)
+        `PORT_CONNECT(17)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
