@@ -307,9 +307,10 @@ module AntUpdate(
             
             // neural net related stuff
             food_left <= 0;
-            food_right <= 0;
+            food_right <= `NN_DATA_WIDTH'b00010000;
             food_up <= 0;
-            food_down <= 0;
+            food_down <= `NN_DATA_WIDTH'b00010000;
+            // TODO make this right once testing finishes
             poison_left <= 0;
             poison_right <= 0;
             poison_up <= 0;

@@ -12,7 +12,7 @@ module Random16 (clock, resetn, data);
     
     always @(posedge clock) begin
         if(!resetn) begin
-            data <= 16'b1000000000001101;
+            data <= data | 16'b1000000000001101;
         end
         else begin
             data = {feedback, data[15:1]};
