@@ -220,11 +220,15 @@ module AntUpdate(
     input [`MEM_ADDR_WIDTH-1:0] id,
     input [`RAND_WIDTH-1:0] rand,
     
+    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights;
+
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
     output reg start_dp,
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp
     );
+    
+    
     
     reg [`ANTU_OP_WIDTH-1:0] cur_state;
     
@@ -238,6 +242,43 @@ module AntUpdate(
     
     reg colliding;
     reg [`MEM_ADDR_WIDTH-1:0] food_counter;
+    
+    
+    // neural net related stuff
+    // neural net input
+    reg [`NN_DATA_WIDTH-1:0] food_x_left;
+    reg [`NN_DATA_WIDTH-1:0] food_x_right;
+    reg [`NN_DATA_WIDTH-1:0] food_y_up;
+    reg [`NN_DATA_WIDTH-1:0] food_y_down;
+    reg [`NN_DATA_WIDTH-1:0] poison_x_left;
+    reg [`NN_DATA_WIDTH-1:0] poison_x_right;
+    reg [`NN_DATA_WIDTH-1:0] poison_y_up;
+    reg [`NN_DATA_WIDTH-1:0] poison_y_down;
+    // neural net output
+    wire [`NN_DATA_WIDTH-1:0] move_left;
+    wire [`NN_DATA_WIDTH-1:0] move_right;
+    wire [`NN_DATA_WIDTH-1:0] move_up;
+    wire [`NN_DATA_WIDTH-1:0] move_down;
+    
+    NeuralNet neural_net(
+        .input_data({
+            food_x_left,
+            food_x_right,
+            food_y_up,
+            food_y_down,
+            poison_x_left,
+            poison_x_right,
+            poison_y_up,
+            poison_y_down
+        }),
+        .weights(neural_net_weights),
+        .output_data({
+            move_left,
+            move_right,
+            move_up,
+            move_down
+        })
+    );
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -257,6 +298,8 @@ module AntUpdate(
             
             colliding <= 0;
             food_counter <= 0;
+            
+            // neural net related stuff
         end
         else begin
             // TODO make sure everything use blocking assignment
@@ -352,25 +395,38 @@ module AntUpdate(
                 
                 
                 `ANTU_OP_NN_START: begin
-                    x = x + dx;
-                    y = y + dy;
-                    if (x < `X_COORD_WIDTH'd0) begin
-                        dx = -dx;
-                    end
-                    else if (x >= `SCREEN_WIDTH - `BLOCK_WIDTH) begin
-                        dx = -dx;
-                    end
-                    if (y < `Y_COORD_WIDTH'd0) begin
-                        dy = -dy;
-                    end
-                    else if (y >= `SCREEN_HEIGHT - `BLOCK_HEIGHT) begin
-                        dy = -dy;
-                    end
+                    // x = x + dx;
+                    // y = y + dy;
+                    // if (x < `X_COORD_WIDTH'd0) begin
+                        // dx = -dx;
+                    // end
+                    // else if (x >= `SCREEN_WIDTH - `BLOCK_WIDTH) begin
+                        // dx = -dx;
+                    // end
+                    // if (y < `Y_COORD_WIDTH'd0) begin
+                        // dy = -dy;
+                    // end
+                    // else if (y >= `SCREEN_HEIGHT - `BLOCK_HEIGHT) begin
+                        // dy = -dy;
+                    // end
                     
                     cur_state = cur_state + `ANDU_OP_WIDTH'd1;
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
+                    if (move_left) begin
+                        x = x - `X_COORD_WIDTH'd1;
+                    end
+                    if (move_right) begin
+                        x = x + `X_COORD_WIDTH'd1;
+                    end
+                    if (move_up) begin
+                        y = y - `Y_COORD_WIDTH'd1;
+                    end
+                    if (move_down) begin
+                        y = y + `Y_COORD_WIDTH'd1;
+                    end
+                    
                     cur_state = cur_state + `ANDU_OP_WIDTH'd1;
                 end
                 

@@ -3,9 +3,6 @@
 
 
 module NeuralNet(
-    clock,
-    resetn,
-    
     input_data,
     weights,
     output_data
@@ -16,9 +13,6 @@ module NeuralNet(
     parameter hidden_size = `NN_HIDDEN_SIZE;
     parameter output_size = `NN_OUTPUT_SIZE;
     
-    input clock;
-    input resetn;
-    
     input [data_width * input_size - 1 : 0] input_data;
     input [data_width * (`NN_GET_WEIGHTS_SIZE(input_size, hidden_size, output_size)) - 1 : 0] weights;
     output [data_width * output_size - 1 : 0] output_data;
@@ -26,9 +20,6 @@ module NeuralNet(
     wire [data_width * hidden_size - 1 : 0] hidden_output;
     
     Neuron hidden_layer[hidden_size - 1 : 0] (
-        .clock(clock),
-        .resetn(resetn),
-        
         .input_data(input_data),
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size)) - 1 : 0]),
         .output_data(hidden_output)
@@ -37,9 +28,6 @@ module NeuralNet(
     defparam input_layer.input_size = input_size;
     
     Neuron output_layer[output_size - 1 : 0] (
-        .clock(clock),
-        .resetn(resetn),
-        
         .input_data(hidden_output),
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE(input_size, hidden_size, output_size)) - 1 : data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size))]),
         .output_data(output_data)
@@ -51,9 +39,6 @@ endmodule
 
 
 module Neuron(
-    clock,
-    resetn,
-    
     input_data,
     weights,
     output_data
@@ -61,9 +46,6 @@ module Neuron(
     
     parameter data_width = `NN_DATA_WIDTH;
     parameter input_size;
-    
-    input clock;
-    input resetn;
     
     input [data_width * input_size - 1 : 0] input_data;
     input [data_width * (input_size + 1) - 1 : 0] weights;
