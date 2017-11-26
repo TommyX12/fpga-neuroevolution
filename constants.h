@@ -36,6 +36,8 @@
 `define NUM_FOOD   `MEM_ADDR_WIDTH'd15
 `define NUM_POISON `MEM_ADDR_WIDTH'd15
 
+`define RAND_WIDTH 16
+
 // TODO make sure the output with must be MEM_ADDR_WIDTH.
 `define ADDR_FOOD_X(ID)           (ID)
 `define ADDR_FOOD_Y(ID)           (ID + `NUM_FOOD)

@@ -26,10 +26,13 @@
 `define MAIN_OP_FOOD_DRAW_START       `MAIN_OP_WIDTH'd13
 `define MAIN_OP_FOOD_DRAW_DELAY       `MAIN_OP_WIDTH'd14
 `define MAIN_OP_FOOD_DRAW_WAIT        `MAIN_OP_WIDTH'd15
-`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd16
-`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd17
-`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd18
-`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd19
+`define MAIN_OP_POISON_DRAW_START     `MAIN_OP_WIDTH'd16
+`define MAIN_OP_POISON_DRAW_DELAY     `MAIN_OP_WIDTH'd17
+`define MAIN_OP_POISON_DRAW_WAIT      `MAIN_OP_WIDTH'd18
+`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd19
+`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd20
+`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd21
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd22
 
 
 module main(
@@ -122,6 +125,9 @@ module main(
     reg food_draw_start;
     wire food_draw_finished;
     
+    reg poison_draw_start;
+    wire poison_draw_finished;
+    
     reg fb_display_start;
     wire fb_display_finished;
     
@@ -139,8 +145,16 @@ module main(
     wire [`RESULT_WIDTH*ports-1:0] result;
     wire [ports-1:0] finished;
     
+    wire [15:0] rand;
+    
     // TODO update this with the number of subroutines
-    localparam ports = 5;
+    localparam ports = 6;
+    
+    Random16 random16(
+        .clock(clock),
+        .resetn(resetn),
+        .data(rand),
+    );
     
     DatapathRouter datapath_router(
         
@@ -215,6 +229,19 @@ module main(
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    PoisonDraw poison_draw(
+        .clock(clock),
+        .resetn(resetn),
+        .start(poison_draw_start),
+        .finished(poison_draw_finished),
+        
+        .id(`ID_WIDTH'd0),
+        .rand(rand),
+        
+        `PORT_CONNECT(3)
+    );
+    
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     FBDisplay fb_display(
         .start(fb_display_start),
         .clock(clock),
@@ -260,6 +287,7 @@ module main(
             draw_background_start <= 0;
             ant_draw_start <= 0;
             food_draw_start <= 0;
+            poison_draw_start <= 0;
             fb_display_start <= 0;
             fps_limiter_start <= 0;
         end
@@ -359,6 +387,25 @@ module main(
                     food_draw_start = 0;
                     
                     if (food_draw_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_POISON_DRAW_START: begin
+                    poison_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_POISON_DRAW_DELAY: begin
+                    poison_draw_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_POISON_DRAW_WAIT: begin
+                    poison_draw_start = 0;
+                    
+                    if (poison_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
