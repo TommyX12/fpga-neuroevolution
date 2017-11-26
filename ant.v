@@ -136,7 +136,7 @@ module AntDraw(
                         // TODO do something with result_dp
                         if (dx == `ANT_WIDTH - 1) begin
                             dx = `X_COORD_WIDTH'd0;
-                            if (y == `ANT_HEIGHT - 1) begin
+                            if (dy == `ANT_HEIGHT - 1) begin
                                 dy = `Y_COORD_WIDTH'd0;
                                 finished = 1;
                             end
