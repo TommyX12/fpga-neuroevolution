@@ -217,36 +217,27 @@ module main(
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    // genvar poison_i;
-    // generate
-        // for (poison_i = 0; poison_i < `NUM_POISON; poison_i = poison_i + 1) begin : generate_poison
+    genvar poison_i;
+    generate
+        for (poison_i = 0; poison_i < `NUM_POISON; poison_i = poison_i + 1) begin : generate_poison
         
             // reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
             // initial 
                 // id_reg = poison_i;
         
-            // PoisonDraw poison_draw(
-                // .clock(clock),
-                // .resetn(resetn),
-                // .start(poison_draw_start),
-                // .finished(poison_draw_finished[poison_i]),
+            PoisonDraw poison_draw(
+                .clock(clock),
+                .resetn(resetn),
+                .start(poison_draw_start),
+                .finished(poison_draw_finished[poison_i]),
                 
-                // .id(id_reg),
+                .id(poison_i),
+                .rand(rand),
                 
-                // `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + poison_i)
-            // );
-        // end
-    // endgenerate
-    PoisonDraw poison_draw(
-        .clock(clock),
-        .resetn(resetn),
-        .start(poison_draw_start),
-        .finished(poison_draw_finished),
-        
-        .id(`MEM_ADDR_WIDTH'd0),
-        
-        `PORT_CONNECT(3)
-    );
+                `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + poison_i)
+            );
+        end
+    endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     DrawBackground draw_background(

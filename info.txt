@@ -85,6 +85,8 @@ structs:
     GA update stores all weights of the neural network.
     and each ant module connects to one of them.
     GA also stores a copy buffer, used in copying.
+    
+    !!! make sure to use advanced physical optimization on final compilation.
 
 main loop:
     // logic
