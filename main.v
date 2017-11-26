@@ -117,7 +117,7 @@ module main(
     
     // TODO declare start and finished signal for each subroutine.
     reg ant_update_start;
-    wire ant_update_finished;
+    wire [`NUM_ANT-1:0] ant_update_finished;
     
     reg draw_background_start;
     wire draw_background_finished;
@@ -184,22 +184,30 @@ module main(
     .start_dp(start[index]), \
     .instruction_dp(instruction[`INSTRUCTION_WIDTH*((index) + 1)-1:`INSTRUCTION_WIDTH*(index)])
     
-    reg [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights;
+    reg [`NUM_ANT * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1 : 0] neural_net_weights;
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    AntUpdate ant_update(
-        .clock(clock),
-        .resetn(resetn),
-        .start(ant_update_start),
-        .finished(ant_update_finished),
-        
-        .id(`MEM_ADDR_WIDTH'd0),
-        .rand(rand),
-        
-        .neural_net_weights(neural_net_weights),
-        
-        `PORT_CONNECT(0)
-    );
+    genvar ant_i;
+    generate
+        for (ant_i = 0; ant_i < input_size; ant_i = ant_i + 1) begin : gen_ant
+            AntUpdate ant_update(
+                .clock(clock),
+                .resetn(resetn),
+                .start(ant_update_start),
+                .finished(ant_update_finished[ant_i]),
+                
+                .id(ant_i),
+                .rand(rand),
+                
+                .neural_net_weights(neural_net_weights[
+                    (ant_i + 1) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1
+                    :
+                    (ant_i) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
+                ]),
+                
+                `PORT_CONNECT(ant_i)
+            );
+    endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntDraw ant_draw(

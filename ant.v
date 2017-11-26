@@ -295,8 +295,8 @@ module AntUpdate(
             instruction_dp <= 0;
             
             // TODO reset any register
-            x <= `X_COORD_WIDTH'd0;
-            y <= `Y_COORD_WIDTH'd0;
+            x <= `X_COORD_WIDTH'd10;
+            y <= `Y_COORD_WIDTH'd10;
             fitness <= `FITNESS_WIDTH'd0;
             
             dx <= `X_COORD_WIDTH'd1;
@@ -502,16 +502,16 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_left) begin
+                    if (move_left && x > (`ANT_WIDTH / 2)) begin
                         x = x - `X_COORD_WIDTH'd1;
                     end
-                    if (move_right) begin
+                    if (move_right && x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
                         x = x + `X_COORD_WIDTH'd1;
                     end
-                    if (move_up) begin
+                    if (move_up && y > (`ANT_HEIGHT / 2)) begin
                         y = y - `Y_COORD_WIDTH'd1;
                     end
-                    if (move_down) begin
+                    if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
                         y = y + `Y_COORD_WIDTH'd1;
                     end
                     
