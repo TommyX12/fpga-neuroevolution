@@ -1,6 +1,6 @@
 `include "constants.h"
 
-// TODO change prefix to be for this file specifically
+//  change prefix to be for this file specifically
 `define ANTD_OP_WIDTH 5 // TODO this must be large enough
 `define ANTD_OP_STANDBY      `ANTD_OP_WIDTH'd0
 `define ANTD_OP_LOAD_X_START `ANTD_OP_WIDTH'd1
@@ -115,6 +115,7 @@ module AntDraw(
                         cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
                 end
+                
                 `ANTD_OP_DRAW_START: begin
                     start_dp = 1;
                     
@@ -172,6 +173,12 @@ endmodule
 `define ANTU_OP_SET_Y_START `ANTU_OP_WIDTH'd5
 `define ANTU_OP_SET_Y_DELAY `ANTU_OP_WIDTH'd6
 `define ANTU_OP_SET_Y_WAIT  `ANTU_OP_WIDTH'd7
+`define ANTU_OP_FOOD_X_START    `ANTU_OP_WIDTH'd8
+`define ANTU_OP_FOOD_X_DELAY    `ANTU_OP_WIDTH'd9
+`define ANTU_OP_FOOD_X_WAIT     `ANTU_OP_WIDTH'd10
+`define ANTU_OP_FOOD_Y_START    `ANTU_OP_WIDTH'd11
+`define ANTU_OP_FOOD_Y_DELAY    `ANTU_OP_WIDTH'd12
+`define ANTU_OP_FOOD_Y_WAIT     `ANTU_OP_WIDTH'd13
 
 module AntUpdate(
     input clock,
@@ -196,6 +203,9 @@ module AntUpdate(
     reg [`X_COORD_WIDTH-1:0] dx;
     reg [`Y_COORD_WIDTH-1:0] dy;
     
+    reg colliding;
+    reg [`MEM_ADDR_WIDTH-1:0] food_counter;
+    
     always @(posedge clock) begin
         if (!resetn) begin
             cur_state <= `ANTU_OP_STANDBY;
@@ -210,6 +220,9 @@ module AntUpdate(
             
             dx <= `X_COORD_WIDTH'd1;
             dy <= `Y_COORD_WIDTH'd1;
+            
+            colliding <= 0;
+            food_counter <= 0;
         end
         else begin
             // TODO make sure everything use blocking assignment
@@ -223,6 +236,9 @@ module AntUpdate(
                         
                         cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                         finished = 0;
+                        
+                        colliding = 0;
+                        food_counter = 0;
                     end
                 end
                 `ANTU_OP_UPDATE: begin
@@ -244,6 +260,7 @@ module AntUpdate(
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
+                
                 `ANTU_OP_SET_X_START: begin
                     start_dp = 1;
                     
@@ -266,6 +283,7 @@ module AntUpdate(
                         cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                     end
                 end
+                
                 `ANTU_OP_SET_Y_START: begin
                     start_dp = 1;
                     
@@ -288,6 +306,38 @@ module AntUpdate(
                         cur_state = `ANTU_OP_STANDBY;
                     end
                 end
+                
+                `ANTU_OP_FOOD_X_START: begin
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_FOOD_X(food_counter), `OPCODE_MEMREAD};
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_X_DELAY: begin
+                    start_dp = 1;
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_X_WAIT: begin
+                    start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        if (result_dp[`X_COORD_WIDTH-1:0] == x) begin
+                            // Then check Y coords
+                        end
+                        else if (food_counter == `NUM_FOOD - 1) begin
+                            cur_state = `ANTU_OP_STANDBY;
+                        end
+                        else begin
+                            cur_state = `ANTU_OP_FOOD_X_START;
+                        end
+                    end
+                end
+                
             endcase
         end
     end
