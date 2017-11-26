@@ -123,10 +123,10 @@ module main(
     wire ant_draw_finished;
     
     reg food_draw_start;
-    wire [`NUM_FOOD-1:0] food_draw_finished;
+    wire food_draw_finished;
     
     reg poison_draw_start;
-    wire poison_draw_finished;
+    wire [`NUM_POISON-1:0] poison_draw_finished;
     
     reg fb_display_start;
     wire fb_display_finished;
@@ -205,38 +205,50 @@ module main(
         `PORT_CONNECT(1)
     );
     
-    genvar food_i;
-    generate
-        for (food_i = 0; food_i < `NUM_FOOD; food_i = food_i + 1) begin : generate_food
+    FoodDraw food_draw(
+        .clock(clock),
+        .resetn(resetn),
+        .start(food_draw_start),
+        .finished(food_draw_finished),
         
-            reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
-            initial 
-                id_reg = food_i;
+        .id(`MEM_ADDR_WIDTH'd0),
         
-            FoodDraw food_draw(
-                .clock(clock),
-                .resetn(resetn),
-                .start(food_draw_start),
-                .finished(food_draw_finished[food_i]),
-                
-                .id(id_reg),
-                
-                `PORT_CONNECT(2 * `NUM_ANT + food_i)
-            );
-        end
-    endgenerate
+        `PORT_CONNECT(2)
+    );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    // genvar poison_i;
+    // generate
+        // for (poison_i = 0; poison_i < `NUM_POISON; poison_i = poison_i + 1) begin : generate_poison
+        
+            // reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
+            // initial 
+                // id_reg = poison_i;
+        
+            // PoisonDraw poison_draw(
+                // .clock(clock),
+                // .resetn(resetn),
+                // .start(poison_draw_start),
+                // .finished(poison_draw_finished[poison_i]),
+                
+                // .id(id_reg),
+                // .rand(rand),
+                
+                // `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + poison_i)
+            // );
+        // end
+    // endgenerate
+    
     PoisonDraw poison_draw(
         .clock(clock),
         .resetn(resetn),
         .start(poison_draw_start),
-        .finished(poison_draw_finished),
+        .finished(poison_draw_finished[poison_i]),
         
-        .id(`MEM_ADDR_WIDTH'd0),
+        .id(id_reg),
         .rand(rand),
         
-        `PORT_CONNECT(17)
+        `PORT_CONNECT(3)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -394,7 +406,7 @@ module main(
                 `MAIN_OP_FOOD_DRAW_WAIT: begin
                     food_draw_start = 0;
                     
-                    if (&food_draw_finished) begin
+                    if (food_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
@@ -413,7 +425,7 @@ module main(
                 `MAIN_OP_POISON_DRAW_WAIT: begin
                     poison_draw_start = 0;
                     
-                    if (poison_draw_finished) begin
+                    if (&poison_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end

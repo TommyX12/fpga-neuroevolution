@@ -85,7 +85,7 @@ module PoisonDraw(
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         // x = result_dp;
-                        x = rand;
+                        x = rand + id;
                         
                         cur_state = cur_state + `POISOND_OP_WIDTH'd1;
                     end
