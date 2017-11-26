@@ -328,73 +328,73 @@ module AntUpdate(
                     end
                 end
                 
-                `ANDU_OP_LOAD_X_START: begin
+                `ANTU_OP_LOAD_X_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {`ADDR_ANT_X(id), `OPCODE_MEMREAD};
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_X_DELAY: begin
+                `ANTU_OP_LOAD_X_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_X_WAIT: begin
+                `ANTU_OP_LOAD_X_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         x = result_dp;
                         
-                        cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                     end
                 end
-                `ANDU_OP_LOAD_Y_START: begin
+                `ANTU_OP_LOAD_Y_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {`ADDR_ANT_Y(id), `OPCODE_MEMREAD};
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_Y_DELAY: begin
+                `ANTU_OP_LOAD_Y_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_Y_WAIT: begin
+                `ANTU_OP_LOAD_Y_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         y = result_dp;
                         
-                        cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                     end
                 end
-                `ANDU_OP_LOAD_FITNESS_START: begin
+                `ANTU_OP_LOAD_FITNESS_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {`ADDR_ANT_FITNESS(id), `OPCODE_MEMREAD};
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_FITNESS_DELAY: begin
+                `ANTU_OP_LOAD_FITNESS_DELAY: begin
                     start_dp = 1;
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANDU_OP_LOAD_FITNESS_WAIT: begin
+                `ANTU_OP_LOAD_FITNESS_WAIT: begin
                     start_dp = 0;
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
                         fitness = result_dp;
                         
-                        cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                     end
                 end
                 
@@ -403,76 +403,76 @@ module AntUpdate(
                 
                 `ANTU_OP_FOOD_X_START : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_X_DELAY : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_X_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_Y_START : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_Y_DELAY : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_Y_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_SET_START : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_SET_DELAY : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_SET_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
 
                 `ANTU_OP_POISON_X_START : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_X_DELAY : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_X_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_Y_START : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_Y_DELAY : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_Y_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_SET_START: begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_SET_DELAY: begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_SET_WAIT : begin
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 
                 
@@ -492,7 +492,7 @@ module AntUpdate(
                         // dy = -dy;
                     // end
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
@@ -509,7 +509,7 @@ module AntUpdate(
                         y = y + `Y_COORD_WIDTH'd1;
                     end
                     
-                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 
                 `ANTU_OP_SET_X_START: begin
