@@ -32,6 +32,8 @@ module AntDraw(
     // TODO declare any register
     reg [`X_COORD_WIDTH-1:0] x;
     reg [`Y_COORD_WIDTH-1:0] y;
+    reg [`X_COORD_WIDTH-1:0] dx;
+    reg [`Y_COORD_WIDTH-1:0] dy;
     reg [`COLOUR_WIDTH-1:0] colour; // WE'RE CANADIAN
     reg plot;
     
@@ -46,6 +48,8 @@ module AntDraw(
             // TODO reset any register
             x <= `X_COORD_WIDTH'd0;
             y <= `Y_COORD_WIDTH'd0;
+            dx <= `X_COORD_WIDTH'd0;
+            dy <= `Y_COORD_WIDTH'd0;
             colour <= `COLOUR_WIDTH'd0;
             plot <= 0;
         end
@@ -58,6 +62,8 @@ module AntDraw(
                     
                     if (start) begin
                         // TODO register initialization on start
+                        dx <= `X_COORD_WIDTH'd0;
+                        dy <= `Y_COORD_WIDTH'd0;
                         
                         cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                         finished = 0;
@@ -81,7 +87,7 @@ module AntDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        x = result_dp;
+                        x = result_dp - 1;
                         
                         cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
@@ -104,7 +110,7 @@ module AntDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        y = result_dp;
+                        y = result_dp - 1;
                         
                         cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
@@ -114,7 +120,7 @@ module AntDraw(
                     
                     // TODO process and replace with your instruction
                     colour = `COLOUR_ANT;
-                    instruction_dp = {1'b1, colour, y, x, `OPCODE_DRAW};
+                    instruction_dp = {1'b1, colour, y + dy, x + dx, `OPCODE_DRAW};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
@@ -128,8 +134,26 @@ module AntDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
+                        if (dx == `ANT_WIDTH - 1) begin
+                            dx = `X_COORD_WIDTH'd0;
+                            if (y == `ANT_HEIGHT - 1) begin
+                                dy = `Y_COORD_WIDTH'd0;
+                                finished = 1;
+                            end
+                            else begin
+                                dy = dy + 1;
+                            end
+                        end
+                        else begin
+                            dx = dx + 1;
+                        end
                         
-                        cur_state = `ANTD_OP_STANDBY;
+                        if (finished) begin
+                            cur_state = `ANTD_OP_STANDBY;
+                        end
+                        else begin
+                            cur_state = `ANTD_OP_DRAW_START;
+                        end
                     end
                 end
             endcase
@@ -208,13 +232,13 @@ module AntUpdate(
                     if (x < `X_COORD_WIDTH'd0) begin
                         dx = -dx;
                     end
-                    else if (x >= `SCREEN_WIDTH - `BLOCK_WIDTH) begin
+                    else if (x >= `SCREEN_WIDTH - `ANT_WIDTH) begin
                         dx = -dx;
                     end
                     if (y < `Y_COORD_WIDTH'd0) begin
                         dy = -dy;
                     end
-                    else if (y >= `SCREEN_HEIGHT - `BLOCK_HEIGHT) begin
+                    else if (y >= `SCREEN_HEIGHT - `ANT_HEIGHT) begin
                         dy = -dy;
                     end
                     

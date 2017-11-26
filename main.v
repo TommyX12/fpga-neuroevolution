@@ -148,7 +148,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = 6 + `NUM_FOOD;
+    localparam ports = 2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 2;
     
     Random16 random16(
         .clock(clock),
@@ -181,7 +181,6 @@ module main(
     .start_dp(start[index]), \
     .instruction_dp(instruction[`INSTRUCTION_WIDTH*(index + 1)-1:`INSTRUCTION_WIDTH*index])
 
-    
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntUpdate ant_update(
         .clock(clock),
@@ -189,19 +188,9 @@ module main(
         .start(ant_update_start),
         .finished(ant_update_finished),
         
-        .id(`ID_WIDTH'd0),
+        .id(`MEM_ADDR_WIDTH'd0),
         
         `PORT_CONNECT(0)
-    );
-    
-    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    DrawBackground draw_background(
-        .start(draw_background_start),
-        .clock(clock),
-        .resetn(resetn),
-        .finished(draw_background_finished),
-        
-        `PORT_CONNECT(1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -211,16 +200,16 @@ module main(
         .start(ant_draw_start),
         .finished(ant_draw_finished),
         
-        .id(`ID_WIDTH'd0),
+        .id(`MEM_ADDR_WIDTH'd0),
         
-        `PORT_CONNECT(2)
+        `PORT_CONNECT(1)
     );
     
     genvar food_i;
     generate
         for (food_i = 0; food_i < `NUM_FOOD; food_i = food_i + 1) begin : generate_food
         
-            reg [`ID_WIDTH - 1:0] id_reg;
+            reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
             initial 
                 id_reg = food_i;
         
@@ -232,22 +221,10 @@ module main(
                 
                 .id(id_reg),
                 
-                `PORT_CONNECT(food_i + 3)
+                `PORT_CONNECT(2 * `NUM_ANT + food_i)
             );
         end
     endgenerate
-    
-    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    FoodDraw food_draw(
-        .clock(clock),
-        .resetn(resetn),
-        .start(food_draw_start),
-        .finished(food_draw_finished),
-        
-        .id(`ID_WIDTH'd0),
-        
-        `PORT_CONNECT(`NUM_FOOD + 3)
-    );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     PoisonDraw poison_draw(
@@ -256,10 +233,20 @@ module main(
         .start(poison_draw_start),
         .finished(poison_draw_finished),
         
-        .id(`ID_WIDTH'd0),
+        .id(`MEM_ADDR_WIDTH'd0),
         .rand(rand),
         
-        `PORT_CONNECT(`NUM_FOOD + 4)
+        `PORT_CONNECT(2)
+    );
+    
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    DrawBackground draw_background(
+        .start(draw_background_start),
+        .clock(clock),
+        .resetn(resetn),
+        .finished(draw_background_finished),
+        
+        `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 0)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -269,7 +256,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        `PORT_CONNECT(`NUM_FOOD + 5)
+        `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
