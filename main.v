@@ -126,7 +126,7 @@ module main(
     wire food_draw_finished;
     
     reg poison_draw_start;
-    wire [`NUM_POISON-1:0] poison_draw_finished;
+    wire poison_draw_finished;
     
     reg fb_display_start;
     wire fb_display_finished;
@@ -425,7 +425,7 @@ module main(
                 `MAIN_OP_POISON_DRAW_WAIT: begin
                     poison_draw_start = 0;
                     
-                    if (&poison_draw_finished) begin
+                    if (poison_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
