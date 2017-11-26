@@ -394,7 +394,7 @@ module main(
                     ant_draw_start = 0;
                     
                     if (ant_draw_finished) begin
-                        if (cur_id = `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
+                        if (cur_id == `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
                             cur_id = 0;
                             cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                         end
@@ -420,7 +420,7 @@ module main(
                     food_draw_start = 0;
                     
                     if (food_draw_finished) begin
-                        if (cur_id = `NUM_FOOD - `MEM_ADDR_WIDTH'd1) begin
+                        if (cur_id == `NUM_FOOD - `MEM_ADDR_WIDTH'd1) begin
                             cur_id = 0;
                             cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                         end
@@ -446,7 +446,7 @@ module main(
                     poison_draw_start = 0;
                     
                     if (poison_draw_finished) begin
-                        if (cur_id = `NUM_POISON - `MEM_ADDR_WIDTH'd1) begin
+                        if (cur_id == `NUM_POISON - `MEM_ADDR_WIDTH'd1) begin
                             cur_id = 0;
                             cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                         end
