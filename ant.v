@@ -280,6 +280,10 @@ module AntUpdate(
             move_down
         })
     );
+    defparam neural_net.data_width = `NN_DATA_WIDTH;
+    defparam neural_net.input_size = `NN_INPUT_SIZE;
+    defparam neural_net.hidden_size = `NN_HIDDEN_SIZE;
+    defparam neural_net.output_size = `NN_OUTPUT_SIZE;
 	 
     
     always @(posedge clock) begin
