@@ -156,7 +156,7 @@ module main(
     Random16 random16(
         .clock(clock),
         .resetn(resetn),
-        .data(rand),
+        .data(rand)
     );
     
     DatapathRouter datapath_router(
@@ -301,7 +301,7 @@ module main(
         .y(y),
         .colour(colour),
         .plot(writeEn),
-        .finished(finished_dp),
+        .finished(finished_dp)
     );
     
     always @(posedge clock) begin

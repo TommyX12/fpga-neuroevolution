@@ -20,8 +20,8 @@ module NeuralNet(
     wire [data_width * hidden_size - 1 : 0] hidden_output;
     
     Neuron #(
-        .data_width(data_width);
-        .input_size(input_size);
+        .data_width(data_width),
+        .input_size(input_size)
     )
     hidden_layer[hidden_size - 1 : 0] 
     (
@@ -31,8 +31,8 @@ module NeuralNet(
     );
     
     Neuron #(
-        .data_width(data_width);
-        .input_size(hidden_size);
+        .data_width(data_width),
+        .input_size(hidden_size)
     )
     output_layer[output_size - 1 : 0] 
     (
@@ -51,7 +51,7 @@ module Neuron(
     );
     
     parameter data_width = `NN_DATA_WIDTH;
-    parameter input_size = 1;
+    parameter input_size;
     
     input [data_width * input_size - 1 : 0] input_data;
     input [data_width * (input_size + 1) - 1 : 0] weights;
