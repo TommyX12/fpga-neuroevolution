@@ -34,7 +34,7 @@
 
 `define NUM_ANT    `MEM_ADDR_WIDTH'd1
 `define NUM_FOOD   `MEM_ADDR_WIDTH'd1
-`define NUM_POISON `MEM_ADDR_WIDTH'd2
+`define NUM_POISON `MEM_ADDR_WIDTH'd1
 
 `define RAND_WIDTH 16
 
