@@ -192,6 +192,7 @@ module main(
         .finished(ant_update_finished),
         
         .id(`MEM_ADDR_WIDTH'd0),
+        .rand(rand),
         
         `PORT_CONNECT(0)
     );

@@ -71,7 +71,7 @@ datapath multiplexer for concurrent access control.
 
 structs:
     ant:
-        x, y, food eaten, poison eaten, current fitness
+        x, y, current fitness
     
     food:
         x, y
@@ -124,17 +124,32 @@ main loop:
         
     ant update (parallel for each ant)
         test if food collide.
-            if yes, change food to another random location, update current food eaten count. store to memory.
-            in the same step, retrieve closest food location.
+            if yes, change food to another random location, update current fitness.
+            in the same step, retrieve closest food location into a register.
                 
         test if poison collide.
-            if yes, change poison to another random location, update current poison eaten count. store to memory.
-            in the same step, retrieve closest poison location.
-        
-        compute current fitness, store to memory
+            if yes, change poison to another random location, update current fitness.
+            in the same step, retrieve closest poison location into a register.
         
         run neural network
-        
+            fixed point arithmetic: multiply and shift.
+            use 8 bits operands which actually represents xxxx.xxxx
+            input:
+                food x to the left
+                food x to the right
+                food y to the left
+                food y to the right
+                poison x to the left
+                poison x to the right
+                poison y to the left
+                poison y to the right
+            
+            output:
+                move left
+                move right
+                move up
+                move down
+            
         move depending on output
         
         !!! note:
