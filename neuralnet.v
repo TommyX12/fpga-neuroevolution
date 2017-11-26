@@ -19,21 +19,27 @@ module NeuralNet(
     
     wire [data_width * hidden_size - 1 : 0] hidden_output;
     
-    Neuron hidden_layer[hidden_size - 1 : 0] (
+    Neuron #(
+        .data_width(data_width);
+        .input_size(input_size);
+    )
+    hidden_layer[hidden_size - 1 : 0] 
+    (
         .input_data(input_data),
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size)) - 1 : 0]),
         .output_data(hidden_output)
     );
-    defparam hidden_layer.data_width = data_width;
-    defparam hidden_layer.input_size = input_size;
     
-    Neuron output_layer[output_size - 1 : 0] (
+    Neuron #(
+        .data_width(data_width);
+        .input_size(hidden_size);
+    )
+    output_layer[output_size - 1 : 0] 
+    (
         .input_data(hidden_output),
         .weights(weights[data_width * (`NN_GET_WEIGHTS_SIZE(input_size, hidden_size, output_size)) - 1 : data_width * (`NN_GET_WEIGHTS_SIZE_1(input_size, hidden_size, output_size))]),
         .output_data(output_data)
     );
-    defparam output_layer.data_width = data_width;
-    defparam output_layer.input_size = hidden_size;
     
 endmodule
 
