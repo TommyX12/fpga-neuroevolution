@@ -22,4 +22,4 @@ module Random16 (clock, resetn, data);
         end
     end
 
-endmodule;
+endmodule

@@ -148,7 +148,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = 6;
+    localparam ports = 6 + `NUM_FOOD;
     
     Random16 random16(
         .clock(clock),
@@ -216,6 +216,27 @@ module main(
         `PORT_CONNECT(2)
     );
     
+    genvar food_i;
+    generate
+        for (food_i = 0; food_i < `NUM_FOOD; food_i = food_i + 1) begin : generate_food
+        
+            reg [`ID_WIDTH - 1:0] id_reg;
+            initial 
+                id_reg = food_i;
+        
+            FoodDraw food_draw(
+                .clock(clock),
+                .resetn(resetn),
+                .start(food_draw_start),
+                .finished(food_draw_finished),
+                
+                .id(id_reg),
+                
+                `PORT_CONNECT(food_i + 3)
+            );
+        end
+    endgenerate
+    
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     FoodDraw food_draw(
         .clock(clock),
@@ -225,7 +246,7 @@ module main(
         
         .id(`ID_WIDTH'd0),
         
-        `PORT_CONNECT(3)
+        `PORT_CONNECT(`NUM_FOOD + 3)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -238,7 +259,7 @@ module main(
         .id(`ID_WIDTH'd0),
         .rand(rand),
         
-        `PORT_CONNECT(3)
+        `PORT_CONNECT(`NUM_FOOD + 4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -248,7 +269,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        `PORT_CONNECT(4)
+        `PORT_CONNECT(`NUM_FOOD + 5)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
