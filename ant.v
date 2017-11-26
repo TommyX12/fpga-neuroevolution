@@ -398,9 +398,82 @@ module AntUpdate(
                     end
                 end
                 
-                
                 // TODO
                 // I added extra states for writing the modified food location back to memory
+                
+                `ANTU_OP_FOOD_X_START : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_X_DELAY : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_X_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_Y_START : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_Y_DELAY : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_Y_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_START : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_DELAY : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+
+                `ANTU_OP_POISON_X_START : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_X_DELAY : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_X_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_Y_START : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_Y_DELAY : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_Y_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_START: begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_DELAY: begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_WAIT : begin
+                    
+                    cur_state = cur_state + `ANDU_OP_WIDTH'd1;
+                end
                 
                 
                 `ANTU_OP_NN_START: begin
