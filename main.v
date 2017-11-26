@@ -112,6 +112,9 @@ module main(
     reg [`MAIN_OP_WIDTH-1:0] next_state;
     reg [`MAIN_OP_WIDTH-1:0] cur_state;
     
+    // TODO initialize other registers
+    reg [`MEM_ADDR_WIDTH-1:0] cur_id;
+    
     // TODO declare start and finished signal for each subroutine.
     reg ant_update_start;
     wire ant_update_finished;
@@ -126,7 +129,7 @@ module main(
     wire food_draw_finished;
     
     reg poison_draw_start;
-    wire [`NUM_POISON-1:0] poison_draw_finished;
+    wire poison_draw_finished;
     
     reg fb_display_start;
     wire fb_display_finished;
@@ -148,7 +151,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = 2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 2;
+    localparam ports = `NUM_ANT + 5;
     
     Random16 random16(
         .clock(clock),
@@ -200,9 +203,9 @@ module main(
         .start(ant_draw_start),
         .finished(ant_draw_finished),
         
-        .id(`MEM_ADDR_WIDTH'd0),
+        .id(cur_id),
         
-        `PORT_CONNECT(1)
+        `PORT_CONNECT(`NUM_ANT + 0)
     );
     
     FoodDraw food_draw(
@@ -211,33 +214,44 @@ module main(
         .start(food_draw_start),
         .finished(food_draw_finished),
         
-        .id(`MEM_ADDR_WIDTH'd0),
+        .id(cur_id),
         
-        `PORT_CONNECT(2)
+        `PORT_CONNECT(`NUM_ANT + 1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    genvar poison_i;
-    generate
-        for (poison_i = 0; poison_i < `NUM_POISON; poison_i = poison_i + 1) begin : generate_poison
+    PoisonDraw poison_draw(
+        .clock(clock),
+        .resetn(resetn),
+        .start(poison_draw_start),
+        .finished(poison_draw_finished),
         
-            // reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
-            // initial 
-                // id_reg = poison_i;
+        .id(cur_id),
+        .rand(rand),
         
-            PoisonDraw poison_draw(
-                .clock(clock),
-                .resetn(resetn),
-                .start(poison_draw_start),
-                .finished(poison_draw_finished[poison_i]),
+        `PORT_CONNECT(`NUM_ANT + 2)
+    );
+    // genvar poison_i;
+    // generate
+        // for (poison_i = 0; poison_i < `NUM_POISON; poison_i = poison_i + 1) begin : generate_poison
+        
+            // // reg [`MEM_ADDR_WIDTH - 1:0] id_reg;
+            // // initial 
+                // // id_reg = poison_i;
+        
+            // PoisonDraw poison_draw(
+                // .clock(clock),
+                // .resetn(resetn),
+                // .start(poison_draw_start),
+                // .finished(poison_draw_finished[poison_i]),
                 
-                .id(poison_i),
-                .rand(rand),
+                // .id(poison_i),
+                // .rand(rand),
                 
-                `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + poison_i)
-            );
-        end
-    endgenerate
+                // `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + poison_i)
+            // );
+        // end
+    // endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     DrawBackground draw_background(
@@ -246,7 +260,7 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
-        `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 0)
+        `PORT_CONNECT(`NUM_ANT + 3)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -256,7 +270,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        `PORT_CONNECT(2 * `NUM_ANT + `NUM_FOOD + `NUM_POISON + 1)
+        `PORT_CONNECT(`NUM_ANT + 4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -298,12 +312,16 @@ module main(
             poison_draw_start <= 0;
             fb_display_start <= 0;
             fps_limiter_start <= 0;
+            
+            cur_id <= 0;
         end
         else begin
             // TODO make sure this matches the order of state code, and make sure no typo.
             case (cur_state)
                 `MAIN_OP_STANDBY: begin
                     cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    
+                    cur_id = 0;
                 end
                 
                 // TODO make sure there is no typo and everything matches the subroutine name.
@@ -376,7 +394,14 @@ module main(
                     ant_draw_start = 0;
                     
                     if (ant_draw_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        if (cur_id = `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
+                            cur_id = 0;
+                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        end
+                        else begin
+                            cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `MAIN_OP_ANT_DRAW_START;
+                        end
                     end
                 end
                 
@@ -395,7 +420,14 @@ module main(
                     food_draw_start = 0;
                     
                     if (food_draw_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        if (cur_id = `NUM_FOOD - `MEM_ADDR_WIDTH'd1) begin
+                            cur_id = 0;
+                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        end
+                        else begin
+                            cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `MAIN_OP_FOOD_DRAW_START;
+                        end
                     end
                 end
                 
@@ -413,8 +445,15 @@ module main(
                 `MAIN_OP_POISON_DRAW_WAIT: begin
                     poison_draw_start = 0;
                     
-                    if (&poison_draw_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    if (poison_draw_finished) begin
+                        if (cur_id = `NUM_POISON - `MEM_ADDR_WIDTH'd1) begin
+                            cur_id = 0;
+                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        end
+                        else begin
+                            cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `MAIN_OP_POISON_DRAW_START;
+                        end
                     end
                 end
                 
