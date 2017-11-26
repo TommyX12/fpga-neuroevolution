@@ -177,9 +177,9 @@ module main(
     
 `define PORT_CONNECT(index) \
     .finished_dp(finished[index]), \
-    .result_dp(result[`RESULT_WIDTH*(index + 1)-1:`RESULT_WIDTH*index]), \
+    .result_dp(result[`RESULT_WIDTH*((index) + 1)-1:`RESULT_WIDTH*(index)]), \
     .start_dp(start[index]), \
-    .instruction_dp(instruction[`INSTRUCTION_WIDTH*(index + 1)-1:`INSTRUCTION_WIDTH*index])
+    .instruction_dp(instruction[`INSTRUCTION_WIDTH*((index) + 1)-1:`INSTRUCTION_WIDTH*(index)])
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntUpdate ant_update(
