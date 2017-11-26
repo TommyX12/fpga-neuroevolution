@@ -189,7 +189,7 @@ module main(
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     genvar ant_i;
     generate
-        for (ant_i = 0; ant_i < input_size; ant_i = ant_i + 1) begin : gen_ant
+        for (ant_i = 0; ant_i < `NUM_ANT; ant_i = ant_i + 1) begin : gen_ant
             AntUpdate ant_update(
                 .clock(clock),
                 .resetn(resetn),
@@ -207,6 +207,7 @@ module main(
                 
                 `PORT_CONNECT(ant_i)
             );
+        end
     endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
