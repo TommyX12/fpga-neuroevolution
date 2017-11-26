@@ -242,18 +242,19 @@ module AntUpdate(
     
     reg colliding;
     reg [`MEM_ADDR_WIDTH-1:0] food_counter;
+    // TODO tip: store closest food position and distance here.
     
     
     // neural net related stuff
     // neural net input
-    reg [`NN_DATA_WIDTH-1:0] food_x_left;
-    reg [`NN_DATA_WIDTH-1:0] food_x_right;
-    reg [`NN_DATA_WIDTH-1:0] food_y_up;
-    reg [`NN_DATA_WIDTH-1:0] food_y_down;
-    reg [`NN_DATA_WIDTH-1:0] poison_x_left;
-    reg [`NN_DATA_WIDTH-1:0] poison_x_right;
-    reg [`NN_DATA_WIDTH-1:0] poison_y_up;
-    reg [`NN_DATA_WIDTH-1:0] poison_y_down;
+    reg [`NN_DATA_WIDTH-1:0] food_left;
+    reg [`NN_DATA_WIDTH-1:0] food_right;
+    reg [`NN_DATA_WIDTH-1:0] food_up;
+    reg [`NN_DATA_WIDTH-1:0] food_down;
+    reg [`NN_DATA_WIDTH-1:0] poison_left;
+    reg [`NN_DATA_WIDTH-1:0] poison_right;
+    reg [`NN_DATA_WIDTH-1:0] poison_up;
+    reg [`NN_DATA_WIDTH-1:0] poison_down;
     // neural net output
     wire [`NN_DATA_WIDTH-1:0] move_left;
     wire [`NN_DATA_WIDTH-1:0] move_right;
@@ -262,14 +263,14 @@ module AntUpdate(
     
     NeuralNet neural_net(
         .input_data({
-            food_x_left,
-            food_x_right,
-            food_y_up,
-            food_y_down,
-            poison_x_left,
-            poison_x_right,
-            poison_y_up,
-            poison_y_down
+            food_left,
+            food_right,
+            food_up,
+            food_down,
+            poison_left,
+            poison_right,
+            poison_up,
+            poison_down
         }),
         .weights(neural_net_weights),
         .output_data({
@@ -300,6 +301,14 @@ module AntUpdate(
             food_counter <= 0;
             
             // neural net related stuff
+            food_left <= 0;
+            food_right <= 0;
+            food_up <= 0;
+            food_down <= 0;
+            poison_left <= 0;
+            poison_right <= 0;
+            poison_up <= 0;
+            poison_down <= 0;
         end
         else begin
             // TODO make sure everything use blocking assignment

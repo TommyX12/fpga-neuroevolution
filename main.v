@@ -183,6 +183,8 @@ module main(
     .result_dp(result[`RESULT_WIDTH*((index) + 1)-1:`RESULT_WIDTH*(index)]), \
     .start_dp(start[index]), \
     .instruction_dp(instruction[`INSTRUCTION_WIDTH*((index) + 1)-1:`INSTRUCTION_WIDTH*(index)])
+    
+    reg [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights;
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntUpdate ant_update(
@@ -193,6 +195,8 @@ module main(
         
         .id(`MEM_ADDR_WIDTH'd0),
         .rand(rand),
+        
+        .neural_net_weights(neural_net_weights),
         
         `PORT_CONNECT(0)
     );
