@@ -118,7 +118,7 @@ module PoisonDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = `COLOUR_POISON;
+                    colour = id ? `COLOUR_POISON : `COLOUR_FOOD;
                     instruction_dp = {1'b1, colour, y, x, `OPCODE_DRAW};
                     
                     cur_state = cur_state + `POISOND_OP_WIDTH'd1;
