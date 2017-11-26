@@ -123,7 +123,7 @@ module main(
     wire ant_draw_finished;
     
     reg food_draw_start;
-    wire food_draw_finished;
+    wire [`NUM_FOOD-1:0] food_draw_finished;
     
     reg poison_draw_start;
     wire poison_draw_finished;
@@ -217,7 +217,7 @@ module main(
                 .clock(clock),
                 .resetn(resetn),
                 .start(food_draw_start),
-                .finished(food_draw_finished),
+                .finished(food_draw_finished[food_i]),
                 
                 .id(id_reg),
                 
@@ -394,7 +394,7 @@ module main(
                 `MAIN_OP_FOOD_DRAW_WAIT: begin
                     food_draw_start = 0;
                     
-                    if (food_draw_finished) begin
+                    if (&food_draw_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
