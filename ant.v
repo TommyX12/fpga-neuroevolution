@@ -165,20 +165,20 @@ endmodule
 
 // TODO change prefix to be for this file specifically
 `define ANTU_OP_WIDTH 5 // TODO this must be large enough
-`define ANTU_OP_STANDBY     `ANTU_OP_WIDTH'd0
-`define ANTU_OP_UPDATE      `ANTU_OP_WIDTH'd1
-`define ANTU_OP_SET_X_START `ANTU_OP_WIDTH'd2
-`define ANTU_OP_SET_X_DELAY `ANTU_OP_WIDTH'd3
-`define ANTU_OP_SET_X_WAIT  `ANTU_OP_WIDTH'd4
-`define ANTU_OP_SET_Y_START `ANTU_OP_WIDTH'd5
-`define ANTU_OP_SET_Y_DELAY `ANTU_OP_WIDTH'd6
-`define ANTU_OP_SET_Y_WAIT  `ANTU_OP_WIDTH'd7
-`define ANTU_OP_FOOD_X_START    `ANTU_OP_WIDTH'd8
-`define ANTU_OP_FOOD_X_DELAY    `ANTU_OP_WIDTH'd9
-`define ANTU_OP_FOOD_X_WAIT     `ANTU_OP_WIDTH'd10
-`define ANTU_OP_FOOD_Y_START    `ANTU_OP_WIDTH'd11
-`define ANTU_OP_FOOD_Y_DELAY    `ANTU_OP_WIDTH'd12
-`define ANTU_OP_FOOD_Y_WAIT     `ANTU_OP_WIDTH'd13
+`define ANTU_OP_STANDBY      `ANTU_OP_WIDTH'd0
+`define ANTU_OP_UPDATE       `ANTU_OP_WIDTH'd1
+`define ANTU_OP_SET_X_START  `ANTU_OP_WIDTH'd2
+`define ANTU_OP_SET_X_DELAY  `ANTU_OP_WIDTH'd3
+`define ANTU_OP_SET_X_WAIT   `ANTU_OP_WIDTH'd4
+`define ANTU_OP_SET_Y_START  `ANTU_OP_WIDTH'd5
+`define ANTU_OP_SET_Y_DELAY  `ANTU_OP_WIDTH'd6
+`define ANTU_OP_SET_Y_WAIT   `ANTU_OP_WIDTH'd7
+`define ANTU_OP_FOOD_X_START `ANTU_OP_WIDTH'd8
+`define ANTU_OP_FOOD_X_DELAY `ANTU_OP_WIDTH'd9
+`define ANTU_OP_FOOD_X_WAIT  `ANTU_OP_WIDTH'd10
+`define ANTU_OP_FOOD_Y_START `ANTU_OP_WIDTH'd11
+`define ANTU_OP_FOOD_Y_DELAY `ANTU_OP_WIDTH'd12
+`define ANTU_OP_FOOD_Y_WAIT  `ANTU_OP_WIDTH'd13
 
 module AntUpdate(
     input clock,
@@ -307,36 +307,36 @@ module AntUpdate(
                     end
                 end
                 
-                `ANTU_OP_FOOD_X_START: begin
-                    start_dp = 1;
+                // `ANTU_OP_FOOD_X_START: begin
+                    // start_dp = 1;
                     
-                    // TODO process and replace with your instruction
-                    instruction_dp = {`ADDR_FOOD_X(food_counter), `OPCODE_MEMREAD};
+                    // // TODO process and replace with your instruction
+                    // instruction_dp = {`ADDR_FOOD_X(food_counter), `OPCODE_MEMREAD};
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
-                end
-                `ANTU_OP_FOOD_X_DELAY: begin
-                    start_dp = 1;
+                    // cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                // end
+                // `ANTU_OP_FOOD_X_DELAY: begin
+                    // start_dp = 1;
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
-                end
-                `ANTU_OP_FOOD_X_WAIT: begin
-                    start_dp = 0;
+                    // cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                // end
+                // `ANTU_OP_FOOD_X_WAIT: begin
+                    // start_dp = 0;
                     
-                    if (finished_dp) begin
-                        // TODO do something with result_dp
+                    // if (finished_dp) begin
+                        // // TODO do something with result_dp
                         
-                        if (result_dp[`X_COORD_WIDTH-1:0] == x) begin
-                            // Then check Y coords
-                        end
-                        else if (food_counter == `NUM_FOOD - 1) begin
-                            cur_state = `ANTU_OP_STANDBY;
-                        end
-                        else begin
-                            cur_state = `ANTU_OP_FOOD_X_START;
-                        end
-                    end
-                end
+                        // if (result_dp[`X_COORD_WIDTH-1:0] == x) begin
+                            // // Then check Y coords
+                        // end
+                        // else if (food_counter == `NUM_FOOD - 1) begin
+                            // cur_state = `ANTU_OP_STANDBY;
+                        // end
+                        // else begin
+                            // cur_state = `ANTU_OP_FOOD_X_START;
+                        // end
+                    // end
+                // end
                 
             endcase
         end
