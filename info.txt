@@ -89,6 +89,8 @@ structs:
     !!! make sure to use advanced physical optimization on final compilation.
     
     !!! make sure to account for screen size when randomizing (especially in ant)
+    
+    !!! use slicing operator, NOT shift, to access part of array.
 
 main loop:
     // logic

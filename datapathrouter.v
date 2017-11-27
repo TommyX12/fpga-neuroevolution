@@ -66,17 +66,18 @@ module DatapathRouter(
                 start_dp = 0;
                 if (finished_dp) begin
                     // receive
-                    result = result & ~(
-                        ({{(`RESULT_WIDTH*(ports - 1)){1'd0}}, {(`RESULT_WIDTH){1'd1}}})
-                        << (`RESULT_WIDTH * ptr)
-                    );
-                    result = result | (
-                        (
-                        ({{(`RESULT_WIDTH*(ports - 1)){1'd0}}, {(`RESULT_WIDTH){1'd1}}})
-                        & result_dp
-                        )
-                        << (`RESULT_WIDTH * ptr)
-                    );
+                    // result = result & ~(
+                        // ({{(`RESULT_WIDTH*(ports - 1)){1'd0}}, {(`RESULT_WIDTH){1'd1}}})
+                        // << (`RESULT_WIDTH * ptr)
+                    // );
+                    // result = result | (
+                        // (
+                        // ({{(`RESULT_WIDTH*(ports - 1)){1'd0}}, {(`RESULT_WIDTH){1'd1}}})
+                        // & result_dp
+                        // )
+                        // << (`RESULT_WIDTH * ptr)
+                    // );
+                    result[ptr * `RESULT_WIDTH +: `RESULT_WIDTH] = result_dp;
                     finished = finished | ptr_mask;
                     
                     waiting = 0;
@@ -95,7 +96,8 @@ module DatapathRouter(
                         end
                         if (ptr_mask & ~(finished)) begin
                             // send
-                            instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
+                            // instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
+                            instruction_dp = instruction[ptr * `RESULT_WIDTH +: `RESULT_WIDTH];
                             start_dp = 1;
                             
                             delay = 1;

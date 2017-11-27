@@ -64,16 +64,6 @@ module Evolve(
     
     // TODO declare any register
     reg [`NN_WEIGHTS_BITS_COUNT - 1 : 0] weights_buffer;
-    wire [`NN_WEIGHTS_BITS_COUNT - 1 : 0] weights_data_mask;
-    assign weights_data_mask = {
-        {(`NN_WEIGHTS_BITS_COUNT - `NN_DATA_WIDTH){1'b0}},
-        {(`NN_DATA_WIDTH){1'b1}}
-    };
-    wire [`NN_WEIGHTS_BITS_COUNT - 1 : 0] weights_bit_mask;
-    assign weights_bit_mask = {
-        {(`NN_WEIGHTS_BITS_COUNT - 1){1'b0}},
-        1'b1
-    };
     
     reg [`DELAY_WIDTH-1:0] gen_counter;
     
@@ -161,10 +151,7 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_WEIGHT_RAND: begin
-                    neural_net_weights = neural_net_weights |
-                        (weights_data_mask & rand)
-                        << (weights_data_index * `NN_DATA_WIDTH)
-                    ;
+                    neural_net_weights[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
                     
                     if (weights_data_index == `NN_WEIGHTS_DATA_COUNT - 1) begin
                         weights_data_index = 0;
