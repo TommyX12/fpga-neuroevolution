@@ -14,25 +14,28 @@
 `define MAIN_OP_FPS_LIMITER_START     `MAIN_OP_WIDTH'd1
 `define MAIN_OP_FPS_LIMITER_DELAY     `MAIN_OP_WIDTH'd2
 `define MAIN_OP_FPS_LIMITER_DELAY2    `MAIN_OP_WIDTH'd3
-`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd4
-`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd5
-`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd6
-`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd7
-`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd8
-`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd9
-`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd10
-`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd11
-`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd12
-`define MAIN_OP_FOOD_DRAW_START       `MAIN_OP_WIDTH'd13
-`define MAIN_OP_FOOD_DRAW_DELAY       `MAIN_OP_WIDTH'd14
-`define MAIN_OP_FOOD_DRAW_WAIT        `MAIN_OP_WIDTH'd15
-`define MAIN_OP_POISON_DRAW_START     `MAIN_OP_WIDTH'd16
-`define MAIN_OP_POISON_DRAW_DELAY     `MAIN_OP_WIDTH'd17
-`define MAIN_OP_POISON_DRAW_WAIT      `MAIN_OP_WIDTH'd18
-`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd19
-`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd20
-`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd21
-`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd22
+`define MAIN_OP_EVOLVE_START          `MAIN_OP_WIDTH'd4
+`define MAIN_OP_EVOLVE_DELAY          `MAIN_OP_WIDTH'd5
+`define MAIN_OP_EVOLVE_WAIT           `MAIN_OP_WIDTH'd6
+`define MAIN_OP_ANT_UPDATE_START      `MAIN_OP_WIDTH'd7
+`define MAIN_OP_ANT_UPDATE_DELAY      `MAIN_OP_WIDTH'd8
+`define MAIN_OP_ANT_UPDATE_WAIT       `MAIN_OP_WIDTH'd9
+`define MAIN_OP_DRAW_BACKGROUND_START `MAIN_OP_WIDTH'd10
+`define MAIN_OP_DRAW_BACKGROUND_DELAY `MAIN_OP_WIDTH'd11
+`define MAIN_OP_DRAW_BACKGROUND_WAIT  `MAIN_OP_WIDTH'd12
+`define MAIN_OP_ANT_DRAW_START        `MAIN_OP_WIDTH'd13
+`define MAIN_OP_ANT_DRAW_DELAY        `MAIN_OP_WIDTH'd14
+`define MAIN_OP_ANT_DRAW_WAIT         `MAIN_OP_WIDTH'd15
+`define MAIN_OP_FOOD_DRAW_START       `MAIN_OP_WIDTH'd16
+`define MAIN_OP_FOOD_DRAW_DELAY       `MAIN_OP_WIDTH'd17
+`define MAIN_OP_FOOD_DRAW_WAIT        `MAIN_OP_WIDTH'd18
+`define MAIN_OP_POISON_DRAW_START     `MAIN_OP_WIDTH'd19
+`define MAIN_OP_POISON_DRAW_DELAY     `MAIN_OP_WIDTH'd20
+`define MAIN_OP_POISON_DRAW_WAIT      `MAIN_OP_WIDTH'd21
+`define MAIN_OP_FBDISP_START          `MAIN_OP_WIDTH'd22
+`define MAIN_OP_FBDISP_DELAY          `MAIN_OP_WIDTH'd23
+`define MAIN_OP_FBDISP_WAIT           `MAIN_OP_WIDTH'd24
+`define MAIN_OP_FPS_LIMITER_WAIT      `MAIN_OP_WIDTH'd25
 
 
 module main(
@@ -116,6 +119,9 @@ module main(
     reg [`MEM_ADDR_WIDTH-1:0] cur_id;
     
     // TODO declare start and finished signal for each subroutine.
+    reg evolve_start;
+    wire evolve_finished;
+    
     reg ant_update_start;
     wire [`NUM_ANT-1:0] ant_update_finished;
     
@@ -151,7 +157,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = `NUM_ANT + 5;
+    localparam ports = `NUM_ANT + 6;
     
     Random16 random16(
         .clock(clock),
@@ -184,7 +190,7 @@ module main(
     .start_dp(start[index]), \
     .instruction_dp(instruction[`INSTRUCTION_WIDTH*((index) + 1)-1:`INSTRUCTION_WIDTH*(index)])
     
-    reg [`NUM_ANT * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1 : 0] neural_net_weights;
+    wire [`NUM_ANT * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1 : 0] neural_net_weights;
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     genvar ant_i;
@@ -288,12 +294,28 @@ module main(
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
+    Evolve evolve(
+        .clock(clock),
+        .resetn(resetn),
+        .start(evolve_start),
+        .finished(evolve_finished),
+        
+        .rand(rand),
+        
+        .neural_net_weights(neural_net_weights),
+        
+        .gen_duration(`DELAY_GEN),
+        
+        `PORT_CONNECT(`NUM_ANT + 5)
+    );
+
+    // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     FPSLimiter fps_limiter(
         .start(fps_limiter_start),
         .clock(clock),
         .resetn(resetn),
         
-        .delay(`DELAY_WIDTH'd833333),
+        .delay(`DELAY_60FPS),
         // .delay(`DELAY_WIDTH'd50000000),
         
         .finished(fps_limiter_finished)
@@ -319,6 +341,7 @@ module main(
             
             // TODO reset any register, namely, the start signal of subroutines
             
+            evolve_start <= 0;
             ant_update_start <= 0;
             draw_background_start <= 0;
             ant_draw_start <= 0;
@@ -356,6 +379,25 @@ module main(
                 end
                 
                 // TODO make sure there is no typo and everything matches the subroutine name.
+                `MAIN_OP_EVOLVE_START: begin
+                    evolve_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_EVOLVE_DELAY: begin
+                    evolve_start = 1;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                end
+                `MAIN_OP_EVOLVE_WAIT: begin
+                    evolve_start = 0;
+                    
+                    if (evolve_finished) begin
+                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    end
+                end
+                
+                // TODO make sure there is no typo and everything matches the subroutine name.
                 `MAIN_OP_ANT_UPDATE_START: begin
                     ant_update_start = 1;
                     
@@ -369,7 +411,7 @@ module main(
                 `MAIN_OP_ANT_UPDATE_WAIT: begin
                     ant_update_start = 0;
                     
-                    if (ant_update_finished) begin
+                    if (&ant_update_finished) begin
                         cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                     end
                 end
