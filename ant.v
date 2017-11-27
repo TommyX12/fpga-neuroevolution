@@ -220,7 +220,7 @@ module AntUpdate(
     input [`MEM_ADDR_WIDTH-1:0] id,
     input [`RAND_WIDTH-1:0] rand,
     
-    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
+    input [`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
 
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
@@ -239,6 +239,9 @@ module AntUpdate(
     
     reg [`X_COORD_WIDTH-1:0] dx;
     reg [`Y_COORD_WIDTH-1:0] dy;
+    
+    wire [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] cur_weights;
+    assign cur_weights = neural_net_weights >> (id * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE));
     
     reg colliding;
     reg [`MEM_ADDR_WIDTH-1:0] food_counter;
@@ -272,7 +275,7 @@ module AntUpdate(
             poison_up,
             poison_down
         }),
-        .weights(neural_net_weights),
+        .weights(cur_weights),
         .output_data({
             move_left,
             move_right,
