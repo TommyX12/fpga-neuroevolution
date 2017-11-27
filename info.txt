@@ -87,6 +87,8 @@ structs:
     GA also stores a copy buffer, used in copying.
     
     !!! make sure to use advanced physical optimization on final compilation.
+    
+    !!! make sure to account for screen size when randomizing (especially in ant)
 
 main loop:
     // logic

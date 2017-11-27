@@ -180,7 +180,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_ANT_X(ant_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_WIDTH, `ADDR_ANT_X(ant_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
@@ -206,7 +206,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_ANT_Y(ant_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_HEIGHT, `ADDR_ANT_Y(ant_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
@@ -239,7 +239,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_FOOD_X(food_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_WIDTH, `ADDR_FOOD_X(food_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
@@ -265,7 +265,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_FOOD_Y(food_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_HEIGHT, `ADDR_FOOD_Y(food_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
@@ -298,7 +298,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_POISON_X(poison_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_WIDTH, `ADDR_POISON_X(poison_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
@@ -324,7 +324,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {rand, `ADDR_POISON_Y(poison_index), `OPCODE_MEMWRITE};
+                    instruction_dp = {rand % `SCREEN_HEIGHT, `ADDR_POISON_Y(poison_index), `OPCODE_MEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
