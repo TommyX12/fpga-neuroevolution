@@ -84,8 +84,7 @@ module PoisonDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        // x = result_dp;
-                        x = rand + id;
+                        x = result_dp;
                         
                         cur_state = cur_state + `POISOND_OP_WIDTH'd1;
                     end
@@ -108,8 +107,7 @@ module PoisonDraw(
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        // y = result_dp;
-                        y = rand;
+                        y = result_dp;
                         
                         cur_state = cur_state + `POISOND_OP_WIDTH'd1;
                     end
@@ -118,7 +116,6 @@ module PoisonDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = id ? `COLOUR_POISON : `COLOUR_FOOD;
                     instruction_dp = {1'b1, colour, y, x, `OPCODE_DRAW};
                     
                     cur_state = cur_state + `POISOND_OP_WIDTH'd1;
