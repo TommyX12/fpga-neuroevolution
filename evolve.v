@@ -6,15 +6,24 @@
 // TODO change prefix to be for this file specifically
 // TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define EVOLVE_OP_WIDTH 6 // TODO this must be large enough
-`define EVOLVE_OP_STANDBY          `EVOLVE_OP_WIDTH'd0
-`define EVOLVE_OP_TIMER_CHECK      `EVOLVE_OP_WIDTH'd1
-`define EVOLVE_OP_FOOD_SET_X_START `EVOLVE_OP_WIDTH'd2
-`define EVOLVE_OP_FOOD_SET_X_DELAY `EVOLVE_OP_WIDTH'd3
-`define EVOLVE_OP_FOOD_SET_X_WAIT  `EVOLVE_OP_WIDTH'd4
-`define EVOLVE_OP_FOOD_SET_Y_START `EVOLVE_OP_WIDTH'd5
-`define EVOLVE_OP_FOOD_SET_Y_DELAY `EVOLVE_OP_WIDTH'd6
-`define EVOLVE_OP_FOOD_SET_Y_WAIT  `EVOLVE_OP_WIDTH'd7
-`define EVOLVE_OP_FINISHED         `EVOLVE_OP_WIDTH'd8
+`define EVOLVE_OP_STANDBY            `EVOLVE_OP_WIDTH'd0
+`define EVOLVE_OP_TIMER_CHECK        `EVOLVE_OP_WIDTH'd1
+
+`define EVOLVE_OP_FOOD_SET_X_START   `EVOLVE_OP_WIDTH'd2
+`define EVOLVE_OP_FOOD_SET_X_DELAY   `EVOLVE_OP_WIDTH'd3
+`define EVOLVE_OP_FOOD_SET_X_WAIT    `EVOLVE_OP_WIDTH'd4
+`define EVOLVE_OP_FOOD_SET_Y_START   `EVOLVE_OP_WIDTH'd5
+`define EVOLVE_OP_FOOD_SET_Y_DELAY   `EVOLVE_OP_WIDTH'd6
+`define EVOLVE_OP_FOOD_SET_Y_WAIT    `EVOLVE_OP_WIDTH'd7
+
+`define EVOLVE_OP_POISON_SET_X_START `EVOLVE_OP_WIDTH'd8
+`define EVOLVE_OP_POISON_SET_X_DELAY `EVOLVE_OP_WIDTH'd9
+`define EVOLVE_OP_POISON_SET_X_WAIT  `EVOLVE_OP_WIDTH'd10
+`define EVOLVE_OP_POISON_SET_Y_START `EVOLVE_OP_WIDTH'd11
+`define EVOLVE_OP_POISON_SET_Y_DELAY `EVOLVE_OP_WIDTH'd12
+`define EVOLVE_OP_POISON_SET_Y_WAIT  `EVOLVE_OP_WIDTH'd13
+
+`define EVOLVE_OP_FINISHED           `EVOLVE_OP_WIDTH'd14
 
 // TODO change to your module name.
 module Evolve(
@@ -45,6 +54,9 @@ module Evolve(
     reg [`MEM_ADDR_WIDTH-1:0] food_index;
     reg [`X_COORD_WIDTH-1:0] food_x;
     reg [`Y_COORD_WIDTH-1:0] food_y;
+    reg [`MEM_ADDR_WIDTH-1:0] poison_index;
+    reg [`X_COORD_WIDTH-1:0] poison_x;
+    reg [`Y_COORD_WIDTH-1:0] poison_y;
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -62,6 +74,9 @@ module Evolve(
             food_index <= `MEM_ADDR_WIDTH'd0;
             food_x <= `X_COORD_WIDTH'd0;
             food_y <= `Y_COORD_WIDTH'd0;
+            poison_index <= `MEM_ADDR_WIDTH'd0;
+            poison_x <= `X_COORD_WIDTH'd0;
+            poison_y <= `Y_COORD_WIDTH'd0;
         end
         else begin
             // TODO make sure everything use blocking assignment
@@ -77,6 +92,9 @@ module Evolve(
                         food_index = `MEM_ADDR_WIDTH'd0;
                         food_x = `X_COORD_WIDTH'd0;
                         food_y = `Y_COORD_WIDTH'd0;
+                        poison_index = `MEM_ADDR_WIDTH'd0;
+                        poison_x = `X_COORD_WIDTH'd0;
+                        poison_y = `Y_COORD_WIDTH'd0;
                         
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                         finished = 0;
@@ -148,6 +166,65 @@ module Evolve(
                         else begin
                             food_index = food_index + `MEM_ADDR_WIDTH'd1;
                             cur_state = `EVOLVE_OP_FOOD_SET_X_START;
+                        end
+                        
+                    end
+                end
+                
+                `EVOLVE_OP_POISON_SET_X_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand, `ADDR_POISON_X(poison_index), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_POISON_SET_X_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_POISON_SET_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        poison_x = result_dp;
+                        
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                end
+                
+                `EVOLVE_OP_POISON_SET_Y_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand, `ADDR_POISON_Y(poison_index), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_POISON_SET_Y_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_POISON_SET_Y_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        poison_y = result_dp;
+                        if (poison_index == `NUM_POISON - 1) begin
+                            poison_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                        end
+                        else begin
+                            poison_index = poison_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_POISON_SET_X_START;
                         end
                         
                     end
