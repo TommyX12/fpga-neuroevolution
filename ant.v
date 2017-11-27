@@ -220,7 +220,7 @@ module AntUpdate(
     input [`MEM_ADDR_WIDTH-1:0] id,
     input [`RAND_WIDTH-1:0] rand,
     
-    input [`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
+    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
 
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
@@ -239,8 +239,6 @@ module AntUpdate(
     
     reg [`X_COORD_WIDTH-1:0] dx;
     reg [`Y_COORD_WIDTH-1:0] dy;
-    
-    reg [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] cur_weights;
     
     reg colliding;
     reg [`MEM_ADDR_WIDTH-1:0] food_counter;
@@ -274,7 +272,7 @@ module AntUpdate(
             poison_up,
             poison_down
         }),
-        .weights(cur_weights),
+        .weights(neural_net_weights),
         .output_data({
             move_left,
             move_right,
@@ -303,8 +301,6 @@ module AntUpdate(
             
             dx <= `X_COORD_WIDTH'd1;
             dy <= `Y_COORD_WIDTH'd1;
-            
-            cur_weights <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
             
             colliding <= 0;
             food_counter <= 0;
@@ -501,8 +497,6 @@ module AntUpdate(
                     // else if (y >= `SCREEN_HEIGHT - `ANT_HEIGHT) begin
                         // dy = -dy;
                     // end
-                    
-                    cur_weights = neural_net_weights >> (id * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE));
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
