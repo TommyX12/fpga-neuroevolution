@@ -83,7 +83,7 @@ module Evolve(
                     end
                 end
                 `EVOLVE_OP_TIMER_CHECK: begin
-                    if (counter) begin
+                    if (gen_counter) begin
                         gen_counter = gen_counter - `DELAY_WIDTH'd1;
                         cur_state = `EVOLVE_OP_STANDBY;
                     end
