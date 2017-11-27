@@ -315,7 +315,7 @@ module main(
         .clock(clock),
         .resetn(resetn),
         
-        .delay(`DELAY_60FPS),
+        .delay(SW[0] ? `DELAY_ACCEL : `DELAY_60FPS),
         // .delay(`DELAY_WIDTH'd50000000),
         
         .finished(fps_limiter_finished)

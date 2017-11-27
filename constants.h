@@ -7,6 +7,7 @@
 `define COLOUR_WIDTH   3
 `define DELAY_WIDTH   32
 
+`define DELAY_ACCEL   `DELAY_WIDTH'd1
 `define DELAY_60FPS   `DELAY_WIDTH'd833333
 `define DELAY_GEN     `DELAY_WIDTH'd1800 // this is the number of frames, not number of cycles
 
@@ -48,7 +49,7 @@
 `define COLOUR_FOOD   `COLOUR_WIDTH'b010
 `define COLOUR_POISON `COLOUR_WIDTH'b100
 
-`define NUM_ANT    `MEM_ADDR_WIDTH'd2
+`define NUM_ANT    `MEM_ADDR_WIDTH'd15
 `define NUM_FOOD   `MEM_ADDR_WIDTH'd15
 `define NUM_POISON `MEM_ADDR_WIDTH'd15
 
