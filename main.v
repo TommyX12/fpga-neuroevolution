@@ -123,7 +123,7 @@ module main(
     wire evolve_finished;
     
     reg ant_update_start;
-    wire [`NUM_ANT-1:0] ant_update_finished;
+    wire ant_update_finished;
     
     reg draw_background_start;
     wire draw_background_finished;
@@ -157,7 +157,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = `NUM_ANT + 6;
+    localparam ports = 7;
     
     Random16 random16(
         .clock(clock),
@@ -193,28 +193,41 @@ module main(
     wire [`NUM_ANT * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1 : 0] neural_net_weights;
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    genvar ant_i;
-    generate
-        for (ant_i = 0; ant_i < `NUM_ANT; ant_i = ant_i + 1) begin : gen_ant
-            AntUpdate ant_update(
-                .clock(clock),
-                .resetn(resetn),
-                .start(ant_update_start),
-                .finished(ant_update_finished[ant_i]),
+    AntUpdate ant_update(
+        .clock(clock),
+        .resetn(resetn),
+        .start(ant_update_start),
+        .finished(ant_update_finished),
+        
+        .id(cur_id),
+        .rand(rand),
+        
+        .neural_net_weights(neural_net_weights),
+        
+        `PORT_CONNECT(0)
+    );
+    // genvar ant_i;
+    // generate
+        // for (ant_i = 0; ant_i < `NUM_ANT; ant_i = ant_i + 1) begin : gen_ant
+            // AntUpdate ant_update(
+                // .clock(clock),
+                // .resetn(resetn),
+                // .start(ant_update_start),
+                // .finished(ant_update_finished[ant_i]),
                 
-                .id(ant_i),
-                .rand(rand),
+                // .id(ant_i),
+                // .rand(rand),
                 
-                .neural_net_weights(neural_net_weights[
-                    (ant_i + 1) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1
-                    :
-                    (ant_i) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
-                ]),
+                // .neural_net_weights(neural_net_weights[
+                    // (ant_i + 1) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1
+                    // :
+                    // (ant_i) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
+                // ]),
                 
-                `PORT_CONNECT(ant_i)
-            );
-        end
-    endgenerate
+                // `PORT_CONNECT(ant_i)
+            // );
+        // end
+    // endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntDraw ant_draw(
@@ -225,7 +238,7 @@ module main(
         
         .id(cur_id),
         
-        `PORT_CONNECT(`NUM_ANT + 0)
+        `PORT_CONNECT(1)
     );
     
     FoodDraw food_draw(
@@ -236,7 +249,7 @@ module main(
         
         .id(cur_id),
         
-        `PORT_CONNECT(`NUM_ANT + 1)
+        `PORT_CONNECT(2)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -249,7 +262,7 @@ module main(
         .id(cur_id),
         .rand(rand),
         
-        `PORT_CONNECT(`NUM_ANT + 2)
+        `PORT_CONNECT(3)
     );
     // genvar poison_i;
     // generate
@@ -280,7 +293,7 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
-        `PORT_CONNECT(`NUM_ANT + 3)
+        `PORT_CONNECT(4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -290,7 +303,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        `PORT_CONNECT(`NUM_ANT + 4)
+        `PORT_CONNECT(5)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -306,7 +319,7 @@ module main(
         
         .gen_duration(`DELAY_GEN),
         
-        `PORT_CONNECT(`NUM_ANT + 5)
+        `PORT_CONNECT(6)
     );
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -356,9 +369,9 @@ module main(
             // TODO make sure this matches the order of state code, and make sure no typo.
             case (cur_state)
                 `MAIN_OP_STANDBY: begin
-                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
-                    
                     cur_id = 0;
+                    
+                    cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                 end
                 
                 // TODO make sure there is no typo and everything matches the subroutine name.
@@ -411,8 +424,15 @@ module main(
                 `MAIN_OP_ANT_UPDATE_WAIT: begin
                     ant_update_start = 0;
                     
-                    if (&ant_update_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    if (ant_update_finished) begin
+                        if (cur_id == `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
+                            cur_id = 0;
+                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        end
+                        else begin
+                            cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `MAIN_OP_ANT_UPDATE_START;
+                        end
                     end
                 end
                 
