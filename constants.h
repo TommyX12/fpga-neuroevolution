@@ -1,4 +1,6 @@
 
+`define STD_WIDTH 32
+
 `define S_WIDTH 3
 `define X_COORD_WIDTH 8
 `define Y_COORD_WIDTH 7
@@ -46,7 +48,7 @@
 `define COLOUR_FOOD   `COLOUR_WIDTH'b010
 `define COLOUR_POISON `COLOUR_WIDTH'b100
 
-`define NUM_ANT    `MEM_ADDR_WIDTH'd1
+`define NUM_ANT    `MEM_ADDR_WIDTH'd2
 `define NUM_FOOD   `MEM_ADDR_WIDTH'd15
 `define NUM_POISON `MEM_ADDR_WIDTH'd15
 
