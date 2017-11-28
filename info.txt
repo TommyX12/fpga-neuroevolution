@@ -86,11 +86,28 @@ structs:
     and each ant module connects to one of them.
     GA also stores a copy buffer, used in copying.
     
-    !!! make sure to use advanced physical optimization on final compilation.
+    make sure to use advanced physical optimization on final compilation.
     
     !!! make sure to account for screen size when randomizing (especially in ant)
     
     !!! use slicing operator, NOT shift, to access part of array.
+    
+    !!! reduce clock cycle, reduce number of DSP blocks, reduce number of indexed access (maybe try using dedicated memory blocks instead, or an array of blocks similar to how neurons do it, each block does its stuff)
+    
+    !!! combine all drawing modules to a single one, to save space for parallelized update modules.
+    
+    !!! let datapath perform buffer flipping so save the fbdisp module
+    
+    !!! when accelerating: disable drawing altogether.
+    
+    !!! current plan:
+        use verilog multi-dimensional array access everywhere
+        try hardware acceleration for distance calculation of food (requires parallel storage of data) etc, and become a special operation call in datapath.
+        use dedicated ram module with largest bit width possible to store neural network weights, and main module will load them into ant update modules.
+        can have dual ant update modules that achieve partial parallelization.
+        if all else fails, fall back to standard FSM design (next_state etc).
+        
+        make sure neural network execution wait for long enough (at least one clock edge), or buffer the input such that they do not partially change to food that are not closest.
 
 main loop:
     // logic
