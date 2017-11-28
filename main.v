@@ -123,7 +123,7 @@ module main(
     wire evolve_finished;
     
     reg ant_update_start;
-    wire [`NUM_ANT-1:0] ant_update_finished;
+    wire ant_update_finished;
     
     reg draw_background_start;
     wire draw_background_finished;
@@ -148,6 +148,9 @@ module main(
     wire [`RESULT_WIDTH-1:0] result_dp;
     wire start_dp;
     wire [`INSTRUCTION_WIDTH-1:0] instruction_dp;
+    
+    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_data,
+    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_output,
     
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
@@ -181,8 +184,7 @@ module main(
         .finished_dp(finished_dp)
         
     );
-        defparam
-            datapath_router.ports = ports;
+    defparam datapath_router.ports = ports;
     
 `define PORT_CONNECT(index) \
     .finished_dp(finished[index]), \
@@ -190,31 +192,42 @@ module main(
     .start_dp(start[index]), \
     .instruction_dp(instruction[`INSTRUCTION_WIDTH*((index) + 1)-1:`INSTRUCTION_WIDTH*(index)])
     
-    wire [`NUM_ANT * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1 : 0] neural_net_weights;
-
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
-    genvar ant_i;
-    generate
-        for (ant_i = 0; ant_i < `NUM_ANT; ant_i = ant_i + 1) begin : gen_ant
-            AntUpdate ant_update(
-                .clock(clock),
-                .resetn(resetn),
-                .start(ant_update_start),
-                .finished(ant_update_finished[ant_i]),
+    AntUpdate ant_update(
+        .clock(clock),
+        .resetn(resetn),
+        .start(ant_update_start),
+        .finished(ant_update_finished),
+        
+        .id(cur_id),
+        .rand(rand),
+        
+        .neural_net_weights(nnmem_output),
+        
+        `PORT_CONNECT(ant_i)
+    );
+    // genvar ant_i;
+    // generate
+        // for (ant_i = 0; ant_i < `NUM_ANT; ant_i = ant_i + 1) begin : gen_ant
+            // AntUpdate ant_update(
+                // .clock(clock),
+                // .resetn(resetn),
+                // .start(ant_update_start),
+                // .finished(ant_update_finished[ant_i]),
                 
-                .id(ant_i),
-                .rand(rand),
+                // .id(ant_i),
+                // .rand(rand),
                 
-                .neural_net_weights(neural_net_weights[
-                    (ant_i + 1) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1
-                    :
-                    (ant_i) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
-                ]),
+                // .neural_net_weights(neural_net_weights[
+                    // (ant_i + 1) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)) - 1
+                    // :
+                    // (ant_i) * (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
+                // ]),
                 
-                `PORT_CONNECT(ant_i)
-            );
-        end
-    endgenerate
+                // `PORT_CONNECT(ant_i)
+            // );
+        // end
+    // endgenerate
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
     AntDraw ant_draw(
@@ -302,7 +315,8 @@ module main(
         
         .rand(rand),
         
-        .neural_net_weights(neural_net_weights),
+        .neural_net_weights_in(nnmem_output),
+        .neural_net_weights_out(nnmem_data),
         
         .gen_duration(`DELAY_GEN),
         
@@ -327,6 +341,9 @@ module main(
         .resetn(resetn),
         .instruction(instruction_dp),
         .result(result_dp),
+        
+        .nnmem_data(nnmem_data),
+        .nnmem_output(nnmem_output),
         
         .x(x),
         .y(y),

@@ -220,7 +220,7 @@ module AntUpdate(
     input [`MEM_ADDR_WIDTH-1:0] id,
     input [`RAND_WIDTH-1:0] rand,
     
-    input [`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
+    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
 
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,

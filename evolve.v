@@ -6,39 +6,41 @@
 // TODO change prefix to be for this file specifically
 // TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define EVOLVE_OP_WIDTH 6 // TODO this must be large enough
-`define EVOLVE_OP_STANDBY            `EVOLVE_OP_WIDTH'd0
-`define EVOLVE_OP_TIMER_CHECK        `EVOLVE_OP_WIDTH'd1
+`define EVOLVE_OP_STANDBY               `EVOLVE_OP_WIDTH'd0
+`define EVOLVE_OP_TIMER_CHECK           `EVOLVE_OP_WIDTH'd1
 
-`define EVOLVE_OP_WEIGHT_RAND        `EVOLVE_OP_WIDTH'd2
+`define EVOLVE_OP_ANT_RAND_WEIGHT_MAKE  `EVOLVE_OP_WIDTH'd2
+`define EVOLVE_OP_ANT_RAND_WEIGHT_START `EVOLVE_OP_WIDTH'd3
+`define EVOLVE_OP_ANT_RAND_WEIGHT_DELAY `EVOLVE_OP_WIDTH'd4
+`define EVOLVE_OP_ANT_RAND_WEIGHT_WAIT  `EVOLVE_OP_WIDTH'd5
 
-`define EVOLVE_OP_ANT_SET_X_START    `EVOLVE_OP_WIDTH'd3
-`define EVOLVE_OP_ANT_SET_X_DELAY    `EVOLVE_OP_WIDTH'd4
-`define EVOLVE_OP_ANT_SET_X_WAIT     `EVOLVE_OP_WIDTH'd5
-`define EVOLVE_OP_ANT_SET_Y_START    `EVOLVE_OP_WIDTH'd6
-`define EVOLVE_OP_ANT_SET_Y_DELAY    `EVOLVE_OP_WIDTH'd7
-`define EVOLVE_OP_ANT_SET_Y_WAIT     `EVOLVE_OP_WIDTH'd8
+`define EVOLVE_OP_ANT_RAND_X_START      `EVOLVE_OP_WIDTH'd6
+`define EVOLVE_OP_ANT_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd7
+`define EVOLVE_OP_ANT_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd8
+`define EVOLVE_OP_ANT_RAND_Y_START      `EVOLVE_OP_WIDTH'd9
+`define EVOLVE_OP_ANT_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd10
+`define EVOLVE_OP_ANT_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd11
 
-`define EVOLVE_OP_FOOD_SET_X_START   `EVOLVE_OP_WIDTH'd9
-`define EVOLVE_OP_FOOD_SET_X_DELAY   `EVOLVE_OP_WIDTH'd10
-`define EVOLVE_OP_FOOD_SET_X_WAIT    `EVOLVE_OP_WIDTH'd11
-`define EVOLVE_OP_FOOD_SET_Y_START   `EVOLVE_OP_WIDTH'd12
-`define EVOLVE_OP_FOOD_SET_Y_DELAY   `EVOLVE_OP_WIDTH'd13
-`define EVOLVE_OP_FOOD_SET_Y_WAIT    `EVOLVE_OP_WIDTH'd14
+`define EVOLVE_OP_FOOD_RAND_X_START     `EVOLVE_OP_WIDTH'd12
+`define EVOLVE_OP_FOOD_RAND_X_DELAY     `EVOLVE_OP_WIDTH'd13
+`define EVOLVE_OP_FOOD_RAND_X_WAIT      `EVOLVE_OP_WIDTH'd14
+`define EVOLVE_OP_FOOD_RAND_Y_START     `EVOLVE_OP_WIDTH'd15
+`define EVOLVE_OP_FOOD_RAND_Y_DELAY     `EVOLVE_OP_WIDTH'd16
+`define EVOLVE_OP_FOOD_RAND_Y_WAIT      `EVOLVE_OP_WIDTH'd17
 
-`define EVOLVE_OP_POISON_SET_X_START `EVOLVE_OP_WIDTH'd15
-`define EVOLVE_OP_POISON_SET_X_DELAY `EVOLVE_OP_WIDTH'd16
-`define EVOLVE_OP_POISON_SET_X_WAIT  `EVOLVE_OP_WIDTH'd17
-`define EVOLVE_OP_POISON_SET_Y_START `EVOLVE_OP_WIDTH'd18
-`define EVOLVE_OP_POISON_SET_Y_DELAY `EVOLVE_OP_WIDTH'd19
-`define EVOLVE_OP_POISON_SET_Y_WAIT  `EVOLVE_OP_WIDTH'd20
+`define EVOLVE_OP_POISON_RAND_X_START   `EVOLVE_OP_WIDTH'd18
+`define EVOLVE_OP_POISON_RAND_X_DELAY   `EVOLVE_OP_WIDTH'd19
+`define EVOLVE_OP_POISON_RAND_X_WAIT    `EVOLVE_OP_WIDTH'd20
+`define EVOLVE_OP_POISON_RAND_Y_START   `EVOLVE_OP_WIDTH'd21
+`define EVOLVE_OP_POISON_RAND_Y_DELAY   `EVOLVE_OP_WIDTH'd22
+`define EVOLVE_OP_POISON_RAND_Y_WAIT    `EVOLVE_OP_WIDTH'd23
 
-`define EVOLVE_OP_FINISHED           `EVOLVE_OP_WIDTH'd21
+`define EVOLVE_OP_FINISHED              `EVOLVE_OP_WIDTH'd24
 
 
 
-`define NN_WEIGHTS_DATA_COUNT (`NUM_ANT * (`NN_WEIGHTS_SIZE))
+// `define NN_WEIGHTS_DATA_COUNT (`NUM_ANT * (`NN_WEIGHTS_SIZE))
 // `define NN_WEIGHTS_BITS (`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
-`define NN_WEIGHTS_BITS_COUNT (`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE))
 
 // TODO change to your module name.
 module Evolve(
@@ -50,7 +52,8 @@ module Evolve(
     
     input [`RAND_WIDTH-1:0] rand,
     
-    output reg [`NN_WEIGHTS_BITS_COUNT - 1 : 0] neural_net_weights,
+    input [``NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_in,
+    output reg [``NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_out,
     
     input [`DELAY_WIDTH-1:0] gen_duration,
     
@@ -63,7 +66,6 @@ module Evolve(
     reg [`EVOLVE_OP_WIDTH-1:0] cur_state;
     
     // TODO declare any register
-    reg [`NN_WEIGHTS_BITS_COUNT - 1 : 0] weights_buffer;
     
     reg [`DELAY_WIDTH-1:0] gen_counter;
     
@@ -90,8 +92,7 @@ module Evolve(
             instruction_dp <= 0;
             
             // TODO reset any register
-            neural_net_weights <= {(`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
-            weights_buffer <= {(`NUM_ANT * `NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
+            neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
             
             gen_counter <= `DELAY_WIDTH'd0;
             
@@ -150,10 +151,10 @@ module Evolve(
                     end
                 end
                 
-                `EVOLVE_OP_WEIGHT_RAND: begin
-                    neural_net_weights[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
+                    neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
                     
-                    if (weights_data_index == `NN_WEIGHTS_DATA_COUNT - 1) begin
+                    if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
@@ -161,8 +162,38 @@ module Evolve(
                         weights_data_index = weights_data_index + 1;
                     end
                 end
+                `EVOLVE_OP_ANT_RAND_WEIGHT_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {ant_index, `OPCODE_NNMEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_RAND_WEIGHT_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_RAND_WEIGHT_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        if (ant_index == `NUM_ANT - 1) begin
+                            ant_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                        end
+                        else begin
+                            ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_ANT_RAND_WEIGHT_START;
+                        end
+                    end
+                end
                 
-                `EVOLVE_OP_ANT_SET_X_START: begin
+                `EVOLVE_OP_ANT_RAND_X_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -172,23 +203,22 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_ANT_SET_X_DELAY: begin
+                `EVOLVE_OP_ANT_RAND_X_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_ANT_SET_X_WAIT: begin
+                `EVOLVE_OP_ANT_RAND_X_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        ant_x = result_dp;
                         
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                 end
                 
-                `EVOLVE_OP_ANT_SET_Y_START: begin
+                `EVOLVE_OP_ANT_RAND_Y_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -198,30 +228,29 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_ANT_SET_Y_DELAY: begin
+                `EVOLVE_OP_ANT_RAND_Y_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_ANT_SET_Y_WAIT: begin
+                `EVOLVE_OP_ANT_RAND_Y_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
                         // TODO do something with result_dp
-                        ant_y = result_dp;
                         if (ant_index == `NUM_ANT - 1) begin
                             ant_index = `MEM_ADDR_WIDTH'd0;
                             cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                         end
                         else begin
                             ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
-                            cur_state = `EVOLVE_OP_ANT_SET_X_START;
+                            cur_state = `EVOLVE_OP_ANT_RAND_X_START;
                         end
                         
                     end
                 end
                 
-                `EVOLVE_OP_FOOD_SET_X_START: begin
+                `EVOLVE_OP_FOOD_RAND_X_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -231,12 +260,12 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_FOOD_SET_X_DELAY: begin
+                `EVOLVE_OP_FOOD_RAND_X_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_FOOD_SET_X_WAIT: begin
+                `EVOLVE_OP_FOOD_RAND_X_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
@@ -247,7 +276,7 @@ module Evolve(
                     end
                 end
                 
-                `EVOLVE_OP_FOOD_SET_Y_START: begin
+                `EVOLVE_OP_FOOD_RAND_Y_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -257,12 +286,12 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_FOOD_SET_Y_DELAY: begin
+                `EVOLVE_OP_FOOD_RAND_Y_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_FOOD_SET_Y_WAIT: begin
+                `EVOLVE_OP_FOOD_RAND_Y_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
@@ -274,13 +303,13 @@ module Evolve(
                         end
                         else begin
                             food_index = food_index + `MEM_ADDR_WIDTH'd1;
-                            cur_state = `EVOLVE_OP_FOOD_SET_X_START;
+                            cur_state = `EVOLVE_OP_FOOD_RAND_X_START;
                         end
                         
                     end
                 end
                 
-                `EVOLVE_OP_POISON_SET_X_START: begin
+                `EVOLVE_OP_POISON_RAND_X_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -290,12 +319,12 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_POISON_SET_X_DELAY: begin
+                `EVOLVE_OP_POISON_RAND_X_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_POISON_SET_X_WAIT: begin
+                `EVOLVE_OP_POISON_RAND_X_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
@@ -306,7 +335,7 @@ module Evolve(
                     end
                 end
                 
-                `EVOLVE_OP_POISON_SET_Y_START: begin
+                `EVOLVE_OP_POISON_RAND_Y_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
@@ -316,12 +345,12 @@ module Evolve(
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_POISON_SET_Y_DELAY: begin
+                `EVOLVE_OP_POISON_RAND_Y_DELAY: begin
                     start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
-                `EVOLVE_OP_POISON_SET_Y_WAIT: begin
+                `EVOLVE_OP_POISON_RAND_Y_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
@@ -333,7 +362,7 @@ module Evolve(
                         end
                         else begin
                             poison_index = poison_index + `MEM_ADDR_WIDTH'd1;
-                            cur_state = `EVOLVE_OP_POISON_SET_X_START;
+                            cur_state = `EVOLVE_OP_POISON_RAND_X_START;
                         end
                         
                     end
