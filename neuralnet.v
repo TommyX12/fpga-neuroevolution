@@ -62,11 +62,11 @@ module Neuron(
     genvar i;
     generate
         for (i = 0; i < input_size; i = i + 1) begin : gen_product
-            assign product[data_width * (i + 1) - 1 : data_width * (i)] =
+            assign product[data_width * i +: data_width] =
                 (
-                    {{(`NN_DATA_WIDTH){1'd0}}, input_data[data_width * (i + 1) - 1 : data_width * (i)]}
+                    {{(`NN_DATA_WIDTH){1'd0}}, input_data[data_width * i +: data_width]}
                     *
-                    {{(`NN_DATA_WIDTH){1'd0}}, weights[data_width * (i + 1) - 1 : data_width * (i)]}
+                    {{(`NN_DATA_WIDTH){1'd0}}, weights[data_width * i +: data_width]}
                 )
                 >> (`NN_DATA_WIDTH / 2);
         end
@@ -75,15 +75,15 @@ module Neuron(
     assign sum[data_width - 1 : 0] = product[data_width - 1 : 0];
     generate
         for (i = 1; i < input_size; i = i + 1) begin : gen_sum
-            assign sum[data_width * (i + 1) - 1 : data_width * (i)] =
-                product[data_width * (i + 1) - 1 : data_width * (i)]
+            assign sum[data_width * i +: data_width] =
+                product[data_width * i +: data_width]
                 +
-                sum[data_width * (i) - 1 : data_width * (i - 1)];
+                sum[data_width * (i - 1) +: data_width];
         end
     endgenerate
     
     assign output_data = sum[data_width * input_size - 1 : data_width * (input_size - 1)]
-        >= weights[data_width * (input_size + 1) - 1 : data_width * input_size] ? 
+        >= weights[data_width * input_size +: data_width] ? 
         (`NN_DATA_WIDTH'd1 << (`NN_DATA_WIDTH / 2)) : `NN_DATA_WIDTH'd0;
     
 endmodule
