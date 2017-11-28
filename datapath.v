@@ -9,7 +9,7 @@ module Datapath(
     output reg [`RESULT_WIDTH-1:0] result,
     
     input [`NNMEM_DATA_WIDTH-1 : 0] nnmem_data,
-    output reg [`NNMEM_DATA_WIDTH-1 : 0] nnmem_output,
+    output [`NNMEM_DATA_WIDTH-1 : 0] nnmem_output,
     
     output reg [`X_COORD_WIDTH-1:0] x,
     output reg [`Y_COORD_WIDTH-1:0] y,
@@ -73,7 +73,6 @@ module Datapath(
             mem_write <= 0;
             
             nnmem_address <= `NNMEM_ADDR_WIDTH'd0;
-            nnmem_output <= `NNMEM_DATA_WIDTH'd0;
             nnmem_write <= 0;
             
             delay <= 2'b0;

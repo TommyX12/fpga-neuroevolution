@@ -52,8 +52,8 @@ module Evolve(
     
     input [`RAND_WIDTH-1:0] rand,
     
-    input [``NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_in,
-    output reg [``NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_out,
+    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_in,
+    output reg [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights_out,
     
     input [`DELAY_WIDTH-1:0] gen_duration,
     

@@ -149,8 +149,8 @@ module main(
     wire start_dp;
     wire [`INSTRUCTION_WIDTH-1:0] instruction_dp;
     
-    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_data,
-    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_output,
+    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_data;
+    wire [`NNMEM_DATA_WIDTH-1 : 0] nnmem_output;
     
     wire [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     wire [ports-1:0] start;
@@ -160,7 +160,7 @@ module main(
     wire [15:0] rand;
     
     // TODO update this with the number of subroutines
-    localparam ports = `NUM_ANT + 6;
+    localparam ports = `NUM_ANT_CORES + 6;
     
     Random16 random16(
         .clock(clock),
@@ -204,7 +204,7 @@ module main(
         
         .neural_net_weights(nnmem_output),
         
-        `PORT_CONNECT(ant_i)
+        `PORT_CONNECT(0)
     );
     // genvar ant_i;
     // generate
@@ -238,7 +238,7 @@ module main(
         
         .id(cur_id),
         
-        `PORT_CONNECT(`NUM_ANT + 0)
+        `PORT_CONNECT(`NUM_ANT_CORES + 0)
     );
     
     FoodDraw food_draw(
@@ -249,7 +249,7 @@ module main(
         
         .id(cur_id),
         
-        `PORT_CONNECT(`NUM_ANT + 1)
+        `PORT_CONNECT(`NUM_ANT_CORES + 1)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -262,7 +262,7 @@ module main(
         .id(cur_id),
         .rand(rand),
         
-        `PORT_CONNECT(`NUM_ANT + 2)
+        `PORT_CONNECT(`NUM_ANT_CORES + 2)
     );
     // genvar poison_i;
     // generate
@@ -293,7 +293,7 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
-        `PORT_CONNECT(`NUM_ANT + 3)
+        `PORT_CONNECT(`NUM_ANT_CORES + 3)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -303,7 +303,7 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
 
-        `PORT_CONNECT(`NUM_ANT + 4)
+        `PORT_CONNECT(`NUM_ANT_CORES + 4)
     );
     
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
@@ -320,7 +320,7 @@ module main(
         
         .gen_duration(`DELAY_GEN),
         
-        `PORT_CONNECT(`NUM_ANT + 5)
+        `PORT_CONNECT(`NUM_ANT_CORES + 5)
     );
 
     // TODO make sure the start and finish signal identifier match the current module, and make sure datapath access signal are in the correct stream.
