@@ -6,10 +6,13 @@
 // TODO change prefix to be for this file specifically
 // TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define FBDISP_OP_WIDTH 5 // TODO this must be large enough
-`define FBDISP_OP_STANDBY          `FBDISP_OP_WIDTH'd0
-`define FBDISP_OP_START `FBDISP_OP_WIDTH'd1
-`define FBDISP_OP_DELAY `FBDISP_OP_WIDTH'd2
-`define FBDISP_OP_WAIT  `FBDISP_OP_WIDTH'd3
+`define FBDISP_OP_STANDBY     `FBDISP_OP_WIDTH'd0
+`define FBDISP_OP_DEBUG_START `FBDISP_OP_WIDTH'd1
+`define FBDISP_OP_DEBUG_DELAY `FBDISP_OP_WIDTH'd2
+`define FBDISP_OP_DEBUG_WAIT  `FBDISP_OP_WIDTH'd3
+`define FBDISP_OP_START       `FBDISP_OP_WIDTH'd4
+`define FBDISP_OP_DELAY       `FBDISP_OP_WIDTH'd5
+`define FBDISP_OP_WAIT        `FBDISP_OP_WIDTH'd6
 
 module FBDisplay(
     input start,
@@ -18,6 +21,9 @@ module FBDisplay(
     
     output reg finished,
     
+    input [5:0] debug,
+    input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
+    
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
     output reg start_dp,
@@ -25,6 +31,8 @@ module FBDisplay(
     );
 
     reg [`FBDISP_OP_WIDTH-1:0] cur_state;
+    
+    reg [31:0] debugcount;
     
     // TODO declare any register
     reg [`X_COORD_WIDTH-1:0] x;
@@ -41,6 +49,7 @@ module FBDisplay(
             // TODO reset any register
             x <= `X_COORD_WIDTH'd0;
             y <= `Y_COORD_WIDTH'd0;
+            debugcount <= 0;
         end
         else begin
             // TODO make sure everything use blocking assignment
@@ -54,9 +63,34 @@ module FBDisplay(
                         // TODO register initialization on start
                         x = `X_COORD_WIDTH'd0;
                         y = `Y_COORD_WIDTH'd0;
+                        debugcount <= 0;
                         
                         cur_state = cur_state + `FBDISP_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                         finished = 0;
+                    end
+                end
+                `FBDISP_OP_DEBUG_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {debug, `OPCODE_NNMEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `FBDISP_OP_WIDTH'd1;
+                end
+                `FBDISP_OP_DEBUG_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `FBDISP_OP_WIDTH'd1;
+                end
+                `FBDISP_OP_DEBUG_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `FBDISP_OP_WIDTH'd1;
                     end
                 end
                 `FBDISP_OP_START: begin
@@ -64,7 +98,8 @@ module FBDisplay(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {y, x, `OPCODE_DISPLAY};
+                    // instruction_dp = {y, x, `OPCODE_DISPLAY};
+                    instruction_dp = {1'b1, 3'b111, y, x, `OPCODE_DRAW};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `FBDISP_OP_WIDTH'd1;
@@ -92,6 +127,7 @@ module FBDisplay(
                         else begin
                             x = x + 1;
                         end
+                        debugcount = debugcount + 1;
                         
                         if (finished) begin
                             cur_state = `FBDISP_OP_STANDBY;
