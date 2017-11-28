@@ -452,15 +452,15 @@ module AntUpdate(
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_X_START: begin
+                `ANTU_OP_FOOD_SET_Y_START: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_X_DELAY: begin
+                `ANTU_OP_FOOD_SET_Y_DELAY: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_X_WAIT : begin
+                `ANTU_OP_FOOD_SET_Y_WAIT : begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -501,15 +501,15 @@ module AntUpdate(
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_X_START: begin
+                `ANTU_OP_POISON_SET_Y_START: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_X_DELAY: begin
+                `ANTU_OP_POISON_SET_Y_DELAY: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_X_WAIT : begin
+                `ANTU_OP_POISON_SET_Y_WAIT : begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
