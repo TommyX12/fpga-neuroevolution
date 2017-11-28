@@ -62,41 +62,43 @@ module DrawBackground(
                         y = `Y_COORD_WIDTH'd0;
                         counter = 0;
                         
-                        cur_state = cur_state + `BG_OP_WIDTH'd1; // this jumps to the next instruction in sequence
+                        // cur_state = cur_state + `BG_OP_WIDTH'd1; // this jumps to the next instruction in sequence
+                        cur_state = `BG_OP_DRAW_START;
                         finished = 0;
                     end
                 end
-                `BG_OP_DEBUG_START: begin
-                    // dispatch instruction
-                    start_dp = 1;
+                // `BG_OP_DEBUG_START: begin
+                    // // dispatch instruction
+                    // start_dp = 1;
                     
-                    // TODO process and replace with your instruction
-                    instruction_dp = {debug, `OPCODE_NNMEMREAD};
-                    // it is best to maintain the same instruction until result comes back.
+                    // // TODO process and replace with your instruction
+                    // instruction_dp = {debug, `OPCODE_NNMEMREAD};
+                    // // it is best to maintain the same instruction until result comes back.
                     
-                    cur_state = cur_state + `BG_OP_WIDTH'd1;
-                end
-                `BG_OP_DEBUG_DELAY: begin
-                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    // cur_state = cur_state + `BG_OP_WIDTH'd1;
+                // end
+                // `BG_OP_DEBUG_DELAY: begin
+                    // start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
-                    cur_state = cur_state + `BG_OP_WIDTH'd1;
-                end
-                `BG_OP_DEBUG_WAIT: begin
-                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    // cur_state = cur_state + `BG_OP_WIDTH'd1;
+                // end
+                // `BG_OP_DEBUG_WAIT: begin
+                    // start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    if (finished_dp) begin
-                        // TODO do something with result_dp
-                        counter = counter + 1;
+                    // if (finished_dp) begin
+                        // // TODO do something with result_dp
+                        // counter = counter + 1;
                         
-                        cur_state = cur_state + `BG_OP_WIDTH'd1;
-                    end
-                end
+                        // cur_state = cur_state + `BG_OP_WIDTH'd1;
+                    // end
+                // end
                 `BG_OP_DRAW_START: begin
                     // dispatch instruction
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = neural_net_weights[counter] ? 3'b001 : `COLOUR_BG;
+                    // colour = neural_net_weights[counter] ? 3'b001 : `COLOUR_BG;
+                    colour = `COLOUR_BG;
                     plot = 1;
                     instruction_dp = {plot, colour, y, x, `OPCODE_DRAW};
                     // it is best to maintain the same instruction until result comes back.
@@ -131,7 +133,8 @@ module DrawBackground(
                             cur_state = `BG_OP_STANDBY;
                         end
                         else begin
-                            cur_state = `BG_OP_DEBUG_START;
+                            // cur_state = `BG_OP_DEBUG_START;
+                            cur_state = `BG_OP_DRAW_START;
                         end
                     end
                 end
