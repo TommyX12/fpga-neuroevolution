@@ -167,7 +167,7 @@ module Evolve(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {ant_index, `OPCODE_NNMEMWRITE};
+                    instruction_dp = {6'd5, `OPCODE_NNMEMWRITE};
                     // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
