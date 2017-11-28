@@ -293,6 +293,9 @@ module main(
         .resetn(resetn),
         .finished(draw_background_finished),
         
+        .debug(SW[9:4]),
+        .neural_net_weights(nnmem_output),
+
         `PORT_CONNECT(`NUM_ANT_CORES + 3)
     );
     
@@ -303,9 +306,6 @@ module main(
         .resetn(resetn),
         .finished(fb_display_finished),
         
-        .debug(SW[9:4]),
-        .neural_net_weights(nnmem_output),
-
         `PORT_CONNECT(`NUM_ANT_CORES + 4)
     );
     
