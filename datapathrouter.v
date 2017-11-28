@@ -26,9 +26,9 @@ module DatapathRouter(
     input clock;
     input resetn;
     
-    input [`INSTRUCTION_WIDTH-1:0] instruction[ports-1:0];
+    input [`INSTRUCTION_WIDTH*ports-1:0] instruction;
     input [ports-1:0] start;
-    output reg [`RESULT_WIDTH-1:0] result[ports-1:0];
+    output reg [`RESULT_WIDTH*ports-1:0] result;
     output reg [ports-1:0] finished;
     
     output reg [`INSTRUCTION_WIDTH-1:0] instruction_dp;
@@ -77,7 +77,7 @@ module DatapathRouter(
                         // )
                         // << (`RESULT_WIDTH * ptr)
                     // );
-                    result[ptr] = result_dp;
+                    result[ptr * `RESULT_WIDTH +: `RESULT_WIDTH] = result_dp;
                     finished = finished | ptr_mask;
                     
                     waiting = 0;
@@ -97,7 +97,7 @@ module DatapathRouter(
                         if (ptr_mask & ~(finished)) begin
                             // send
                             // instruction_dp = (instruction >> (`INSTRUCTION_WIDTH * ptr));
-                            instruction_dp = instruction[ptr];
+                            instruction_dp = instruction[ptr * `RESULT_WIDTH +: `RESULT_WIDTH];
                             start_dp = 1;
                             
                             delay = 1;
