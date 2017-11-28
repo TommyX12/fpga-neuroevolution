@@ -92,7 +92,14 @@ structs:
     
     make sure to use advanced physical optimization on final compilation.
     
+    !!! current debug measures:
+        background drawing neural net
+        evolve jump over states that resets neural net
+    
+    
     !!! make sure memory can store all weights in neural network.
+    
+    !!! solve the bug of ants being drawn on the right side of screen when on the left. maybe a buffer offset problem.
     
     !!! add initial block that does standard reset for fsm template.
     
