@@ -249,8 +249,6 @@ module AntUpdate(
     reg [`X_COORD_WIDTH-1:0] dx;
     reg [`Y_COORD_WIDTH-1:0] dy;
     
-    reg [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
-    
     reg colliding;
     reg [`MEM_ADDR_WIDTH-1:0] food_counter;
     // TODO tip: store closest food position and distance here.
