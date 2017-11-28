@@ -1,9 +1,15 @@
-module Random16 (clock, resetn, data);
+module Random16 (clock, resetn, out);
 
     input clock;
     input resetn;
     
-    output reg [15:0] data;
+    reg [15:0] data;
+    output [15:0] out;
+    assign out = {
+        data[3:0],
+        data[11:4],
+        data[15:12]
+    }
     
     wire f1 = data[0] ^ data[11];
     wire f2 = data[0] ^ data[13];

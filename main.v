@@ -165,7 +165,7 @@ module main(
     Random16 random16(
         .clock(clock),
         .resetn(resetn),
-        .data(rand)
+        .out(rand)
     );
     
     DatapathRouter datapath_router(
