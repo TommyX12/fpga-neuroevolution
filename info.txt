@@ -33,7 +33,7 @@ standardized datapath access
             6: write to memory for neural net
                 bit [9:4]: address
                 
-            7: 
+            7:
             8: 
             9: 
             10: 
@@ -95,6 +95,10 @@ structs:
     !!! current debug measures:
         // background drawing neural net
         // evolve jump over states that resets neural net
+    
+    potential future optimizations:
+        datapath router can be more efficiently designed in hardware.
+        !!! reduce complexity by using just food. have all food below a certain ID to become poison
     
     
     !!! make sure memory can store all weights in neural network.

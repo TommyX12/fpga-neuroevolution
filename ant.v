@@ -250,7 +250,13 @@ module AntUpdate(
     reg [`Y_COORD_WIDTH-1:0] dy;
     
     reg colliding;
-    reg [`MEM_ADDR_WIDTH-1:0] food_counter;
+    reg [`MEM_ADDR_WIDTH-1:0] food_index;
+    reg [`X_COORD_WIDTH-1:0] food_x;
+    reg [`Y_COORD_WIDTH-1:0] food_y;
+    reg [`MEM_ADDR_WIDTH-1:0] food_index_closest;
+    reg [`STD_WIDTH-1:0] food_distance_closest;
+    reg [`X_COORD_WIDTH-1:0] food_x_closest;
+    reg [`Y_COORD_WIDTH-1:0] food_y_closest;
     // TODO tip: store closest food position and distance here.
     
     
@@ -312,7 +318,13 @@ module AntUpdate(
             dy <= `Y_COORD_WIDTH'd1;
             
             colliding <= 0;
-            food_counter <= 0;
+            food_index <= `MEM_ADDR_WIDTH'd0;
+            food_x <= `X_COORD_WIDTH'd0;
+            food_y <= `Y_COORD_WIDTH'd0;
+            food_index_closest <= `MEM_ADDR_WIDTH'd0;
+            food_distance_closest <= ~(`STD_WIDTH'd0);
+            food_x_closest <= `X_COORD_WIDTH'd0;
+            food_y_closest <= `Y_COORD_WIDTH'd0;
             
             // neural net related stuff
             // TODO make this right once testing finishes
@@ -334,12 +346,18 @@ module AntUpdate(
                     
                     if (start) begin
                         // TODO register initialization on start
+                        food_index <= `MEM_ADDR_WIDTH'd0;
+                        food_x <= `X_COORD_WIDTH'd0;
+                        food_y <= `Y_COORD_WIDTH'd0;
+                        food_index_closest <= `MEM_ADDR_WIDTH'd0;
+                        food_distance_closest <= ~(`STD_WIDTH'd0);
+                        food_x_closest <= `X_COORD_WIDTH'd0;
+                        food_y_closest <= `Y_COORD_WIDTH'd0;
                         
                         cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                         finished = 0;
                         
                         colliding = 0;
-                        food_counter = 0;
                     end
                 end
                 
@@ -416,30 +434,75 @@ module AntUpdate(
                 // TODO
                 // I added extra states for writing the modified food location back to memory
                 
-                `ANTU_OP_FOOD_X_START : begin
+                `ANTU_OP_FOOD_X_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_FOOD_X(food_index), `OPCODE_MEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_X_DELAY : begin
+                `ANTU_OP_FOOD_X_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_X_WAIT : begin
+                `ANTU_OP_FOOD_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        food_x = result_dp;
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
+                end
+                
+                `ANTU_OP_FOOD_Y_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_FOOD_Y(food_index), `OPCODE_MEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_Y_START : begin
+                `ANTU_OP_FOOD_Y_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_Y_DELAY : begin
+                `ANTU_OP_FOOD_Y_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        food_y = result_dp;
+                        
+                        // process the food
+                        `define DISTANCE(X1, Y1, X2, Y2) ((X2 > X1 ? X2 - X1 : X1 - X2) + (Y2 > Y1 ? Y2 - Y1 : Y1 - Y2))
+                        if (DISTANCE(food_x, food_y, x, y) < food_distance_closest) begin
+                            food_index_closest = food_index;
+                            food_distance_closest = DISTANCE(food_x, food_y, x, y);
+                            food_x_closest = food_x;
+                            food_y_closest = food_y;
+                        end
+                        
+                        if (food_index == `NUM_FOOD - 1) begin
+                            food_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                        end
+                        else begin
+                            food_index = food_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `ANTU_OP_FOOD_X_START;
+                        end
+                        
+                    end
                 end
-                `ANTU_OP_FOOD_Y_WAIT : begin
-                    
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
-                end
+                
                 `ANTU_OP_FOOD_SET_X_START: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
@@ -535,6 +598,24 @@ module AntUpdate(
                 // end
                 `ANTU_OP_NN_LOAD_START: begin
                     start_dp = 1;
+                    
+                    // process input info
+                    if (food_x_closest > x) begin
+                        food_left = `NN_DATA_WIDTH'd0;
+                        food_right = food_x_closest - x;
+                    end
+                    else begin
+                        food_right = `NN_DATA_WIDTH'd0;
+                        food_left = x - food_x_closest;
+                    end
+                    if (food_y_closest > y) begin
+                        food_up = `NN_DATA_WIDTH'd0;
+                        food_down = food_y_closest - y;
+                    end
+                    else begin
+                        food_down = `NN_DATA_WIDTH'd0;
+                        food_up = y - food_y_closest;
+                    end
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {id, `OPCODE_NNMEMREAD};
