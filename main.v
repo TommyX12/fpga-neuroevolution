@@ -157,7 +157,7 @@ module main(
     wire [`RESULT_WIDTH*ports-1:0] result;
     wire [ports-1:0] finished;
     
-    wire [15:0] rand;
+    wire [`RAND_WIDTH-1:0] rand;
     
     // TODO update this with the number of subroutines
     localparam ports = `NUM_ANT_CORES + 6;
@@ -428,8 +428,15 @@ module main(
                 `MAIN_OP_ANT_UPDATE_WAIT: begin
                     ant_update_start = 0;
                     
-                    if (&ant_update_finished) begin
-                        cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    if (ant_update_finished) begin
+                        if (cur_id == `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
+                            cur_id = 0;
+                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                        end
+                        else begin
+                            cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `MAIN_OP_ANT_UPDATE_START;
+                        end
                     end
                 end
                 

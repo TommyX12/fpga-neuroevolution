@@ -166,7 +166,7 @@ endmodule
 // TODO change prefix to be for this file specifically
 `define ANTU_OP_WIDTH 6 // TODO this must be large enough
 `define ANTU_OP_STANDBY            `ANTU_OP_WIDTH'd0
-
+                                                   
 `define ANTU_OP_LOAD_X_START       `ANTU_OP_WIDTH'd1
 `define ANTU_OP_LOAD_X_DELAY       `ANTU_OP_WIDTH'd2
 `define ANTU_OP_LOAD_X_WAIT        `ANTU_OP_WIDTH'd3
@@ -176,39 +176,48 @@ endmodule
 `define ANTU_OP_LOAD_FITNESS_START `ANTU_OP_WIDTH'd7
 `define ANTU_OP_LOAD_FITNESS_DELAY `ANTU_OP_WIDTH'd8
 `define ANTU_OP_LOAD_FITNESS_WAIT  `ANTU_OP_WIDTH'd9
-
+                                                   
 `define ANTU_OP_FOOD_X_START       `ANTU_OP_WIDTH'd10
 `define ANTU_OP_FOOD_X_DELAY       `ANTU_OP_WIDTH'd11
 `define ANTU_OP_FOOD_X_WAIT        `ANTU_OP_WIDTH'd12
 `define ANTU_OP_FOOD_Y_START       `ANTU_OP_WIDTH'd13
 `define ANTU_OP_FOOD_Y_DELAY       `ANTU_OP_WIDTH'd14
 `define ANTU_OP_FOOD_Y_WAIT        `ANTU_OP_WIDTH'd15
-`define ANTU_OP_FOOD_SET_START     `ANTU_OP_WIDTH'd16
-`define ANTU_OP_FOOD_SET_DELAY     `ANTU_OP_WIDTH'd17
-`define ANTU_OP_FOOD_SET_WAIT      `ANTU_OP_WIDTH'd18
-
-`define ANTU_OP_POISON_X_START     `ANTU_OP_WIDTH'd19
-`define ANTU_OP_POISON_X_DELAY     `ANTU_OP_WIDTH'd20
-`define ANTU_OP_POISON_X_WAIT      `ANTU_OP_WIDTH'd21
-`define ANTU_OP_POISON_Y_START     `ANTU_OP_WIDTH'd22
-`define ANTU_OP_POISON_Y_DELAY     `ANTU_OP_WIDTH'd23
-`define ANTU_OP_POISON_Y_WAIT      `ANTU_OP_WIDTH'd24
-`define ANTU_OP_POISON_SET_START   `ANTU_OP_WIDTH'd25
-`define ANTU_OP_POISON_SET_DELAY   `ANTU_OP_WIDTH'd26
-`define ANTU_OP_POISON_SET_WAIT    `ANTU_OP_WIDTH'd27
-
-`define ANTU_OP_NN_START           `ANTU_OP_WIDTH'd28
-`define ANTU_OP_NN_WAIT            `ANTU_OP_WIDTH'd29
-
-`define ANTU_OP_SET_X_START        `ANTU_OP_WIDTH'd30
-`define ANTU_OP_SET_X_DELAY        `ANTU_OP_WIDTH'd31
-`define ANTU_OP_SET_X_WAIT         `ANTU_OP_WIDTH'd32
-`define ANTU_OP_SET_Y_START        `ANTU_OP_WIDTH'd33
-`define ANTU_OP_SET_Y_DELAY        `ANTU_OP_WIDTH'd34
-`define ANTU_OP_SET_Y_WAIT         `ANTU_OP_WIDTH'd35
-`define ANTU_OP_SET_FITNESS_START  `ANTU_OP_WIDTH'd36
-`define ANTU_OP_SET_FITNESS_DELAY  `ANTU_OP_WIDTH'd37
-`define ANTU_OP_SET_FITNESS_WAIT   `ANTU_OP_WIDTH'd38
+`define ANTU_OP_FOOD_SET_X_START   `ANTU_OP_WIDTH'd16
+`define ANTU_OP_FOOD_SET_X_DELAY   `ANTU_OP_WIDTH'd17
+`define ANTU_OP_FOOD_SET_X_WAIT    `ANTU_OP_WIDTH'd18
+`define ANTU_OP_FOOD_SET_Y_START   `ANTU_OP_WIDTH'd19
+`define ANTU_OP_FOOD_SET_Y_DELAY   `ANTU_OP_WIDTH'd20
+`define ANTU_OP_FOOD_SET_Y_WAIT    `ANTU_OP_WIDTH'd21
+                                                   
+`define ANTU_OP_POISON_X_START     `ANTU_OP_WIDTH'd22
+`define ANTU_OP_POISON_X_DELAY     `ANTU_OP_WIDTH'd23
+`define ANTU_OP_POISON_X_WAIT      `ANTU_OP_WIDTH'd24
+`define ANTU_OP_POISON_Y_START     `ANTU_OP_WIDTH'd25
+`define ANTU_OP_POISON_Y_DELAY     `ANTU_OP_WIDTH'd26
+`define ANTU_OP_POISON_Y_WAIT      `ANTU_OP_WIDTH'd27
+`define ANTU_OP_POISON_SET_X_START `ANTU_OP_WIDTH'd28
+`define ANTU_OP_POISON_SET_X_DELAY `ANTU_OP_WIDTH'd29
+`define ANTU_OP_POISON_SET_X_WAIT  `ANTU_OP_WIDTH'd30
+`define ANTU_OP_POISON_SET_Y_START `ANTU_OP_WIDTH'd31
+`define ANTU_OP_POISON_SET_Y_DELAY `ANTU_OP_WIDTH'd32
+`define ANTU_OP_POISON_SET_Y_WAIT  `ANTU_OP_WIDTH'd33
+                                                   
+`define ANTU_OP_NN_LOAD_START      `ANTU_OP_WIDTH'd34
+`define ANTU_OP_NN_LOAD_DELAY      `ANTU_OP_WIDTH'd35
+`define ANTU_OP_NN_LOAD_WAIT       `ANTU_OP_WIDTH'd36
+`define ANTU_OP_NN_DELAY           `ANTU_OP_WIDTH'd37
+`define ANTU_OP_NN_WAIT            `ANTU_OP_WIDTH'd38
+                                                   
+`define ANTU_OP_SET_X_START        `ANTU_OP_WIDTH'd39
+`define ANTU_OP_SET_X_DELAY        `ANTU_OP_WIDTH'd40
+`define ANTU_OP_SET_X_WAIT         `ANTU_OP_WIDTH'd41
+`define ANTU_OP_SET_Y_START        `ANTU_OP_WIDTH'd42
+`define ANTU_OP_SET_Y_DELAY        `ANTU_OP_WIDTH'd43
+`define ANTU_OP_SET_Y_WAIT         `ANTU_OP_WIDTH'd44
+`define ANTU_OP_SET_FITNESS_START  `ANTU_OP_WIDTH'd45
+`define ANTU_OP_SET_FITNESS_DELAY  `ANTU_OP_WIDTH'd46
+`define ANTU_OP_SET_FITNESS_WAIT   `ANTU_OP_WIDTH'd47
 
 
 module AntUpdate(
@@ -431,15 +440,27 @@ module AntUpdate(
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_START : begin
+                `ANTU_OP_FOOD_SET_X_START: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_DELAY : begin
+                `ANTU_OP_FOOD_SET_X_DELAY: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_WAIT : begin
+                `ANTU_OP_FOOD_SET_X_WAIT : begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_X_START: begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_X_DELAY: begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_FOOD_SET_X_WAIT : begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
@@ -468,21 +489,33 @@ module AntUpdate(
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_START: begin
+                `ANTU_OP_POISON_SET_X_START: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_DELAY: begin
+                `ANTU_OP_POISON_SET_X_DELAY: begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_WAIT : begin
+                `ANTU_OP_POISON_SET_X_WAIT : begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_X_START: begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_X_DELAY: begin
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_POISON_SET_X_WAIT : begin
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 
                 
-                `ANTU_OP_NN_START: begin
+                // `ANTU_OP_NN_START: begin
                     // x = x + dx;
                     // y = y + dy;
                     // if (x < `X_COORD_WIDTH'd0) begin
@@ -498,6 +531,31 @@ module AntUpdate(
                         // dy = -dy;
                     // end
                     
+                    // cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                // end
+                `ANTU_OP_NN_LOAD_START: begin
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {id, `OPCODE_NNMEMREAD};
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_NN_LOAD_DELAY: begin
+                    start_dp = 1;
+                    
+                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                end
+                `ANTU_OP_NN_LOAD_WAIT: begin
+                    start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
+                end
+                
+                `ANTU_OP_NN_DELAY: begin
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 
