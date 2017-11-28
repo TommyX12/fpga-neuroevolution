@@ -188,7 +188,7 @@ module Evolve(
                         end
                         else begin
                             ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
-                            cur_state = `EVOLVE_OP_ANT_RAND_WEIGHT_START;
+                            cur_state = `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE;
                         end
                     end
                 end
