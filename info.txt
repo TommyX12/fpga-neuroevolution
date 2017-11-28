@@ -92,6 +92,8 @@ structs:
     
     make sure to use advanced physical optimization on final compilation.
     
+    !!! make sure randomly generated stuff do not go out of bound.
+    
     !!! make sure memory can store all weights in neural network.
     
     !!! make sure to account for screen size when randomizing (especially in ant)
