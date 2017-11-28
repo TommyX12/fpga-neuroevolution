@@ -99,7 +99,7 @@ module Datapath(
                             fb_data = instruction_buffer[21:19];
                             fb_write = instruction_buffer[22];
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     `OPCODE_MEMREAD: begin
@@ -115,7 +115,7 @@ module Datapath(
                             mem_write = 0;
                             mem_address = instruction_buffer[19:4];
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     `OPCODE_MEMWRITE: begin
@@ -128,11 +128,11 @@ module Datapath(
                             end
                         end
                         else begin
-                            mem_write = 1;
                             mem_address = instruction_buffer[19:4];
                             mem_data = instruction_buffer[31:20];
+                            mem_write = 1;
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     `OPCODE_DISPLAY: begin
@@ -152,7 +152,7 @@ module Datapath(
                             fb_address = y * `SCREEN_WIDTH + x;
                             fb_write = 0;
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     `OPCODE_NNMEMREAD: begin
@@ -166,7 +166,7 @@ module Datapath(
                             nnmem_write = 0;
                             nnmem_address = instruction_buffer[9:4];
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     `OPCODE_NNMEMWRITE: begin
@@ -179,10 +179,10 @@ module Datapath(
                             end
                         end
                         else begin
-                            nnmem_write = 1;
                             nnmem_address = instruction_buffer[9:4];
+                            nnmem_write = 1;
                             
-                            delay = 1;
+                            delay = 2;
                         end
                     end
                     default: begin
