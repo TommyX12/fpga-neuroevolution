@@ -93,8 +93,8 @@ structs:
     make sure to use advanced physical optimization on final compilation.
     
     !!! current debug measures:
-        background drawing neural net
-        evolve jump over states that resets neural net
+        // background drawing neural net
+        // evolve jump over states that resets neural net
     
     
     !!! make sure memory can store all weights in neural network.

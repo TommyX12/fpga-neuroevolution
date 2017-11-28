@@ -147,8 +147,7 @@ module Evolve(
                     else begin
                         gen_counter = gen_duration;
                         
-                        // cur_state = cur_state + `EVOLVE_OP_WIDTH'd1; // this jumps to the next instruction in sequence
-                        cur_state = `EVOLVE_OP_ANT_RAND_X_START;
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1; // this jumps to the next instruction in sequence
                     end
                 end
                 
