@@ -602,7 +602,6 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // process input info
-<<<<<<< HEAD
                     // if (food_x_closest > x) begin
                         // food_left = `NN_DATA_WIDTH'd0;
                         // food_right = food_x_closest - x;
@@ -623,28 +622,6 @@ module AntUpdate(
                     food_right = `NN_DATA_WIDTH'd0;
                     food_up = `NN_DATA_WIDTH'd4;
                     food_down = `NN_DATA_WIDTH'd0;
-=======
-                    if (food_x_closest > x) begin
-                        food_left = `NN_DATA_WIDTH'd0;
-                        food_right = `NN_DATA_WIDTH'd3;
-                    end
-                    else begin
-                        food_right = `NN_DATA_WIDTH'd0;
-                        food_left = `NN_DATA_WIDTH'd3;
-                    end
-                    if (food_y_closest > y) begin
-                        food_up = `NN_DATA_WIDTH'd0;
-                        food_down = `NN_DATA_WIDTH'd3;
-                    end
-                    else begin
-                        food_down = `NN_DATA_WIDTH'd0;
-                        food_up = `NN_DATA_WIDTH'd3;
-                    end
-                    // food_left = `NN_DATA_WIDTH'd3;
-                    // food_right = `NN_DATA_WIDTH'd0;
-                    // food_up = `NN_DATA_WIDTH'd4;
-                    // food_down = `NN_DATA_WIDTH'd0;
->>>>>>> b4f862a3b4020dc8b29474dea5385ba9f4d86a23
                     
                     debug = {
                         food_up, food_down, food_left
