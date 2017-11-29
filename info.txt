@@ -98,7 +98,8 @@ structs:
         // datapath NNMEMREAD delay = 10
         // NN input are set to random
         // ant move to food instead of using neural net
-        food up down left right is now boolean
+        // food up down left right is now boolean
+        only 1 ant
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.
