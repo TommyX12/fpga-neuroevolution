@@ -651,20 +651,14 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_left && move_right) begin
-                        
-                    end
-                    else if (move_left && x > (`ANT_WIDTH / 2)) begin
+                    if (move_left && x > (`ANT_WIDTH / 2)) begin
                         x = x - `X_COORD_WIDTH'd1;
                     end
                     else if (move_right && x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
                         x = x + `X_COORD_WIDTH'd1;
                     end
                     
-                    if (move_up && move_down) begin
-                        
-                    end
-                    else if (move_up && y > (`ANT_HEIGHT / 2)) begin
+                    if (move_up && y > (`ANT_HEIGHT / 2)) begin
                         y = y - `Y_COORD_WIDTH'd1;
                     end
                     else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
