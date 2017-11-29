@@ -601,10 +601,6 @@ module AntUpdate(
                 `ANTU_OP_NN_LOAD_START: begin
                     start_dp = 1;
                     
-                    debug = {
-                        5'b0, y, x, food_x_closest
-                    };
-                    
                     // process input info
                     if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
@@ -622,6 +618,10 @@ module AntUpdate(
                         food_down = `NN_DATA_WIDTH'd0;
                         food_up = y - food_y_closest;
                     end
+                    
+                    debug = {
+                        food_up, food_left, food_right
+                    };
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {id, `OPCODE_NNMEMREAD};
