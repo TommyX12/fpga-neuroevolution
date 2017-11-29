@@ -618,9 +618,9 @@ module AntUpdate(
                         food_down = `NN_DATA_WIDTH'd0;
                         food_up = y - food_y_closest;
                     end */
-                    food_left <= `NN_DATA_WIDTH'b01000000;
+                    food_left <= `NN_DATA_WIDTH'b00000000;
                     food_right <= `NN_DATA_WIDTH'b00000000;
-                    food_up <= `NN_DATA_WIDTH'b01000000;
+                    food_up <= `NN_DATA_WIDTH'b00000000;
                     food_down <= `NN_DATA_WIDTH'b00000000;
                     
                     // TODO process and replace with your instruction
