@@ -334,6 +334,13 @@ module AntUpdate(
             food_distance_closest <= ~(`STD_WIDTH'd0);
             food_x_closest <= `X_COORD_WIDTH'd0;
             food_y_closest <= `Y_COORD_WIDTH'd0;
+            poison_index <= `MEM_ADDR_WIDTH'd0;
+            poison_x <= `X_COORD_WIDTH'd0;
+            poison_y <= `Y_COORD_WIDTH'd0;
+            poison_index_closest <= `MEM_ADDR_WIDTH'd0;
+            poison_distance_closest <= ~(`STD_WIDTH'd0);
+            poison_x_closest <= `X_COORD_WIDTH'd0;
+            poison_y_closest <= `Y_COORD_WIDTH'd0;
             
             // neural net related stuff
             // TODO make this right once testing finishes
