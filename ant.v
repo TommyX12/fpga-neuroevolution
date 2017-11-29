@@ -495,7 +495,12 @@ module AntUpdate(
                         
                         if (food_index == `NUM_FOOD - 1) begin
                             food_index = `MEM_ADDR_WIDTH'd0;
-                            cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                            if (food_distance_closest <= 2) begin
+                                cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                            end
+                            else begin
+                                cur_state = `ANTU_OP_POISON_X_START;
+                            end
                         end
                         else begin
                             food_index = food_index + `MEM_ADDR_WIDTH'd1;
@@ -506,28 +511,53 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_FOOD_SET_X_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand, `ADDR_FOOD_X(food_index_closest), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_SET_X_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_X_WAIT : begin
+                `ANTU_OP_FOOD_SET_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
                 end
+                
                 `ANTU_OP_FOOD_SET_Y_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand, `ADDR_FOOD_Y(food_index_closest), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_FOOD_SET_Y_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_FOOD_SET_Y_WAIT : begin
+                `ANTU_OP_FOOD_SET_Y_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
                 end
 
                 `ANTU_OP_POISON_X_START : begin
