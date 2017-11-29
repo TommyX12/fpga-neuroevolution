@@ -619,10 +619,6 @@ module AntUpdate(
                         food_up = y - food_y_closest;
                     end
                     
-                    debug = {
-                        food_up, food_left, food_right
-                    };
-                    
                     // TODO process and replace with your instruction
                     instruction_dp = {id, `OPCODE_NNMEMREAD};
                     
@@ -666,6 +662,10 @@ module AntUpdate(
                     else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
                         y = y + `Y_COORD_WIDTH'd1;
                     end
+                    
+                    debug = {
+                        move_left, move_right, move_up
+                    };
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
