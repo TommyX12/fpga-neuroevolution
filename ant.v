@@ -483,7 +483,7 @@ module AntUpdate(
                         food_y = result_dp;
                         
                         // process the food
-                        `define DISTANCE(X1, Y1, X2, Y2) ((X2 > X1 ? X2 - X1 : X1 - X2) + (Y2 > Y1 ? Y2 - Y1 : Y1 - Y2))
+                        `define `DISTANCE(X1, Y1, X2, Y2) ({1'b0, (X2 > X1 ? X2 - X1 : X1 - X2)} + {1'b0, (Y2 > Y1 ? Y2 - Y1 : Y1 - Y2)})
                         if (`DISTANCE(food_x, food_y, x, y) < food_distance_closest) begin
                             food_index_closest = food_index;
                             food_distance_closest = `DISTANCE(food_x, food_y, x, y);
