@@ -604,19 +604,23 @@ module AntUpdate(
                     // process input info
                     if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
-                        food_right = food_x_closest - x;
+                        // food_right = food_x_closest - x;
+                        food_right = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         food_right = `NN_DATA_WIDTH'd0;
-                        food_left = x - food_x_closest;
+                        // food_left = x - food_x_closest;
+                        food_left = `NN_DATA_WIDTH'b00010000;
                     end
                     if (food_y_closest > y) begin
                         food_up = `NN_DATA_WIDTH'd0;
-                        food_down = food_y_closest - y;
+                        // food_down = food_y_closest - y;
+                        food_down = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         food_down = `NN_DATA_WIDTH'd0;
-                        food_up = y - food_y_closest;
+                        // food_up = y - food_y_closest;
+                        food_up = `NN_DATA_WIDTH'b00010000;
                     end
                     // food_left = rand;
                     // food_right = rand;
@@ -651,23 +655,23 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (food_left && food_right) begin
+                    if (move_left && move_right) begin
                         
                     end
-                    else if (food_left && x > (`ANT_WIDTH / 2)) begin
+                    else if (move_left && x > (`ANT_WIDTH / 2)) begin
                         x = x - `X_COORD_WIDTH'd1;
                     end
-                    else if (food_right && x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
+                    else if (move_right && x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
                         x = x + `X_COORD_WIDTH'd1;
                     end
                     
-                    if (food_up && food_down) begin
+                    if (move_up && move_down) begin
                         
                     end
-                    else if (food_up && y > (`ANT_HEIGHT / 2)) begin
+                    else if (move_up && y > (`ANT_HEIGHT / 2)) begin
                         y = y - `Y_COORD_WIDTH'd1;
                     end
-                    else if (food_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
+                    else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
                         y = y + `Y_COORD_WIDTH'd1;
                     end
                     
