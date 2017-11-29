@@ -644,7 +644,7 @@ module AntUpdate(
                                 cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                             end
                             else begin
-                                cur_state = `ANTU_OP_POISON_X_START;
+                                cur_state = `ANTU_OP_NN_LOAD_START;
                             end
                         end
                         else begin
