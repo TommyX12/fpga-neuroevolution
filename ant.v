@@ -664,7 +664,7 @@ module AntUpdate(
                     end
                     
                     debug = {
-                        move_left, move_right, move_up
+                        move_left[4 +: 4], move_right[4 +: 4], move_up[4 +: 4], move_down[4 +: 4]
                     };
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
