@@ -259,6 +259,13 @@ module AntUpdate(
     reg [`STD_WIDTH-1:0] food_distance_closest;
     reg [`X_COORD_WIDTH-1:0] food_x_closest;
     reg [`Y_COORD_WIDTH-1:0] food_y_closest;
+    reg [`MEM_ADDR_WIDTH-1:0] poison_index;
+    reg [`X_COORD_WIDTH-1:0] poison_x;
+    reg [`Y_COORD_WIDTH-1:0] poison_y;
+    reg [`MEM_ADDR_WIDTH-1:0] poison_index_closest;
+    reg [`STD_WIDTH-1:0] poison_distance_closest;
+    reg [`X_COORD_WIDTH-1:0] poison_x_closest;
+    reg [`Y_COORD_WIDTH-1:0] poison_y_closest;
     // TODO tip: store closest food position and distance here.
     
     
@@ -355,6 +362,13 @@ module AntUpdate(
                         food_distance_closest <= ~(`STD_WIDTH'd0);
                         food_x_closest <= `X_COORD_WIDTH'd0;
                         food_y_closest <= `Y_COORD_WIDTH'd0;
+                        poison_index <= `MEM_ADDR_WIDTH'd0;
+                        poison_x <= `X_COORD_WIDTH'd0;
+                        poison_y <= `Y_COORD_WIDTH'd0;
+                        poison_index_closest <= `MEM_ADDR_WIDTH'd0;
+                        poison_distance_closest <= ~(`STD_WIDTH'd0);
+                        poison_x_closest <= `X_COORD_WIDTH'd0;
+                        poison_y_closest <= `Y_COORD_WIDTH'd0;
                         
                         cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                         finished = 0;
@@ -560,55 +574,130 @@ module AntUpdate(
                     end
                 end
 
-                `ANTU_OP_POISON_X_START : begin
+                `ANTU_OP_POISON_X_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_POISON_X(poison_index), `OPCODE_MEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_X_DELAY : begin
+                `ANTU_OP_POISON_X_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_X_WAIT : begin
+                `ANTU_OP_POISON_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        poison_x = result_dp;
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
+                end
+                
+                `ANTU_OP_POISON_Y_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_POISON_Y(poison_index), `OPCODE_MEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_Y_START : begin
+                `ANTU_OP_POISON_Y_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_Y_DELAY : begin
+                `ANTU_OP_POISON_Y_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        poison_y = result_dp;
+                        
+                        // process the poison
+                        `define DISTANCE(X1, Y1, X2, Y2) ({1'b0, (X2 > X1 ? X2 - X1 : X1 - X2)} + {1'b0, (Y2 > Y1 ? Y2 - Y1 : Y1 - Y2)})
+                        if (`DISTANCE(poison_x, poison_y, x, y) < poison_distance_closest) begin
+                            poison_index_closest = poison_index;
+                            poison_distance_closest = `DISTANCE(poison_x, poison_y, x, y);
+                            poison_x_closest = poison_x;
+                            poison_y_closest = poison_y;
+                        end
+                        
+                        if (poison_index == `NUM_POISON - 1) begin
+                            poison_index = `MEM_ADDR_WIDTH'd0;
+                            if (poison_distance_closest <= 2) begin
+                                cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                            end
+                            else begin
+                                cur_state = `ANTU_OP_POISON_X_START;
+                            end
+                        end
+                        else begin
+                            poison_index = poison_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `ANTU_OP_POISON_X_START;
+                        end
+                        
+                    end
                 end
-                `ANTU_OP_POISON_Y_WAIT : begin
-                    
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
-                end
+                
                 `ANTU_OP_POISON_SET_X_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand / (`RAND_MAX / `SCREEN_WIDTH), `ADDR_POISON_X(poison_index_closest), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_SET_X_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_X_WAIT : begin
+                `ANTU_OP_POISON_SET_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
                 end
+                
                 `ANTU_OP_POISON_SET_Y_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {rand / (`RAND_MAX / `SCREEN_HEIGHT), `ADDR_POISON_Y(poison_index_closest), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
                 `ANTU_OP_POISON_SET_Y_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
-                `ANTU_OP_POISON_SET_Y_WAIT : begin
+                `ANTU_OP_POISON_SET_Y_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
-                    cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `ANTU_OP_WIDTH'd1;
+                    end
                 end
-                
+
                 
                 // `ANTU_OP_NN_START: begin
                     // x = x + dx;
@@ -647,6 +736,22 @@ module AntUpdate(
                     else begin
                         food_down = `NN_DATA_WIDTH'd0;
                         food_up = y - food_y_closest;
+                    end
+                    if (poison_x_closest > x) begin
+                        poison_left = `NN_DATA_WIDTH'd0;
+                        poison_right = poison_x_closest - x;
+                    end
+                    else begin
+                        poison_right = `NN_DATA_WIDTH'd0;
+                        poison_left = x - poison_x_closest;
+                    end
+                    if (poison_y_closest > y) begin
+                        poison_up = `NN_DATA_WIDTH'd0;
+                        poison_down = poison_y_closest - y;
+                    end
+                    else begin
+                        poison_down = `NN_DATA_WIDTH'd0;
+                        poison_up = y - poison_y_closest;
                     end
                     // food_left = `NN_DATA_WIDTH'd3;
                     // food_right = `NN_DATA_WIDTH'd0;
