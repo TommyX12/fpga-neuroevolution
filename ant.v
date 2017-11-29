@@ -602,26 +602,26 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // process input info
-                    if (food_x_closest > x) begin
-                        food_left = `NN_DATA_WIDTH'd0;
-                        food_right = food_x_closest - x;
-                    end
-                    else begin
-                        food_right = `NN_DATA_WIDTH'd0;
-                        food_left = x - food_x_closest;
-                    end
-                    if (food_y_closest > y) begin
-                        food_up = `NN_DATA_WIDTH'd0;
-                        food_down = food_y_closest - y;
-                    end
-                    else begin
-                        food_down = `NN_DATA_WIDTH'd0;
-                        food_up = y - food_y_closest;
-                    end
-                    // food_left = `NN_DATA_WIDTH'd3;
-                    // food_right = `NN_DATA_WIDTH'd0;
-                    // food_up = `NN_DATA_WIDTH'd4;
-                    // food_down = `NN_DATA_WIDTH'd0;
+                    // if (food_x_closest > x) begin
+                        // food_left = `NN_DATA_WIDTH'd0;
+                        // food_right = food_x_closest - x;
+                    // end
+                    // else begin
+                        // food_right = `NN_DATA_WIDTH'd0;
+                        // food_left = x - food_x_closest;
+                    // end
+                    // if (food_y_closest > y) begin
+                        // food_up = `NN_DATA_WIDTH'd0;
+                        // food_down = food_y_closest - y;
+                    // end
+                    // else begin
+                        // food_down = `NN_DATA_WIDTH'd0;
+                        // food_up = y - food_y_closest;
+                    // end
+                    food_left = `NN_DATA_WIDTH'd3;
+                    food_right = `NN_DATA_WIDTH'd0;
+                    food_up = `NN_DATA_WIDTH'd4;
+                    food_down = `NN_DATA_WIDTH'd0;
                     
                     debug = {
                         food_up, food_down, food_left

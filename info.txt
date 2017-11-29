@@ -99,8 +99,10 @@ structs:
         // NN input are set to random
         // ant move to food instead of using neural net
         // food up down left right is now boolean
-        only 1 ant
-        // food up down left right assigned to 4, 3
+        // only 1 ant
+        // food up down left right always assigned to 3
+        food up down left right assigned to 4, 3
+        neural network is hand designed optimal
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.

@@ -83,6 +83,145 @@ module Evolve(
     reg [`X_COORD_WIDTH-1:0] poison_x;
     reg [`Y_COORD_WIDTH-1:0] poison_y;
     
+    always @(*) begin
+        // given 8 x 8 x 4 net
+        neural_net_weights_out <= {
+            
+            // move left
+            8'b00000001, // bias
+            8'b00000000, // hidden 7
+            8'b00000000, // hidden 6
+            8'b00010000, // hidden 5
+            8'b00000000, // hidden 4
+            8'b00000000, // hidden 3
+            8'b00000000, // hidden 2
+            8'b00000000, // hidden 1
+            8'b00000000, // hidden 0
+            
+            // move right
+            8'b00000001, // bias
+            8'b00000000, // hidden 7
+            8'b00000000, // hidden 6
+            8'b00000000, // hidden 5
+            8'b00010000, // hidden 4
+            8'b00000000, // hidden 3
+            8'b00000000, // hidden 2
+            8'b00000000, // hidden 1
+            8'b00000000, // hidden 0
+            
+            // move up
+            8'b00000001, // bias
+            8'b00010000, // hidden 7
+            8'b00000000, // hidden 6
+            8'b00000000, // hidden 5
+            8'b00000000, // hidden 4
+            8'b00000000, // hidden 3
+            8'b00000000, // hidden 2
+            8'b00000000, // hidden 1
+            8'b00000000, // hidden 0
+            
+            // move down
+            8'b00000001, // bias
+            8'b00000000, // hidden 7
+            8'b00010000, // hidden 6
+            8'b00000000, // hidden 5
+            8'b00000000, // hidden 4
+            8'b00000000, // hidden 3
+            8'b00000000, // hidden 2
+            8'b00000000, // hidden 1
+            8'b00000000, // hidden 0
+            
+            // hidden 7, input going up
+            8'b00000001, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00010000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 6, input going down
+            8'b00000001, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00010000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 5, input going left
+            8'b00000001, // bias
+            8'b00010000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 4, input going right
+            8'b00000001, // bias
+            8'b00000000, // food left
+            8'b00010000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 3, not used
+            8'b00000010, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 2, not used
+            8'b00000010, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 1, not used
+            8'b00000010, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+            // hidden 0, not used
+            8'b00000010, // bias
+            8'b00000000, // food left
+            8'b00000000, // food right
+            8'b00000000, // food up
+            8'b00000000, // food down
+            8'b00000000, // input 3
+            8'b00000000, // input 2
+            8'b00000000, // input 1
+            8'b00000000, // input 0
+            
+        };
+    end
+    
     always @(posedge clock) begin
         if (!resetn) begin
             cur_state <= `EVOLVE_OP_STANDBY;
@@ -92,7 +231,7 @@ module Evolve(
             instruction_dp <= 0;
             
             // TODO reset any register
-            neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
+            // neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
             
             gen_counter <= `DELAY_WIDTH'd0;
             
@@ -152,7 +291,7 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                    // neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
