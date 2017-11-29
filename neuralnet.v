@@ -64,11 +64,11 @@ module Neuron(
         for (i = 0; i < input_size; i = i + 1) begin : gen_product
             assign product[data_width * i +: data_width] =
                 (
-                    {{(`NN_DATA_WIDTH){1'd0}}, input_data[data_width * i +: data_width]}
+                    {{(data_width){1'd0}}, input_data[data_width * i +: data_width]}
                     *
-                    {{(`NN_DATA_WIDTH){1'd0}}, weights[data_width * i +: data_width]}
+                    {{(data_width){1'd0}}, weights[data_width * i +: data_width]}
                 )
-                >> (`NN_DATA_WIDTH / 2);
+                >> (data_width / 2);
         end
     endgenerate
     
@@ -84,6 +84,6 @@ module Neuron(
     
     assign output_data = sum[data_width * input_size - 1 : data_width * (input_size - 1)]
         >= weights[data_width * input_size +: data_width] ? 
-        (`NN_DATA_WIDTH'd1 << (`NN_DATA_WIDTH / 2)) : `NN_DATA_WIDTH'd0;
+        (data_width'd1 << (data_width / 2)) : data_width'd0;
     
 endmodule
