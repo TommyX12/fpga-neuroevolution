@@ -97,6 +97,7 @@ structs:
         // evolve jump over states that resets neural net
         // datapath NNMEMREAD delay = 10
         NN input are set to random
+        ant move to food instead of using neural net
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.
