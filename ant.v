@@ -601,7 +601,7 @@ module AntUpdate(
                 `ANTU_OP_NN_LOAD_START: begin
                     start_dp = 1;
                     
-                    process input info
+                    // process input info
                     if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
                         food_right = food_x_closest - x;

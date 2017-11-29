@@ -84,6 +84,6 @@ module Neuron(
     
     assign output_data = sum[data_width * input_size - 1 : data_width * (input_size - 1)]
         >= weights[data_width * input_size +: data_width] ? 
-        (data_width'd1 << (data_width / 2)) : data_width'd0;
+        ({{(data_width - 1){1'd0}}, 1'd1} << (data_width / 2)) : 0;
     
 endmodule
