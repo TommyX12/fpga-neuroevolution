@@ -83,7 +83,7 @@ module Evolve(
     reg [`X_COORD_WIDTH-1:0] poison_x;
     reg [`Y_COORD_WIDTH-1:0] poison_y;
     
-    /* always @(*) begin
+    always @(*) begin
         // given 8 x 8 x 4 net
         neural_net_weights_out <= {
             
@@ -220,7 +220,7 @@ module Evolve(
             8'b00000000, // input 0
             
         };
-    end */
+    end
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -231,7 +231,7 @@ module Evolve(
             instruction_dp <= 0;
             
             // TODO reset any register
-            neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
+            // neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
             
             gen_counter <= `DELAY_WIDTH'd0;
             
@@ -291,7 +291,7 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                    // neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
