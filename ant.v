@@ -602,7 +602,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // process input info
-                    /* if (food_x_closest > x) begin
+                    if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
                         food_right = food_x_closest - x;
                     end
@@ -617,11 +617,11 @@ module AntUpdate(
                     else begin
                         food_down = `NN_DATA_WIDTH'd0;
                         food_up = y - food_y_closest;
-                    end */
-                    food_left <= `NN_DATA_WIDTH'b00000000;
-                    food_right <= `NN_DATA_WIDTH'b00000000;
-                    food_up <= `NN_DATA_WIDTH'b00000000;
-                    food_down <= `NN_DATA_WIDTH'b00000000;
+                    end
+                    
+                    debug = {
+                        food_up, food_down, food_left
+                    };
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {id, `OPCODE_NNMEMREAD};
@@ -666,10 +666,6 @@ module AntUpdate(
                     else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
                         y = y + `Y_COORD_WIDTH'd1;
                     end
-                    
-                    debug = {
-                        move_left[4 +: 4], move_right[4 +: 4], move_up[4 +: 4], move_down[4 +: 4]
-                    };
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end
