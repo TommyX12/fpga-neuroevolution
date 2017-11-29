@@ -230,6 +230,8 @@ module AntUpdate(
     input [`RAND_WIDTH-1:0] rand,
     
     input [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] neural_net_weights,
+    
+    output reg [23:0] debug,
 
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
@@ -598,6 +600,10 @@ module AntUpdate(
                 // end
                 `ANTU_OP_NN_LOAD_START: begin
                     start_dp = 1;
+                    
+                    debug = {
+                        5'b0, y, x, food_x_closest
+                    };
                     
                     // process input info
                     if (food_x_closest > x) begin

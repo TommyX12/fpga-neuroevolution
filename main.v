@@ -44,6 +44,7 @@ module main(
         KEY,
         SW,
         LEDR,
+        HEX0, HEX1, HEX2, HEX3, HEX4, HEX5,
         // The ports below are for the VGA output.  Do not change.
         VGA_CLK,   						//	VGA Clock
         VGA_HS,							//	VGA H_SYNC
@@ -59,6 +60,7 @@ module main(
     input   [9:0]   SW;
     output   [9:0]   LEDR;
     input   [3:0]   KEY;
+    output [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
     // Declare your inputs and outputs here
     // Do not change the following outputs
@@ -117,6 +119,8 @@ module main(
     
     // TODO initialize other registers
     reg [`MEM_ADDR_WIDTH-1:0] cur_id;
+    reg [23:0] debug;
+    wire [23:0] debug_wire;
     
     // TODO declare start and finished signal for each subroutine.
     reg evolve_start;
@@ -203,6 +207,8 @@ module main(
         .rand(rand),
         
         .neural_net_weights(nnmem_output),
+        
+        .debug(debug_wire),
         
         `PORT_CONNECT(0)
     );
@@ -360,6 +366,7 @@ module main(
             cur_state <= `MAIN_OP_STANDBY;
             
             // TODO reset any register, namely, the start signal of subroutines
+            debug <= 0;
             
             evolve_start <= 0;
             ant_update_start <= 0;
@@ -377,6 +384,8 @@ module main(
             case (cur_state)
                 `MAIN_OP_STANDBY: begin
                     cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                    
+                    debug = debug_wire;
                     
                     cur_id = 0;
                 end
@@ -567,5 +576,62 @@ module main(
             endcase
         end
     end
+    
+    HexDecoder hex0(
+        .hex_digit(debug[0 * 4 +: 4]),
+        .segments(HEX0)
+    );
 
+    HexDecoder hex1(
+        .hex_digit(debug[1 * 4 +: 4]),
+        .segments(HEX1)
+    );
+
+    HexDecoder hex2(
+        .hex_digit(debug[2 * 4 +: 4]),
+        .segments(HEX2)
+    );
+
+    HexDecoder hex3(
+        .hex_digit(debug[3 * 4 +: 4]),
+        .segments(HEX3)
+    );
+
+    HexDecoder hex4(
+        .hex_digit(debug[4 * 4 +: 4]),
+        .segments(HEX4)
+    );
+
+    HexDecoder hex5(
+        .hex_digit(debug[5 * 4 +: 4]),
+        .segments(HEX5)
+    );
+
+endmodule
+
+module HexDecoder(hex_digit, segments);
+    input [3:0] hex_digit;
+    output reg [6:0] segments;
+   
+    always @(*) begin
+        case (hex_digit)
+            4'h0: segments = 7'b100_0000;
+            4'h1: segments = 7'b111_1001;
+            4'h2: segments = 7'b010_0100;
+            4'h3: segments = 7'b011_0000;
+            4'h4: segments = 7'b001_1001;
+            4'h5: segments = 7'b001_0010;
+            4'h6: segments = 7'b000_0010;
+            4'h7: segments = 7'b111_1000;
+            4'h8: segments = 7'b000_0000;
+            4'h9: segments = 7'b001_1000;
+            4'hA: segments = 7'b000_1000;
+            4'hB: segments = 7'b000_0011;
+            4'hC: segments = 7'b100_0110;
+            4'hD: segments = 7'b010_0001;
+            4'hE: segments = 7'b000_0110;
+            4'hF: segments = 7'b000_1110;   
+            default: segments = 7'h7f;
+        endcase
+    end
 endmodule
