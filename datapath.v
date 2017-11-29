@@ -166,7 +166,7 @@ module Datapath(
                             nnmem_write = 0;
                             nnmem_address = instruction_buffer[9:4];
                             
-                            delay = 2;
+                            delay = 10;
                         end
                     end
                     `OPCODE_NNMEMWRITE: begin
