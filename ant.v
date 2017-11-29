@@ -516,7 +516,7 @@ module AntUpdate(
                         
                         if (food_index == `NUM_FOOD - 1) begin
                             food_index = `MEM_ADDR_WIDTH'd0;
-                            if (food_distance_closest <= 2) begin
+                            if (food_distance_closest <= `EAT_RADIUS) begin
                                 cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                             end
                             else begin
@@ -640,7 +640,7 @@ module AntUpdate(
                         
                         if (poison_index == `NUM_POISON - 1) begin
                             poison_index = `MEM_ADDR_WIDTH'd0;
-                            if (poison_distance_closest <= 2) begin
+                            if (poison_distance_closest <= `EAT_RADIUS) begin
                                 cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                             end
                             else begin

@@ -59,6 +59,8 @@
 `define NUM_FOOD      `MEM_ADDR_WIDTH'd20
 `define NUM_POISON    `MEM_ADDR_WIDTH'd30
 
+`define EAT_RADIUS 4
+
 `define RAND_WIDTH 16
 `define RAND_MAX 65535
 
