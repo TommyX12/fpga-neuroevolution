@@ -602,7 +602,7 @@ module AntUpdate(
                     start_dp = 1;
                     
                     // process input info
-                    if (food_x_closest > x) begin
+                    /* if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
                         food_right = food_x_closest - x;
                     end
@@ -617,7 +617,11 @@ module AntUpdate(
                     else begin
                         food_down = `NN_DATA_WIDTH'd0;
                         food_up = y - food_y_closest;
-                    end
+                    end */
+                    food_left <= `NN_DATA_WIDTH'b00010000;
+                    food_right <= `NN_DATA_WIDTH'b00000000;
+                    food_up <= `NN_DATA_WIDTH'b00010000;
+                    food_down <= `NN_DATA_WIDTH'b00000000;
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {id, `OPCODE_NNMEMREAD};
