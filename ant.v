@@ -828,35 +828,43 @@ module AntUpdate(
                     // process input info
                     if (food_x_closest > x) begin
                         food_left = `NN_DATA_WIDTH'd0;
-                        food_right = food_x_closest - x;
+                        // food_right = food_x_closest - x;
+                        food_right = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         food_right = `NN_DATA_WIDTH'd0;
-                        food_left = x - food_x_closest;
+                        // food_left = x - food_x_closest;
+                        food_left = `NN_DATA_WIDTH'b00010000;
                     end
                     if (food_y_closest > y) begin
                         food_up = `NN_DATA_WIDTH'd0;
-                        food_down = food_y_closest - y;
+                        // food_down = food_y_closest - y;
+                        food_down = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         food_down = `NN_DATA_WIDTH'd0;
-                        food_up = y - food_y_closest;
+                        // food_up = y - food_y_closest;
+                        food_up = `NN_DATA_WIDTH'b00010000;
                     end
                     if (poison_x_closest > x) begin
                         poison_left = `NN_DATA_WIDTH'd0;
-                        poison_right = poison_x_closest - x;
+                        // poison_right = poison_x_closest - x;
+                        poison_right = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         poison_right = `NN_DATA_WIDTH'd0;
-                        poison_left = x - poison_x_closest;
+                        // poison_left = x - poison_x_closest;
+                        poison_left = `NN_DATA_WIDTH'b00010000;
                     end
                     if (poison_y_closest > y) begin
                         poison_up = `NN_DATA_WIDTH'd0;
-                        poison_down = poison_y_closest - y;
+                        // poison_down = poison_y_closest - y;
+                        poison_down = `NN_DATA_WIDTH'b00010000;
                     end
                     else begin
                         poison_down = `NN_DATA_WIDTH'd0;
-                        poison_up = y - poison_y_closest;
+                        // poison_up = y - poison_y_closest;
+                        poison_up = `NN_DATA_WIDTH'b00010000;
                     end
                     // food_left = `NN_DATA_WIDTH'd3;
                     // food_right = `NN_DATA_WIDTH'd0;
@@ -891,13 +899,20 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_up && (dy == 0 || dy == 1)) begin
+                    if (move_up && move_down) begin
+                        
+                    end
+                    else if (move_up && (dy == 0 || dy == 1)) begin
                         dy = dy - 1;
                     end
-                    if (move_down && (dy == 0 || dy == -1)) begin
+                    else if (move_down && (dy == 0 || dy == -1)) begin
                         dy = dy + 1;
                     end
-                    if (move_left && (dx == 0 || dx == 1)) begin
+                    
+                    if (move_left && move_right) begin
+                        
+                    end
+                    else if (move_left && (dx == 0 || dx == 1)) begin
                         dx = dx - 1;
                     end
                     if (move_right && (dx == 0 || dx == -1)) begin
