@@ -9,7 +9,7 @@
 
 `define DELAY_ACCEL   `DELAY_WIDTH'd1
 `define DELAY_60FPS   `DELAY_WIDTH'd833333
-`define DELAY_GEN     `DELAY_WIDTH'd1800 // this is the number of frames, not number of cycles
+`define DELAY_GEN     `DELAY_WIDTH'd600 // this is the number of frames, not number of cycles
 
 `define INSTRUCTION_WIDTH   32
 `define RESULT_WIDTH   32
@@ -66,7 +66,7 @@
 `define ANT_FITNESS_MARK1 5
 `define ANT_FITNESS_MARK2 15
 
-`define MUTATION_RAND_THRESHOLD (`RAND_MAX / 1000)
+`define MUTATION_RAND_THRESHOLD (`RAND_MAX / 250)
 
 `define FOOD_FITNESS 1
 `define POISON_FITNESS 1
