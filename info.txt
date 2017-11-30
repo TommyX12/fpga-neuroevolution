@@ -103,9 +103,10 @@ structs:
         // food up down left right always assigned to 3
         // food up down left right assigned to 4, 3
         // neural network is hand designed optimal
-        ants 7 uses optimal neural net at start.
+        // ants 7 uses optimal neural net at start.
         // mutation is skipped
-        mutation rand threshold is reasonably small.
+        // mutation rand threshold is reasonably small.
+        mutation is single weight based instead of bit based.
     
     !!! try:
         there might be bug for neural net perception.

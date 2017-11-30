@@ -82,6 +82,7 @@ module Evolve(
     input [`DELAY_WIDTH-1:0] gen_duration,
     
     output reg [`STD_WIDTH-1:0] current_gen,
+    output reg [`FITNESS_WIDTH-1:0] fitness_max,
     
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
@@ -270,6 +271,7 @@ module Evolve(
             current_gen <= 0;
             fitnesses <= {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
             fitness_sum <= `FITNESS_WIDTH'd0;
+            fitness_max <= `FITNESS_WIDTH'd0;
             fitness_sum_cur <= `FITNESS_WIDTH'd0;
             parent_ant_index <= `MEM_ADDR_WIDTH'd0;
 				
@@ -303,6 +305,7 @@ module Evolve(
                         
                         fitnesses = {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
                         fitness_sum = `FITNESS_WIDTH'd0; 
+                        fitness_max = `FITNESS_WIDTH'd0; 
                         fitness_sum_cur = `FITNESS_WIDTH'd0; 
                         parent_ant_index = `MEM_ADDR_WIDTH'd0;
 								
@@ -344,12 +347,12 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    if (ant_index == 7) begin
-                        neural_net_weights_out = optimal_nn;
-                    end
-                    else begin
+                    // if (ant_index < 5) begin
+                        // neural_net_weights_out = optimal_nn;
+                    // end
+                    // else begin
                         neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
-                    end
+                    // end
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
@@ -412,6 +415,9 @@ module Evolve(
                         // TODO store the fitness somewhere
                         fitnesses[ant_index * `FITNESS_WIDTH +: `FITNESS_WIDTH] = result_dp;
                         fitness_sum = fitness_sum + result_dp;
+                        if (result_dp > fitness_max) begin
+                            fitness_max = result_dp;
+                        end
                         // make sure to reset whatever reg you use
                         
                         if (ant_index == `NUM_ANT - 1) begin
@@ -482,6 +488,21 @@ module Evolve(
                 end
                 `EVOLVE_OP_ANT_MUTATE_WEIGHT: begin
                     if (rand < `MUTATION_RAND_THRESHOLD) begin
+                        neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] =
+                            neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH]
+                            + (rand / (`MUTATION_RAND_THRESHOLD / `MUTATION_RANGE))
+                            - (`MUTATION_RANGE / 2);
+                    end
+                    
+                    if (weights_data_index == (`NN_WEIGHTS_SIZE) - 1) begin
+                        weights_data_index = 0;
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                    else begin
+                        weights_data_index = weights_data_index + 1;
+                    end 
+                
+                    /* if (rand < `MUTATION_RAND_THRESHOLD) begin
                         neural_net_weights_out[weights_data_index] = neural_net_weights_out[weights_data_index] ^ 1'b1;
                     end
                     
@@ -491,7 +512,7 @@ module Evolve(
                     end
                     else begin
                         weights_data_index = weights_data_index + 1;
-                    end
+                    end */
                 end
                 `EVOLVE_OP_ANT_SET_WEIGHT_START: begin
                     // dispatch instruction

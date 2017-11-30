@@ -76,7 +76,7 @@ module main(
     wire resetn;
     assign resetn = KEY[0];
     
-    assign LEDR = ~{(5){1'd0}};
+    // assign LEDR = ~{(5){1'd0}};
     
     // Create the colour, x, y and writeEn wires that are inputs to the controller.
     wire [`COLOUR_WIDTH:0] colour;
@@ -121,6 +121,18 @@ module main(
     reg [`MEM_ADDR_WIDTH-1:0] cur_id;
     reg [23:0] debug;
     wire [23:0] debug_wire;
+    wire [9:0] led_wire;
+    
+    assign LEDR[0] = led_wire > 0 ? 1 : 0;
+    assign LEDR[1] = led_wire > 5 ? 1 : 0;
+    assign LEDR[2] = led_wire > 10 ? 1 : 0;
+    assign LEDR[3] = led_wire > 15 ? 1 : 0;
+    assign LEDR[4] = led_wire > 20 ? 1 : 0;
+    assign LEDR[5] = led_wire > 25 ? 1 : 0;
+    assign LEDR[6] = led_wire > 30 ? 1 : 0;
+    assign LEDR[7] = led_wire > 35 ? 1 : 0;
+    assign LEDR[8] = led_wire > 40 ? 1 : 0;
+    assign LEDR[9] = led_wire > 45 ? 1 : 0;
     
     // TODO declare start and finished signal for each subroutine.
     reg evolve_start;
@@ -330,6 +342,7 @@ module main(
         .gen_duration(`DELAY_GEN),
         
         .current_gen(debug_wire),
+        .fitness_max(led_wire),
         
         `PORT_CONNECT(`NUM_ANT_CORES + 5)
     );
