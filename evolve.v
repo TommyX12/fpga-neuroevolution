@@ -344,7 +344,7 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    if (id < 5) begin
+                    if (ant_id < 5) begin
                         neural_net_weights_out = optimal_nn;
                     end
                     else begin
