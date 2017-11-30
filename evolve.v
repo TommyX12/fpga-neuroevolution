@@ -80,6 +80,12 @@ module Evolve(
     
     reg [`STD_WIDTH-1:0] current_gen;
     
+    reg [`FITNESS_WIDTH * `NUM_ANT-1:0] fitnesses;
+    reg [`FITNESS_WIDTH-1:0] fitness_sum;
+    reg [`FITNESS_WIDTH-1:0] fitness_random;
+    reg [`FITNESS_WIDTH-1:0] fitness_sum_cur;
+    reg [`MEM_ADDR_WIDTH-1:0] chosen_ant_index;
+     
     reg [`MEM_ADDR_WIDTH-1:0] ant_index;
     reg [`X_COORD_WIDTH-1:0] ant_x;
     reg [`Y_COORD_WIDTH-1:0] ant_y;
@@ -245,7 +251,11 @@ module Evolve(
             gen_counter <= `DELAY_WIDTH'd0;
             
             current_gen <= 0;
-            
+            fitnesses <= {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
+            fitness_sum <= `FITNESS_WIDTH'd0;
+            fitness_sum_cur <= `FITNESS_WIDTH'd0;
+            chosen_ant_index <= `MEM_ADDR_WIDTH'd0;
+				
             weights_data_index <= 0;
             
             ant_index <= `MEM_ADDR_WIDTH'd0;
@@ -273,6 +283,11 @@ module Evolve(
                         // TODO register initialization on start
                         weights_data_index = 0;
                         
+                        fitnesses = {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
+                        fitness_sum = `FITNESS_WIDTH'd0; 
+                        fitness_sum_cur = `FITNESS_WIDTH'd0; 
+                        chosen_ant_index = `MEM_ADDR_WIDTH'd0;
+								
                         ant_index = `MEM_ADDR_WIDTH'd0;
                         ant_x = `X_COORD_WIDTH'd0;
                         ant_y = `Y_COORD_WIDTH'd0;
@@ -371,6 +386,8 @@ module Evolve(
                     
                     if (finished_dp) begin
                         // TODO store the fitness somewhere
+                        fitnesses[ant_index * `FITNESS_WIDTH +: `FITNESS_WIDTH] = result_dp;
+                        fitness_sum = fitness_sum + result_dp;
                         // make sure to reset whatever reg you use
                         
                         if (ant_index == `NUM_ANT - 1) begin
@@ -378,6 +395,8 @@ module Evolve(
                             cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                             
                             // TODO generate your random number
+                            fitness_random = rand / (`RAND_MAX / fitness_sum);
+                            fitness_sum_cur = `FITNESS_WIDTH'd0;
                         end
                         else begin
                             ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
@@ -391,13 +410,22 @@ module Evolve(
                     
                     // TODO loop over all fitness stored
                     // change the code below
+                    if (fitness_random >= fitness_sum_cur) begin
+                        fitness_sum_cur = fitness_sum_cur + fitnesses[ant_index * `FITNESS_WIDTH +: `FITNESS_WIDTH];
+                        if (fitness_random < fitness_sum_cur) begin
+                            chosen_ant_index = ant_index;
+                            // also move on to the next state if we have found the chosen one
+                            ant_index = 0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                        end
+                    end
                     
-                    if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
-                        weights_data_index = 0;
+                    if (ant_index == `NUM_ANT - 1) begin
+                        ant_index = 0;
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                     else begin
-                        weights_data_index = weights_data_index + 1;
+                        ant_index = ant_index + 1;
                     end
                     
                 end
