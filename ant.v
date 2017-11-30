@@ -124,7 +124,7 @@ module AntDraw(
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    instruction_dp = {`ADDR_ANT_Y(id), `OPCODE_MEMREAD};
+                    instruction_dp = {`ADDR_ANT_FITNESS(id), `OPCODE_MEMREAD};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                 end
