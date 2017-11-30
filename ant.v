@@ -944,7 +944,7 @@ module AntUpdate(
                             y = y - `Y_COORD_HEIGHT'd1;
                         end
                         else begin
-                            y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
+                            // y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
                         end
                     end
                     else if (dy == 1) begin
@@ -952,7 +952,7 @@ module AntUpdate(
                             y = y + `Y_COORD_HEIGHT'd1;
                         end
                         else begin
-                            y = `ANT_HEIGHT / 2;
+                            // y = `ANT_HEIGHT / 2;
                         end
                     end
                     else begin
