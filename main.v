@@ -443,7 +443,12 @@ module main(
                     if (ant_update_finished) begin
                         if (cur_id == `NUM_ANT - `MEM_ADDR_WIDTH'd1) begin
                             cur_id = 0;
-                            cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                            if (SW[0]) begin
+                                cur_state = `MAIN_OP_STANDBY;
+                            end
+                            else begin
+                                cur_state = cur_state + `MAIN_OP_WIDTH'd1;
+                            end
                         end
                         else begin
                             cur_id = cur_id + `MEM_ADDR_WIDTH'd1;
