@@ -113,6 +113,8 @@ structs:
         or when during the loop the neural net switch it doesn't switch correctly
         why does it shake?
         
+        !!! for GA in general: always keep the currently know maximum fitness guy in the generation
+        
         try making it so that if all of or none of move up down left right is 1, maintain last direction
     
     potential future optimizations:

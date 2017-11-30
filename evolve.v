@@ -344,12 +344,12 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    if (ant_index < 5) begin
-                        neural_net_weights_out = optimal_nn;
-                    end
-                    else begin
+                    // if (ant_index < 5) begin
+                        // neural_net_weights_out = optimal_nn;
+                    // end
+                    // else begin
                         neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
-                    end
+                    // end
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
