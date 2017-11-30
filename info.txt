@@ -106,7 +106,8 @@ structs:
         // ants 7 uses optimal neural net at start.
         // mutation is skipped
         // mutation rand threshold is reasonably small.
-        mutation is single weight based instead of bit based.
+        // mutation is single weight based instead of bit based.
+        mutation chance is extremely high.
     
     !!! try:
         there might be bug for neural net perception.
