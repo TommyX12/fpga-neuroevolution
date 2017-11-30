@@ -208,7 +208,7 @@ module main(
         
         .neural_net_weights(nnmem_output),
         
-        .debug(debug_wire),
+        // .debug(debug_wire),
         
         `PORT_CONNECT(0)
     );
@@ -328,6 +328,8 @@ module main(
         .neural_net_weights_out(nnmem_data),
         
         .gen_duration(`DELAY_GEN),
+        
+        .current_gen(debug_wire),
         
         `PORT_CONNECT(`NUM_ANT_CORES + 5)
     );

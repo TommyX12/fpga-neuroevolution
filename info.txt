@@ -101,8 +101,12 @@ structs:
         // food up down left right is now boolean
         // only 1 ant
         // food up down left right always assigned to 3
-        food up down left right assigned to 4, 3
-        neural network is hand designed optimal
+        // food up down left right assigned to 4, 3
+        // neural network is hand designed optimal
+        5 of ants uses optimal neural net at start.
+    
+    !!! try:
+        there might be bug for neural net perception.
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.

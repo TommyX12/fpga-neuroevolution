@@ -81,6 +81,8 @@ module Evolve(
     
     input [`DELAY_WIDTH-1:0] gen_duration,
     
+    output reg [`STD_WIDTH-1:0] current_gen,
+    
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
     output reg start_dp,
@@ -94,8 +96,6 @@ module Evolve(
     reg [`DELAY_WIDTH-1:0] gen_counter;
     
     reg [`STD_WIDTH-1:0] weights_data_index;
-    
-    reg [`STD_WIDTH-1:0] current_gen;
     
     reg [`FITNESS_WIDTH * `NUM_ANT-1:0] fitnesses;
     reg [`FITNESS_WIDTH-1:0] fitness_sum;
@@ -116,144 +116,143 @@ module Evolve(
     reg [`X_COORD_WIDTH-1:0] poison_x;
     reg [`Y_COORD_WIDTH-1:0] poison_y;
     
-    /* always @(*) begin
-        // given 8 x 8 x 4 net
-        neural_net_weights_out <= {
-            
-            // move left
-            8'b00000001, // bias
-            8'b00000000, // hidden 7
-            8'b00000000, // hidden 6
-            8'b00010000, // hidden 5
-            8'b00000000, // hidden 4
-            8'b00000000, // hidden 3
-            8'b00000000, // hidden 2
-            8'b00000000, // hidden 1
-            8'b00000000, // hidden 0
-            
-            // move right
-            8'b00000001, // bias
-            8'b00000000, // hidden 7
-            8'b00000000, // hidden 6
-            8'b00000000, // hidden 5
-            8'b00010000, // hidden 4
-            8'b00000000, // hidden 3
-            8'b00000000, // hidden 2
-            8'b00000000, // hidden 1
-            8'b00000000, // hidden 0
-            
-            // move up
-            8'b00000001, // bias
-            8'b00010000, // hidden 7
-            8'b00000000, // hidden 6
-            8'b00000000, // hidden 5
-            8'b00000000, // hidden 4
-            8'b00000000, // hidden 3
-            8'b00000000, // hidden 2
-            8'b00000000, // hidden 1
-            8'b00000000, // hidden 0
-            
-            // move down
-            8'b00000001, // bias
-            8'b00000000, // hidden 7
-            8'b00010000, // hidden 6
-            8'b00000000, // hidden 5
-            8'b00000000, // hidden 4
-            8'b00000000, // hidden 3
-            8'b00000000, // hidden 2
-            8'b00000000, // hidden 1
-            8'b00000000, // hidden 0
-            
-            // hidden 7, input going up
-            8'b00000001, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00010000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 6, input going down
-            8'b00000001, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00010000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 5, input going left
-            8'b00000001, // bias
-            8'b00010000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 4, input going right
-            8'b00000001, // bias
-            8'b00000000, // food left
-            8'b00010000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 3, not used
-            8'b00000010, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 2, not used
-            8'b00000010, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 1, not used
-            8'b00000010, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-            // hidden 0, not used
-            8'b00000010, // bias
-            8'b00000000, // food left
-            8'b00000000, // food right
-            8'b00000000, // food up
-            8'b00000000, // food down
-            8'b00000000, // input 3
-            8'b00000000, // input 2
-            8'b00000000, // input 1
-            8'b00000000, // input 0
-            
-        };
-    end */
+    // given 8 x 8 x 4 net
+    wire [`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE) - 1 : 0] optimal_nn;
+    assign optimal_nn = {
+        
+        // move left
+        8'b00000001, // bias
+        8'b00000000, // hidden 7
+        8'b00000000, // hidden 6
+        8'b00010000, // hidden 5
+        8'b00000000, // hidden 4
+        8'b00000000, // hidden 3
+        8'b00000000, // hidden 2
+        8'b00000000, // hidden 1
+        8'b00000000, // hidden 0
+        
+        // move right
+        8'b00000001, // bias
+        8'b00000000, // hidden 7
+        8'b00000000, // hidden 6
+        8'b00000000, // hidden 5
+        8'b00010000, // hidden 4
+        8'b00000000, // hidden 3
+        8'b00000000, // hidden 2
+        8'b00000000, // hidden 1
+        8'b00000000, // hidden 0
+        
+        // move up
+        8'b00000001, // bias
+        8'b00010000, // hidden 7
+        8'b00000000, // hidden 6
+        8'b00000000, // hidden 5
+        8'b00000000, // hidden 4
+        8'b00000000, // hidden 3
+        8'b00000000, // hidden 2
+        8'b00000000, // hidden 1
+        8'b00000000, // hidden 0
+        
+        // move down
+        8'b00000001, // bias
+        8'b00000000, // hidden 7
+        8'b00010000, // hidden 6
+        8'b00000000, // hidden 5
+        8'b00000000, // hidden 4
+        8'b00000000, // hidden 3
+        8'b00000000, // hidden 2
+        8'b00000000, // hidden 1
+        8'b00000000, // hidden 0
+        
+        // hidden 7, input going up
+        8'b00000001, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00010000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 6, input going down
+        8'b00000001, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00010000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 5, input going left
+        8'b00000001, // bias
+        8'b00010000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 4, input going right
+        8'b00000001, // bias
+        8'b00000000, // food left
+        8'b00010000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 3, not used
+        8'b00000010, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 2, not used
+        8'b00000010, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 1, not used
+        8'b00000010, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+        // hidden 0, not used
+        8'b00000010, // bias
+        8'b00000000, // food left
+        8'b00000000, // food right
+        8'b00000000, // food up
+        8'b00000000, // food down
+        8'b00000000, // input 3
+        8'b00000000, // input 2
+        8'b00000000, // input 1
+        8'b00000000, // input 0
+        
+    };
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -345,7 +344,12 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                    if (id < 5) begin
+                        neural_net_weights_out = optimal_nn;
+                    end
+                    else begin
+                        neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                    end
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
