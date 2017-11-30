@@ -441,13 +441,13 @@ module Evolve(
                         if (fitness_random < fitness_sum_cur) begin
                             parent_ant_index = ant_index2;
                             // also move on to the next state if we have found the parent one
-                            ant_index2 = 0;
-                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                            // ant_index2 = 0;
+                            // cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                         end
                     end
                     
                     if (ant_index2 == `NUM_ANT - 1) begin
-                        ant_index2 = 0;
+                        ant_index2 = `MEM_ADDR_WIDTH'd0;
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                     else begin

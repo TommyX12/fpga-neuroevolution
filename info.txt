@@ -107,6 +107,9 @@ structs:
     
     !!! try:
         there might be bug for neural net perception.
+        might be bug for evolution
+        or when during the loop the neural net switch it doesn't switch correctly
+        why does it shake?
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.
