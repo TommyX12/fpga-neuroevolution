@@ -19,33 +19,47 @@
 `define EVOLVE_OP_ANT_LOAD_FITNESS_START `EVOLVE_OP_WIDTH'd6
 `define EVOLVE_OP_ANT_LOAD_FITNESS_DELAY `EVOLVE_OP_WIDTH'd7
 `define EVOLVE_OP_ANT_LOAD_FITNESS_WAIT  `EVOLVE_OP_WIDTH'd8
-`define EVOLVE_OP_ANT_FIND_FITNESS       `EVOLVE_OP_WIDTH'd9
+`define EVOLVE_OP_ANT_FIND_PARENT_START  `EVOLVE_OP_WIDTH'd9
+`define EVOLVE_OP_ANT_FIND_PARENT        `EVOLVE_OP_WIDTH'd10
+`define EVOLVE_OP_ANT_GET_WEIGHT_START   `EVOLVE_OP_WIDTH'd11
+`define EVOLVE_OP_ANT_GET_WEIGHT_DELAY   `EVOLVE_OP_WIDTH'd12
+`define EVOLVE_OP_ANT_GET_WEIGHT_WAIT    `EVOLVE_OP_WIDTH'd13
+`define EVOLVE_OP_ANT_MUTATE_WEIGHT      `EVOLVE_OP_WIDTH'd14
+`define EVOLVE_OP_ANT_SET_WEIGHT_START   `EVOLVE_OP_WIDTH'd15
+`define EVOLVE_OP_ANT_SET_WEIGHT_DELAY   `EVOLVE_OP_WIDTH'd16
+`define EVOLVE_OP_ANT_SET_WEIGHT_WAIT    `EVOLVE_OP_WIDTH'd17
+`define EVOLVE_OP_ANT_GET_WEIGHTB_START  `EVOLVE_OP_WIDTH'd18
+`define EVOLVE_OP_ANT_GET_WEIGHTB_DELAY  `EVOLVE_OP_WIDTH'd19
+`define EVOLVE_OP_ANT_GET_WEIGHTB_WAIT   `EVOLVE_OP_WIDTH'd20
+`define EVOLVE_OP_ANT_SET_WEIGHTB_START  `EVOLVE_OP_WIDTH'd22
+`define EVOLVE_OP_ANT_SET_WEIGHTB_DELAY  `EVOLVE_OP_WIDTH'd23
+`define EVOLVE_OP_ANT_SET_WEIGHTB_WAIT   `EVOLVE_OP_WIDTH'd24
 
-`define EVOLVE_OP_ANT_RAND_X_START       `EVOLVE_OP_WIDTH'd10
-`define EVOLVE_OP_ANT_RAND_X_DELAY       `EVOLVE_OP_WIDTH'd11
-`define EVOLVE_OP_ANT_RAND_X_WAIT        `EVOLVE_OP_WIDTH'd12
-`define EVOLVE_OP_ANT_SET_FITNESS_START  `EVOLVE_OP_WIDTH'd13
-`define EVOLVE_OP_ANT_SET_FITNESS_DELAY  `EVOLVE_OP_WIDTH'd14
-`define EVOLVE_OP_ANT_SET_FITNESS_WAIT   `EVOLVE_OP_WIDTH'd15
-`define EVOLVE_OP_ANT_RAND_Y_START       `EVOLVE_OP_WIDTH'd16
-`define EVOLVE_OP_ANT_RAND_Y_DELAY       `EVOLVE_OP_WIDTH'd17
-`define EVOLVE_OP_ANT_RAND_Y_WAIT        `EVOLVE_OP_WIDTH'd18
+`define EVOLVE_OP_ANT_RAND_X_START       `EVOLVE_OP_WIDTH'd25
+`define EVOLVE_OP_ANT_RAND_X_DELAY       `EVOLVE_OP_WIDTH'd26
+`define EVOLVE_OP_ANT_RAND_X_WAIT        `EVOLVE_OP_WIDTH'd27
+`define EVOLVE_OP_ANT_SET_FITNESS_START  `EVOLVE_OP_WIDTH'd28
+`define EVOLVE_OP_ANT_SET_FITNESS_DELAY  `EVOLVE_OP_WIDTH'd29
+`define EVOLVE_OP_ANT_SET_FITNESS_WAIT   `EVOLVE_OP_WIDTH'd30
+`define EVOLVE_OP_ANT_RAND_Y_START       `EVOLVE_OP_WIDTH'd31
+`define EVOLVE_OP_ANT_RAND_Y_DELAY       `EVOLVE_OP_WIDTH'd32
+`define EVOLVE_OP_ANT_RAND_Y_WAIT        `EVOLVE_OP_WIDTH'd33
 
-`define EVOLVE_OP_FOOD_RAND_X_START      `EVOLVE_OP_WIDTH'd19
-`define EVOLVE_OP_FOOD_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd20
-`define EVOLVE_OP_FOOD_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd21
-`define EVOLVE_OP_FOOD_RAND_Y_START      `EVOLVE_OP_WIDTH'd22
-`define EVOLVE_OP_FOOD_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd23
-`define EVOLVE_OP_FOOD_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd24
+`define EVOLVE_OP_FOOD_RAND_X_START      `EVOLVE_OP_WIDTH'd34
+`define EVOLVE_OP_FOOD_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd35
+`define EVOLVE_OP_FOOD_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd36
+`define EVOLVE_OP_FOOD_RAND_Y_START      `EVOLVE_OP_WIDTH'd37
+`define EVOLVE_OP_FOOD_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd38
+`define EVOLVE_OP_FOOD_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd39
 
-`define EVOLVE_OP_POISON_RAND_X_START    `EVOLVE_OP_WIDTH'd25
-`define EVOLVE_OP_POISON_RAND_X_DELAY    `EVOLVE_OP_WIDTH'd26
-`define EVOLVE_OP_POISON_RAND_X_WAIT     `EVOLVE_OP_WIDTH'd27
-`define EVOLVE_OP_POISON_RAND_Y_START    `EVOLVE_OP_WIDTH'd28
-`define EVOLVE_OP_POISON_RAND_Y_DELAY    `EVOLVE_OP_WIDTH'd29
-`define EVOLVE_OP_POISON_RAND_Y_WAIT     `EVOLVE_OP_WIDTH'd30
+`define EVOLVE_OP_POISON_RAND_X_START    `EVOLVE_OP_WIDTH'd40
+`define EVOLVE_OP_POISON_RAND_X_DELAY    `EVOLVE_OP_WIDTH'd41
+`define EVOLVE_OP_POISON_RAND_X_WAIT     `EVOLVE_OP_WIDTH'd42
+`define EVOLVE_OP_POISON_RAND_Y_START    `EVOLVE_OP_WIDTH'd43
+`define EVOLVE_OP_POISON_RAND_Y_DELAY    `EVOLVE_OP_WIDTH'd44
+`define EVOLVE_OP_POISON_RAND_Y_WAIT     `EVOLVE_OP_WIDTH'd45
 
-`define EVOLVE_OP_FINISHED               `EVOLVE_OP_WIDTH'd31
+`define EVOLVE_OP_FINISHED               `EVOLVE_OP_WIDTH'd46
 
 
 
@@ -87,9 +101,10 @@ module Evolve(
     reg [`FITNESS_WIDTH-1:0] fitness_sum;
     reg [`FITNESS_WIDTH-1:0] fitness_random;
     reg [`FITNESS_WIDTH-1:0] fitness_sum_cur;
-    reg [`MEM_ADDR_WIDTH-1:0] chosen_ant_index;
+    reg [`MEM_ADDR_WIDTH-1:0] parent_ant_index;
      
     reg [`MEM_ADDR_WIDTH-1:0] ant_index;
+    reg [`MEM_ADDR_WIDTH-1:0] ant_index2;
     reg [`X_COORD_WIDTH-1:0] ant_x;
     reg [`Y_COORD_WIDTH-1:0] ant_y;
     
@@ -101,7 +116,7 @@ module Evolve(
     reg [`X_COORD_WIDTH-1:0] poison_x;
     reg [`Y_COORD_WIDTH-1:0] poison_y;
     
-    always @(*) begin
+    /* always @(*) begin
         // given 8 x 8 x 4 net
         neural_net_weights_out <= {
             
@@ -238,7 +253,7 @@ module Evolve(
             8'b00000000, // input 0
             
         };
-    end
+    end */
     
     always @(posedge clock) begin
         if (!resetn) begin
@@ -249,7 +264,7 @@ module Evolve(
             instruction_dp <= 0;
             
             // TODO reset any register
-            // neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
+            neural_net_weights_out <= {(`NN_DATA_WIDTH * (`NN_WEIGHTS_SIZE)){1'b0}};
             
             gen_counter <= `DELAY_WIDTH'd0;
             
@@ -257,11 +272,12 @@ module Evolve(
             fitnesses <= {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
             fitness_sum <= `FITNESS_WIDTH'd0;
             fitness_sum_cur <= `FITNESS_WIDTH'd0;
-            chosen_ant_index <= `MEM_ADDR_WIDTH'd0;
+            parent_ant_index <= `MEM_ADDR_WIDTH'd0;
 				
             weights_data_index <= 0;
             
             ant_index <= `MEM_ADDR_WIDTH'd0;
+            ant_index2 <= `MEM_ADDR_WIDTH'd0;
             ant_x <= `X_COORD_WIDTH'd0;
             ant_y <= `Y_COORD_WIDTH'd0;
             
@@ -289,9 +305,10 @@ module Evolve(
                         fitnesses = {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
                         fitness_sum = `FITNESS_WIDTH'd0; 
                         fitness_sum_cur = `FITNESS_WIDTH'd0; 
-                        chosen_ant_index = `MEM_ADDR_WIDTH'd0;
+                        parent_ant_index = `MEM_ADDR_WIDTH'd0;
 								
                         ant_index = `MEM_ADDR_WIDTH'd0;
+                        ant_index2 = `MEM_ADDR_WIDTH'd0;
                         ant_x = `X_COORD_WIDTH'd0;
                         ant_y = `Y_COORD_WIDTH'd0;
                         
@@ -328,7 +345,7 @@ module Evolve(
                 end
                 
                 `EVOLVE_OP_ANT_RAND_WEIGHT_MAKE: begin
-                    // neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
+                    neural_net_weights_out[weights_data_index * `NN_DATA_WIDTH +: `NN_DATA_WIDTH] = rand;
                     
                     if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
                         weights_data_index = 0;
@@ -396,43 +413,168 @@ module Evolve(
                         if (ant_index == `NUM_ANT - 1) begin
                             ant_index = `MEM_ADDR_WIDTH'd0;
                             cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
-                            
-                            // TODO generate your random number
-                            fitness_random = rand / (`RAND_MAX / fitness_sum);
-                            fitness_sum_cur = `FITNESS_WIDTH'd0;
                         end
                         else begin
                             ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
                             cur_state = `EVOLVE_OP_ANT_LOAD_FITNESS_START;
                         end
                         
-                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                 end
-                `EVOLVE_OP_ANT_FIND_FITNESS: begin
+                `EVOLVE_OP_ANT_FIND_PARENT_START: begin
+                    // TODO generate your random number
+                    fitness_random = rand / (`RAND_MAX / fitness_sum);
+                    fitness_sum_cur = `FITNESS_WIDTH'd0;
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_FIND_PARENT: begin
                     
                     // TODO loop over all fitness stored
                     // change the code below
                     if (fitness_random >= fitness_sum_cur) begin
-                        fitness_sum_cur = fitness_sum_cur + fitnesses[ant_index * `FITNESS_WIDTH +: `FITNESS_WIDTH];
+                        fitness_sum_cur = fitness_sum_cur + fitnesses[ant_index2 * `FITNESS_WIDTH +: `FITNESS_WIDTH];
                         if (fitness_random < fitness_sum_cur) begin
-                            chosen_ant_index = ant_index;
-                            // also move on to the next state if we have found the chosen one
-                            ant_index = 0;
+                            parent_ant_index = ant_index2;
+                            // also move on to the next state if we have found the parent one
+                            ant_index2 = 0;
                             cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                         end
                     end
                     
-                    if (ant_index == `NUM_ANT - 1) begin
-                        ant_index = 0;
+                    if (ant_index2 == `NUM_ANT - 1) begin
+                        ant_index2 = 0;
                         cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                     else begin
-                        ant_index = ant_index + 1;
+                        ant_index2 = ant_index2 + 1;
                     end
                     
                 end
+                `EVOLVE_OP_ANT_GET_WEIGHT_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {parent_ant_index, `OPCODE_NNMEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_GET_WEIGHT_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_GET_WEIGHT_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        neural_net_weights_out = neural_net_weights_in;
+                        
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                end
+                `EVOLVE_OP_ANT_MUTATE_WEIGHT: begin
+                    if (rand < `MUTATION_RAND_THRESHOLD) begin
+                        neural_net_weights_out[weights_data_index] = neural_net_weights_out[weights_data_index] ^ 1'b1;
+                    end
+                    
+                    if (weights_data_index == (`NN_DATA_WIDTH * `NN_WEIGHTS_SIZE) - 1) begin
+                        weights_data_index = 0;
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                    else begin
+                        weights_data_index = weights_data_index + 1;
+                    end
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHT_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`NUM_ANT + ant_index, `OPCODE_NNMEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHT_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHT_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        if (ant_index == `NUM_ANT - 1) begin
+                            ant_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                        end
+                        else begin
+                            ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_ANT_FIND_PARENT_START;
+                        end
+                    end
+                end
                 
+                `EVOLVE_OP_ANT_GET_WEIGHTB_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`NUM_ANT + ant_index, `OPCODE_NNMEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_GET_WEIGHTB_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_GET_WEIGHTB_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        neural_net_weights_out = neural_net_weights_in;
+                        
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHTB_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {ant_index, `OPCODE_NNMEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHTB_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_WEIGHTB_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        if (ant_index == `NUM_ANT - 1) begin
+                            ant_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                        end
+                        else begin
+                            ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_ANT_GET_WEIGHTB_START;
+                        end
+                    end
+                end
                 
                 
                 `EVOLVE_OP_ANT_RAND_X_START: begin
