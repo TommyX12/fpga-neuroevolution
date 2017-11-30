@@ -915,7 +915,7 @@ module AntUpdate(
                     else if (move_left && (dx == 0 || dx == 1)) begin
                         dx = dx - 1;
                     end
-                    if (move_right && (dx == 0 || dx == -1)) begin
+                    else if (move_right && (dx == 0 || dx == -1)) begin
                         dx = dx + 1;
                     end
                     
