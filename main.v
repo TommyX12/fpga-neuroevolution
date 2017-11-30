@@ -342,7 +342,7 @@ module main(
         .gen_duration(`DELAY_GEN),
         
         .current_gen(debug_wire),
-        .fitness_max(led_wire),
+        .fitness_max_out(led_wire),
         
         `PORT_CONNECT(`NUM_ANT_CORES + 5)
     );
