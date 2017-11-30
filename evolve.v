@@ -6,36 +6,43 @@
 // TODO change prefix to be for this file specifically
 // TODO for cur_state += 1 to work, this must also reflect the real execution order
 `define EVOLVE_OP_WIDTH 6 // TODO this must be large enough
-`define EVOLVE_OP_STANDBY               `EVOLVE_OP_WIDTH'd0
-`define EVOLVE_OP_TIMER_CHECK           `EVOLVE_OP_WIDTH'd1
+`define EVOLVE_OP_STANDBY                `EVOLVE_OP_WIDTH'd0
+`define EVOLVE_OP_TIMER_CHECK            `EVOLVE_OP_WIDTH'd1
 
-`define EVOLVE_OP_ANT_RAND_WEIGHT_MAKE  `EVOLVE_OP_WIDTH'd2
-`define EVOLVE_OP_ANT_RAND_WEIGHT_START `EVOLVE_OP_WIDTH'd3
-`define EVOLVE_OP_ANT_RAND_WEIGHT_DELAY `EVOLVE_OP_WIDTH'd4
-`define EVOLVE_OP_ANT_RAND_WEIGHT_WAIT  `EVOLVE_OP_WIDTH'd5
+// first gen
+`define EVOLVE_OP_ANT_RAND_WEIGHT_MAKE   `EVOLVE_OP_WIDTH'd2
+`define EVOLVE_OP_ANT_RAND_WEIGHT_START  `EVOLVE_OP_WIDTH'd3
+`define EVOLVE_OP_ANT_RAND_WEIGHT_DELAY  `EVOLVE_OP_WIDTH'd4
+`define EVOLVE_OP_ANT_RAND_WEIGHT_WAIT   `EVOLVE_OP_WIDTH'd5
 
-`define EVOLVE_OP_ANT_RAND_X_START      `EVOLVE_OP_WIDTH'd6
-`define EVOLVE_OP_ANT_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd7
-`define EVOLVE_OP_ANT_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd8
-`define EVOLVE_OP_ANT_RAND_Y_START      `EVOLVE_OP_WIDTH'd9
-`define EVOLVE_OP_ANT_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd10
-`define EVOLVE_OP_ANT_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd11
+// selection (not first gen)
+`define EVOLVE_OP_ANT_LOAD_FITNESS_START `EVOLVE_OP_WIDTH'd6
+`define EVOLVE_OP_ANT_LOAD_FITNESS_DELAY `EVOLVE_OP_WIDTH'd7
+`define EVOLVE_OP_ANT_LOAD_FITNESS_WAIT  `EVOLVE_OP_WIDTH'd8
+`define EVOLVE_OP_ANT_FIND_FITNESS       `EVOLVE_OP_WIDTH'd9
 
-`define EVOLVE_OP_FOOD_RAND_X_START     `EVOLVE_OP_WIDTH'd12
-`define EVOLVE_OP_FOOD_RAND_X_DELAY     `EVOLVE_OP_WIDTH'd13
-`define EVOLVE_OP_FOOD_RAND_X_WAIT      `EVOLVE_OP_WIDTH'd14
-`define EVOLVE_OP_FOOD_RAND_Y_START     `EVOLVE_OP_WIDTH'd15
-`define EVOLVE_OP_FOOD_RAND_Y_DELAY     `EVOLVE_OP_WIDTH'd16
-`define EVOLVE_OP_FOOD_RAND_Y_WAIT      `EVOLVE_OP_WIDTH'd17
+`define EVOLVE_OP_ANT_RAND_X_START       `EVOLVE_OP_WIDTH'd10
+`define EVOLVE_OP_ANT_RAND_X_DELAY       `EVOLVE_OP_WIDTH'd11
+`define EVOLVE_OP_ANT_RAND_X_WAIT        `EVOLVE_OP_WIDTH'd12
+`define EVOLVE_OP_ANT_RAND_Y_START       `EVOLVE_OP_WIDTH'd13
+`define EVOLVE_OP_ANT_RAND_Y_DELAY       `EVOLVE_OP_WIDTH'd14
+`define EVOLVE_OP_ANT_RAND_Y_WAIT        `EVOLVE_OP_WIDTH'd15
 
-`define EVOLVE_OP_POISON_RAND_X_START   `EVOLVE_OP_WIDTH'd18
-`define EVOLVE_OP_POISON_RAND_X_DELAY   `EVOLVE_OP_WIDTH'd19
-`define EVOLVE_OP_POISON_RAND_X_WAIT    `EVOLVE_OP_WIDTH'd20
-`define EVOLVE_OP_POISON_RAND_Y_START   `EVOLVE_OP_WIDTH'd21
-`define EVOLVE_OP_POISON_RAND_Y_DELAY   `EVOLVE_OP_WIDTH'd22
-`define EVOLVE_OP_POISON_RAND_Y_WAIT    `EVOLVE_OP_WIDTH'd23
+`define EVOLVE_OP_FOOD_RAND_X_START      `EVOLVE_OP_WIDTH'd16
+`define EVOLVE_OP_FOOD_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd17
+`define EVOLVE_OP_FOOD_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd18
+`define EVOLVE_OP_FOOD_RAND_Y_START      `EVOLVE_OP_WIDTH'd19
+`define EVOLVE_OP_FOOD_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd20
+`define EVOLVE_OP_FOOD_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd21
 
-`define EVOLVE_OP_FINISHED              `EVOLVE_OP_WIDTH'd24
+`define EVOLVE_OP_POISON_RAND_X_START    `EVOLVE_OP_WIDTH'd22
+`define EVOLVE_OP_POISON_RAND_X_DELAY    `EVOLVE_OP_WIDTH'd23
+`define EVOLVE_OP_POISON_RAND_X_WAIT     `EVOLVE_OP_WIDTH'd24
+`define EVOLVE_OP_POISON_RAND_Y_START    `EVOLVE_OP_WIDTH'd25
+`define EVOLVE_OP_POISON_RAND_Y_DELAY    `EVOLVE_OP_WIDTH'd26
+`define EVOLVE_OP_POISON_RAND_Y_WAIT     `EVOLVE_OP_WIDTH'd27
+
+`define EVOLVE_OP_FINISHED               `EVOLVE_OP_WIDTH'd28
 
 
 
@@ -70,6 +77,8 @@ module Evolve(
     reg [`DELAY_WIDTH-1:0] gen_counter;
     
     reg [`STD_WIDTH-1:0] weights_data_index;
+    
+    reg [`STD_WIDTH-1:0] current_gen;
     
     reg [`MEM_ADDR_WIDTH-1:0] ant_index;
     reg [`X_COORD_WIDTH-1:0] ant_x;
@@ -235,6 +244,8 @@ module Evolve(
             
             gen_counter <= `DELAY_WIDTH'd0;
             
+            current_gen <= 0;
+            
             weights_data_index <= 0;
             
             ant_index <= `MEM_ADDR_WIDTH'd0;
@@ -286,7 +297,15 @@ module Evolve(
                     else begin
                         gen_counter = gen_duration;
                         
-                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1; // this jumps to the next instruction in sequence
+                        if (current_gen) begin
+                            cur_state = `EVOLVE_OP_ANT_LOAD_FITNESS_START;
+                        end
+                        else begin // first gen
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1; // this jumps to the next instruction in sequence
+                        end
+                        
+                        current_gen = current_gen + 1;
+                        
                     end
                 end
                 
@@ -323,7 +342,7 @@ module Evolve(
                         // TODO do something with result_dp
                         if (ant_index == `NUM_ANT - 1) begin
                             ant_index = `MEM_ADDR_WIDTH'd0;
-                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_ANT_RAND_X_START;
                         end
                         else begin
                             ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
@@ -331,6 +350,59 @@ module Evolve(
                         end
                     end
                 end
+                
+                
+                `EVOLVE_OP_ANT_LOAD_FITNESS_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    instruction_dp = {`ADDR_ANT_FITNESS(ant_index), `OPCODE_MEMREAD};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_LOAD_FITNESS_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_LOAD_FITNESS_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO store the fitness somewhere
+                        // make sure to reset whatever reg you use
+                        
+                        if (ant_index == `NUM_ANT - 1) begin
+                            ant_index = `MEM_ADDR_WIDTH'd0;
+                            cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                            
+                            // TODO generate your random number
+                        end
+                        else begin
+                            ant_index = ant_index + `MEM_ADDR_WIDTH'd1;
+                            cur_state = `EVOLVE_OP_ANT_LOAD_FITNESS_START;
+                        end
+                        
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                end
+                `EVOLVE_OP_ANT_FIND_FITNESS: begin
+                    
+                    // TODO loop over all fitness stored
+                    // change the code below
+                    
+                    if (weights_data_index == `NN_WEIGHTS_SIZE - 1) begin
+                        weights_data_index = 0;
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                    else begin
+                        weights_data_index = weights_data_index + 1;
+                    end
+                    
+                end
+                
+                
                 
                 `EVOLVE_OP_ANT_RAND_X_START: begin
                     // dispatch instruction

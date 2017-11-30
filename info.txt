@@ -111,6 +111,8 @@ structs:
     
     !!! make sure memory can store all weights in neural network.
     
+    !!! change ant color or shape depending on fitness
+    
     !!! solve the bug of ants being drawn on the right side of screen when on the left. maybe a buffer offset problem.
     
     !!! add initial block that does standard reset for fsm template.
