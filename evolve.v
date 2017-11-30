@@ -24,25 +24,28 @@
 `define EVOLVE_OP_ANT_RAND_X_START       `EVOLVE_OP_WIDTH'd10
 `define EVOLVE_OP_ANT_RAND_X_DELAY       `EVOLVE_OP_WIDTH'd11
 `define EVOLVE_OP_ANT_RAND_X_WAIT        `EVOLVE_OP_WIDTH'd12
-`define EVOLVE_OP_ANT_RAND_Y_START       `EVOLVE_OP_WIDTH'd13
-`define EVOLVE_OP_ANT_RAND_Y_DELAY       `EVOLVE_OP_WIDTH'd14
-`define EVOLVE_OP_ANT_RAND_Y_WAIT        `EVOLVE_OP_WIDTH'd15
+`define EVOLVE_OP_ANT_SET_FITNESS_START  `EVOLVE_OP_WIDTH'd13
+`define EVOLVE_OP_ANT_SET_FITNESS_DELAY  `EVOLVE_OP_WIDTH'd14
+`define EVOLVE_OP_ANT_SET_FITNESS_WAIT   `EVOLVE_OP_WIDTH'd15
+`define EVOLVE_OP_ANT_RAND_Y_START       `EVOLVE_OP_WIDTH'd16
+`define EVOLVE_OP_ANT_RAND_Y_DELAY       `EVOLVE_OP_WIDTH'd17
+`define EVOLVE_OP_ANT_RAND_Y_WAIT        `EVOLVE_OP_WIDTH'd18
 
-`define EVOLVE_OP_FOOD_RAND_X_START      `EVOLVE_OP_WIDTH'd16
-`define EVOLVE_OP_FOOD_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd17
-`define EVOLVE_OP_FOOD_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd18
-`define EVOLVE_OP_FOOD_RAND_Y_START      `EVOLVE_OP_WIDTH'd19
-`define EVOLVE_OP_FOOD_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd20
-`define EVOLVE_OP_FOOD_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd21
+`define EVOLVE_OP_FOOD_RAND_X_START      `EVOLVE_OP_WIDTH'd19
+`define EVOLVE_OP_FOOD_RAND_X_DELAY      `EVOLVE_OP_WIDTH'd20
+`define EVOLVE_OP_FOOD_RAND_X_WAIT       `EVOLVE_OP_WIDTH'd21
+`define EVOLVE_OP_FOOD_RAND_Y_START      `EVOLVE_OP_WIDTH'd22
+`define EVOLVE_OP_FOOD_RAND_Y_DELAY      `EVOLVE_OP_WIDTH'd23
+`define EVOLVE_OP_FOOD_RAND_Y_WAIT       `EVOLVE_OP_WIDTH'd24
 
-`define EVOLVE_OP_POISON_RAND_X_START    `EVOLVE_OP_WIDTH'd22
-`define EVOLVE_OP_POISON_RAND_X_DELAY    `EVOLVE_OP_WIDTH'd23
-`define EVOLVE_OP_POISON_RAND_X_WAIT     `EVOLVE_OP_WIDTH'd24
-`define EVOLVE_OP_POISON_RAND_Y_START    `EVOLVE_OP_WIDTH'd25
-`define EVOLVE_OP_POISON_RAND_Y_DELAY    `EVOLVE_OP_WIDTH'd26
-`define EVOLVE_OP_POISON_RAND_Y_WAIT     `EVOLVE_OP_WIDTH'd27
+`define EVOLVE_OP_POISON_RAND_X_START    `EVOLVE_OP_WIDTH'd25
+`define EVOLVE_OP_POISON_RAND_X_DELAY    `EVOLVE_OP_WIDTH'd26
+`define EVOLVE_OP_POISON_RAND_X_WAIT     `EVOLVE_OP_WIDTH'd27
+`define EVOLVE_OP_POISON_RAND_Y_START    `EVOLVE_OP_WIDTH'd28
+`define EVOLVE_OP_POISON_RAND_Y_DELAY    `EVOLVE_OP_WIDTH'd29
+`define EVOLVE_OP_POISON_RAND_Y_WAIT     `EVOLVE_OP_WIDTH'd30
 
-`define EVOLVE_OP_FINISHED               `EVOLVE_OP_WIDTH'd28
+`define EVOLVE_OP_FINISHED               `EVOLVE_OP_WIDTH'd31
 
 
 
@@ -448,6 +451,31 @@ module Evolve(
                     cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                 end
                 `EVOLVE_OP_ANT_RAND_X_WAIT: begin
+                    start_dp = 0; // outbound start signals has to be 0 in the wait state.
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                    end
+                end
+                
+                `EVOLVE_OP_ANT_SET_FITNESS_START: begin
+                    // dispatch instruction
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`FITNESS_WIDTH'd0, `ADDR_ANT_FITNESS(ant_index), `OPCODE_MEMWRITE};
+                    // it is best to maintain the same instruction until result comes back.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_FITNESS_DELAY: begin
+                    start_dp = 1; // outbound start signals has to maintain 1 in the delay state.
+                    
+                    cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
+                end
+                `EVOLVE_OP_ANT_SET_FITNESS_WAIT: begin
                     start_dp = 0; // outbound start signals has to be 0 in the wait state.
                     
                     if (finished_dp) begin
