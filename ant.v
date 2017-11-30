@@ -833,7 +833,10 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_left) begin
+                    if (move_left && move_right) begin
+                        
+                    end
+                    else if (move_left) begin
                         if (x > (`ANT_WIDTH / 2)) begin
                             x = x - `X_COORD_WIDTH'd1;
                         end
@@ -850,6 +853,9 @@ module AntUpdate(
                         end
                     end
                     
+                    if (move_up && move_down) begin
+                        
+                    end
                     if (move_up) begin
                         if (y > (`ANT_HEIGHT / 2)) begin
                             y = y - `Y_COORD_HEIGHT'd1;
