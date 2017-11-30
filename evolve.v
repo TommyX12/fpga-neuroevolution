@@ -477,7 +477,7 @@ module Evolve(
                         // TODO do something with result_dp
                         neural_net_weights_out = neural_net_weights_in;
                         
-                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd2;
+                        cur_state = cur_state + `EVOLVE_OP_WIDTH'd1;
                     end
                 end
                 `EVOLVE_OP_ANT_MUTATE_WEIGHT: begin

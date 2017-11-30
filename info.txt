@@ -104,7 +104,8 @@ structs:
         // food up down left right assigned to 4, 3
         // neural network is hand designed optimal
         5 of ants uses optimal neural net at start.
-        mutation is skipped
+        // mutation is skipped
+        mutation rand threshold is extremely small.
     
     !!! try:
         there might be bug for neural net perception.
@@ -112,7 +113,7 @@ structs:
         or when during the loop the neural net switch it doesn't switch correctly
         why does it shake?
         
-        try making it so that shit happens
+        try making it so that if all of or none of move up down left right is 1, maintain last direction
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.
