@@ -833,19 +833,46 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_left && x > (`ANT_WIDTH / 2)) begin
-                        x = x - `X_COORD_WIDTH'd1;
+                    if (move_left) begin
+                        if (x > (`ANT_WIDTH / 2)) begin
+                            x = x - `X_COORD_WIDTH'd1;
+                        end
+                        else begin
+                            x = `SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1;
+                        end
                     end
-                    else if (move_right && x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
-                        x = x + `X_COORD_WIDTH'd1;
+                    else if (move_right) begin
+                        if (x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
+                            x = x + `X_COORD_WIDTH'd1;
+                        end
+                        else begin
+                            x = `ANT_WIDTH / 2;
+                        end
                     end
                     
-                    if (move_up && y > (`ANT_HEIGHT / 2)) begin
-                        y = y - `Y_COORD_WIDTH'd1;
+                    if (move_up) begin
+                        if (y > (`ANT_HEIGHT / 2)) begin
+                            y = y - `Y_COORD_HEIGHT'd1;
+                        end
+                        else begin
+                            y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
+                        end
                     end
-                    else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
-                        y = y + `Y_COORD_WIDTH'd1;
+                    else if (move_down) begin
+                        if (y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
+                            y = y + `Y_COORD_HEIGHT'd1;
+                        end
+                        else begin
+                            y = `ANT_HEIGHT / 2;
+                        end
                     end
+                    
+                    // if (move_up && y > (`ANT_HEIGHT / 2)) begin
+                        // y = y - `Y_COORD_WIDTH'd1;
+                    // end
+                    // else if (move_down && y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
+                        // y = y + `Y_COORD_WIDTH'd1;
+                    // end
                     
                     cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                 end

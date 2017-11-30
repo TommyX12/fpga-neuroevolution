@@ -57,9 +57,9 @@
 `define COLOUR_POISON `COLOUR_WIDTH'b100
 
 `define NUM_ANT_CORES `MEM_ADDR_WIDTH'd1
-`define NUM_ANT       `MEM_ADDR_WIDTH'd20
-`define NUM_FOOD      `MEM_ADDR_WIDTH'd20
-`define NUM_POISON    `MEM_ADDR_WIDTH'd20
+`define NUM_ANT       `MEM_ADDR_WIDTH'd30
+`define NUM_FOOD      `MEM_ADDR_WIDTH'd25
+`define NUM_POISON    `MEM_ADDR_WIDTH'd25
 
 `define EAT_RADIUS 4
 
