@@ -899,27 +899,30 @@ module AntUpdate(
                 end
                 
                 `ANTU_OP_NN_WAIT: begin
-                    if (move_up && move_down) begin
+                    // if (move_up && move_down) begin
                         
-                    end
-                    else if (move_up && (dy == 0 || dy == 1)) begin
-                        dy = dy - 1;
-                    end
-                    else if (move_down && (dy == 0 || dy == -1)) begin
-                        dy = dy + 1;
-                    end
+                    // end
+                    // else if (move_up && (dy == 0 || dy == 1)) begin
+                        // dy = dy - 1;
+                    // end
+                    // else if (move_down && (dy == 0 || dy == -1)) begin
+                        // dy = dy + 1;
+                    // end
+                    
+                    // if (move_left && move_right) begin
+                        
+                    // end
+                    // else if (move_left && (dx == 0 || dx == 1)) begin
+                        // dx = dx - 1;
+                    // end
+                    // else if (move_right && (dx == 0 || dx == -1)) begin
+                        // dx = dx + 1;
+                    // end
                     
                     if (move_left && move_right) begin
                         
                     end
-                    else if (move_left && (dx == 0 || dx == 1)) begin
-                        dx = dx - 1;
-                    end
-                    else if (move_right && (dx == 0 || dx == -1)) begin
-                        dx = dx + 1;
-                    end
-                    
-                    if (dx == -1) begin
+                    else if (move_left) begin
                         if (x > (`ANT_WIDTH / 2)) begin
                             x = x - `X_COORD_WIDTH'd1;
                         end
@@ -927,7 +930,7 @@ module AntUpdate(
                             // x = `SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1;
                         end
                     end
-                    else if (dx == 1) begin
+                    else if (move_right) begin
                         if (x < (`SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1)) begin
                             x = x + `X_COORD_WIDTH'd1;
                         end
@@ -935,11 +938,14 @@ module AntUpdate(
                             // x = `ANT_WIDTH / 2;
                         end
                     end
-                    else begin
-                        dx = 0;
-                    end
+                    // else begin
+                        // dx = 0;
+                    // end
                     
-                    if (dy == -1) begin
+                    if (move_up && move_down) begin
+                        
+                    end
+                    else if (move_up) begin
                         if (y > (`ANT_HEIGHT / 2)) begin
                             y = y - `Y_COORD_HEIGHT'd1;
                         end
@@ -947,7 +953,7 @@ module AntUpdate(
                             // y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
                         end
                     end
-                    else if (dy == 1) begin
+                    else if (move_down) begin
                         if (y < (`SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1)) begin
                             y = y + `Y_COORD_HEIGHT'd1;
                         end
@@ -955,9 +961,9 @@ module AntUpdate(
                             // y = `ANT_HEIGHT / 2;
                         end
                     end
-                    else begin
-                        dy = 0;
-                    end
+                    // else begin
+                        // dy = 0;
+                    // end
                     
                     // if (move_up && y > (`ANT_HEIGHT / 2)) begin
                         // y = y - `Y_COORD_WIDTH'd1;
