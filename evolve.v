@@ -299,8 +299,6 @@ module Evolve(
                 `EVOLVE_OP_STANDBY: begin
                     finished = 1;
                     
-                    fitness_max_out = fitness_max;
-                    
                     // usually do nothing
                     
                     if (start) begin
@@ -634,6 +632,7 @@ module Evolve(
                 `EVOLVE_OP_ANT_SET_FITNESS_START: begin
                     // dispatch instruction
                     start_dp = 1;
+                    fitness_max_out = fitness_max;
                     
                     // TODO process and replace with your instruction
                     instruction_dp = {`FITNESS_WIDTH'd0, `ADDR_ANT_FITNESS(ant_index), `OPCODE_MEMWRITE};

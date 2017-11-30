@@ -61,7 +61,7 @@
 `define NUM_FOOD      `MEM_ADDR_WIDTH'd15
 `define NUM_POISON    `MEM_ADDR_WIDTH'd15
 
-`define EAT_RADIUS 4
+`define EAT_RADIUS 3
 
 `define ANT_FITNESS_MARK1 5
 `define ANT_FITNESS_MARK2 15
