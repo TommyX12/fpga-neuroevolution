@@ -2,16 +2,19 @@
 
 //  change prefix to be for this file specifically
 `define ANTD_OP_WIDTH 5 // TODO this must be large enough
-`define ANTD_OP_STANDBY      `ANTD_OP_WIDTH'd0
-`define ANTD_OP_LOAD_X_START `ANTD_OP_WIDTH'd1
-`define ANTD_OP_LOAD_X_DELAY `ANTD_OP_WIDTH'd2
-`define ANTD_OP_LOAD_X_WAIT  `ANTD_OP_WIDTH'd3
-`define ANTD_OP_LOAD_Y_START `ANTD_OP_WIDTH'd4
-`define ANTD_OP_LOAD_Y_DELAY `ANTD_OP_WIDTH'd5
-`define ANTD_OP_LOAD_Y_WAIT  `ANTD_OP_WIDTH'd6
-`define ANTD_OP_DRAW_START   `ANTD_OP_WIDTH'd7
-`define ANTD_OP_DRAW_DELAY   `ANTD_OP_WIDTH'd8
-`define ANTD_OP_DRAW_WAIT    `ANTD_OP_WIDTH'd9
+`define ANTD_OP_STANDBY            `ANTD_OP_WIDTH'd0
+`define ANTD_OP_LOAD_X_START       `ANTD_OP_WIDTH'd1
+`define ANTD_OP_LOAD_X_DELAY       `ANTD_OP_WIDTH'd2
+`define ANTD_OP_LOAD_X_WAIT        `ANTD_OP_WIDTH'd3
+`define ANTD_OP_LOAD_Y_START       `ANTD_OP_WIDTH'd4
+`define ANTD_OP_LOAD_Y_DELAY       `ANTD_OP_WIDTH'd5
+`define ANTD_OP_LOAD_Y_WAIT        `ANTD_OP_WIDTH'd6
+`define ANTD_OP_LOAD_FITNESS_START `ANTD_OP_WIDTH'd7
+`define ANTD_OP_LOAD_FITNESS_DELAY `ANTD_OP_WIDTH'd8
+`define ANTD_OP_LOAD_FITNESS_WAIT  `ANTD_OP_WIDTH'd9
+`define ANTD_OP_DRAW_START         `ANTD_OP_WIDTH'd10
+`define ANTD_OP_DRAW_DELAY         `ANTD_OP_WIDTH'd11
+`define ANTD_OP_DRAW_WAIT          `ANTD_OP_WIDTH'd12
 
 module AntDraw(
     input clock,
@@ -35,6 +38,7 @@ module AntDraw(
     reg [`X_COORD_WIDTH-1:0] dx;
     reg [`Y_COORD_WIDTH-1:0] dy;
     reg [`COLOUR_WIDTH-1:0] colour; // WE'RE CANADIAN
+    reg [`FITNESS_WIDTH-1:0] fitness;
     reg plot;
     
     always @(posedge clock) begin
@@ -51,6 +55,7 @@ module AntDraw(
             dx <= `X_COORD_WIDTH'd0;
             dy <= `Y_COORD_WIDTH'd0;
             colour <= `COLOUR_WIDTH'd0;
+            fitness <= `FITNESS_WIDTH'd0;
             plot <= 0;
         end
         else begin
@@ -115,12 +120,43 @@ module AntDraw(
                         cur_state = cur_state + `ANTD_OP_WIDTH'd1;
                     end
                 end
+                `ANTD_OP_LOAD_FITNESS_START: begin
+                    start_dp = 1;
+                    
+                    // TODO process and replace with your instruction
+                    instruction_dp = {`ADDR_ANT_Y(id), `OPCODE_MEMREAD};
+                    
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
+                end
+                `ANTD_OP_LOAD_FITNESS_DELAY: begin
+                    start_dp = 1;
+                    
+                    cur_state = cur_state + `ANTD_OP_WIDTH'd1;
+                end
+                `ANTD_OP_LOAD_FITNESS_WAIT: begin
+                    start_dp = 0;
+                    
+                    if (finished_dp) begin
+                        // TODO do something with result_dp
+                        fitness = result_dp - 1;
+                        
+                        cur_state = cur_state + `ANTD_OP_WIDTH'd1;
+                    end
+                end
                 
                 `ANTD_OP_DRAW_START: begin
                     start_dp = 1;
                     
                     // TODO process and replace with your instruction
-                    colour = `COLOUR_ANT;
+                    if (fitness >= `ANT_FITNESS_MARK2) begin
+                        colour = `COLOUR_ANT3;
+                    end
+                    else if (fitness >= `ANT_FITNESS_MARK1) begin
+                        colour = `COLOUR_ANT2;
+                    end
+                    else begin
+                        colour = `COLOUR_ANT1;
+                    end
                     instruction_dp = {1'b1, colour, y + dy, x + dx, `OPCODE_DRAW};
                     
                     cur_state = cur_state + `ANTD_OP_WIDTH'd1;
@@ -517,6 +553,7 @@ module AntUpdate(
                         if (food_index == `NUM_FOOD - 1) begin
                             food_index = `MEM_ADDR_WIDTH'd0;
                             if (food_distance_closest <= `EAT_RADIUS) begin
+                                fitness = fitness + `FOOD_FITNESS;
                                 cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                             end
                             else begin
@@ -641,6 +678,9 @@ module AntUpdate(
                         if (poison_index == `NUM_POISON - 1) begin
                             poison_index = `MEM_ADDR_WIDTH'd0;
                             if (poison_distance_closest <= `EAT_RADIUS) begin
+                                if (fitness >= `POISON_FITNESS) begin
+                                    fitness = fitness - `POISON_FITNESS;
+                                end
                                 cur_state = cur_state + `ANTU_OP_WIDTH'd1;
                             end
                             else begin
