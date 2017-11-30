@@ -68,7 +68,7 @@
 
 `define MUTATION_RAND_THRESHOLD (`RAND_MAX / 250)
 
-`define FOOD_FITNESS 1
+`define FOOD_FITNESS 2
 `define POISON_FITNESS 1
 
 `define RAND_WIDTH 16
