@@ -107,7 +107,7 @@ structs:
         // mutation is skipped
         // mutation rand threshold is reasonably small.
         // mutation is single weight based instead of bit based.
-        mutation chance is extremely high.
+        // mutation chance is extremely high.
     
     !!! try:
         there might be bug for neural net perception.

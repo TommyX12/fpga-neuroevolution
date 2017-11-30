@@ -927,7 +927,7 @@ module AntUpdate(
                             x = x - `X_COORD_WIDTH'd1;
                         end
                         else begin
-                            // x = `SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1;
+                            x = `SCREEN_WIDTH - (`ANT_WIDTH / 2) - 1;
                         end
                     end
                     else if (move_right) begin
@@ -935,7 +935,7 @@ module AntUpdate(
                             x = x + `X_COORD_WIDTH'd1;
                         end
                         else begin
-                            // x = `ANT_WIDTH / 2;
+                            x = `ANT_WIDTH / 2;
                         end
                     end
                     // else begin
@@ -950,7 +950,7 @@ module AntUpdate(
                             y = y - `Y_COORD_HEIGHT'd1;
                         end
                         else begin
-                            // y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
+                            y = `SCREEN_HEIGHT - (`ANT_HEIGHT / 2) - 1;
                         end
                     end
                     else if (move_down) begin
@@ -958,7 +958,7 @@ module AntUpdate(
                             y = y + `Y_COORD_HEIGHT'd1;
                         end
                         else begin
-                            // y = `ANT_HEIGHT / 2;
+                            y = `ANT_HEIGHT / 2;
                         end
                     end
                     // else begin
