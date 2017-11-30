@@ -105,7 +105,7 @@ structs:
         // neural network is hand designed optimal
         ants 7 uses optimal neural net at start.
         // mutation is skipped
-        mutation rand threshold is extremely small.
+        mutation rand threshold is reasonably small.
     
     !!! try:
         there might be bug for neural net perception.
