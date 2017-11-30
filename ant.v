@@ -920,6 +920,9 @@ module AntUpdate(
                             x = `ANT_WIDTH / 2;
                         end
                     end
+                    else begin
+                        dx = 0;
+                    end
                     
                     if (dy == -1) begin
                         if (y > (`ANT_HEIGHT / 2)) begin
@@ -936,6 +939,9 @@ module AntUpdate(
                         else begin
                             y = `ANT_HEIGHT / 2;
                         end
+                    end
+                    else begin
+                        dy = 0;
                     end
                     
                     // if (move_up && y > (`ANT_HEIGHT / 2)) begin
