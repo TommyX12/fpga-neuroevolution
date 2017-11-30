@@ -82,7 +82,7 @@ module Evolve(
     input [`DELAY_WIDTH-1:0] gen_duration,
     
     output reg [`STD_WIDTH-1:0] current_gen,
-    output reg [`FITNESS_WIDTH-1:0] fitness_max,
+    output reg [`FITNESS_WIDTH-1:0] fitness_max_out,
     
     input finished_dp,
     input [`RESULT_WIDTH-1:0] result_dp,
@@ -100,6 +100,7 @@ module Evolve(
     
     reg [`FITNESS_WIDTH * `NUM_ANT-1:0] fitnesses;
     reg [`FITNESS_WIDTH-1:0] fitness_sum;
+    reg [`FITNESS_WIDTH-1:0] fitness_max;
     reg [`FITNESS_WIDTH-1:0] fitness_random;
     reg [`FITNESS_WIDTH-1:0] fitness_sum_cur;
     reg [`MEM_ADDR_WIDTH-1:0] parent_ant_index;
@@ -272,6 +273,7 @@ module Evolve(
             fitnesses <= {(`FITNESS_WIDTH*`NUM_ANT){1'b0}};
             fitness_sum <= `FITNESS_WIDTH'd0;
             fitness_max <= `FITNESS_WIDTH'd0;
+            fitness_max_out <= `FITNESS_WIDTH'd0;
             fitness_sum_cur <= `FITNESS_WIDTH'd0;
             parent_ant_index <= `MEM_ADDR_WIDTH'd0;
 				
@@ -296,6 +298,8 @@ module Evolve(
             case (cur_state)
                 `EVOLVE_OP_STANDBY: begin
                     finished = 1;
+                    
+                    fitness_max_out = fitness_max;
                     
                     // usually do nothing
                     
