@@ -118,6 +118,8 @@ structs:
         !!! for GA in general: always keep the currently know maximum fitness guy in the generation
         
         try making it so that if all of or none of move up down left right is 1, maintain last direction
+        
+        try allowing changing food count dynamically to see if it makes convergence faster.
     
     potential future optimizations:
         datapath router can be more efficiently designed in hardware.
