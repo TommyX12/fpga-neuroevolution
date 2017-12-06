@@ -160,6 +160,10 @@ module main(
     wire fps_limiter_finished;
     
     
+    wire [`MEM_ADDR_WIDTH-1:0] num_food;
+    assign num_food[4:0] = SW[9:5];
+    
+    
     wire finished_dp;
     wire [`RESULT_WIDTH-1:0] result_dp;
     wire start_dp;
@@ -215,6 +219,7 @@ module main(
         .start(ant_update_start),
         .finished(ant_update_finished),
         
+        .num_food(num_food),
         .id(cur_id),
         .rand(rand),
         
@@ -532,7 +537,7 @@ module main(
                     food_draw_start = 0;
                     
                     if (food_draw_finished) begin
-                        if (cur_id == `NUM_FOOD - `MEM_ADDR_WIDTH'd1) begin
+                        if (cur_id >= num_food - `MEM_ADDR_WIDTH'd1) begin
                             cur_id = 0;
                             cur_state = cur_state + `MAIN_OP_WIDTH'd1;
                         end

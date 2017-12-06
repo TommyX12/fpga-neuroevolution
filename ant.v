@@ -22,6 +22,7 @@ module AntDraw(
     input start,
     output reg finished,
     
+    input [`MEM_ADDR_WIDTH-1:0] num_food,
     input [`MEM_ADDR_WIDTH-1:0] id,
     
     input finished_dp,
@@ -608,7 +609,7 @@ module AntUpdate(
                             food_y_closest = food_y;
                         end
                         
-                        if (food_index == `NUM_FOOD - 1) begin
+                        if (food_index >= num_food - 1) begin
                             food_index = `MEM_ADDR_WIDTH'd0;
                             if (food_distance_closest <= `EAT_RADIUS) begin
                                 fitness = fitness + `FOOD_FITNESS;
