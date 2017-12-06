@@ -161,7 +161,7 @@ module main(
     
     
     wire [`MEM_ADDR_WIDTH-1:0] num_food;
-    assign num_food[4:0] = SW[9:5];
+    assign num_food = {{(`MEM_ADDR_WIDTH - 5){1'd0}}, SW[9:5]};
     
     
     wire finished_dp;
